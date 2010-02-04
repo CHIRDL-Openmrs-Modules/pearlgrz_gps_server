@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!-- Beans to add to the current Application context definition -->
+  
+<beans>
+
+    <bean id="pearlgrlzUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    	<property name="mappings">
+            <props>
+	           <prop key="module/@MODULE_ID@/pearlgrlzLink.form">pearlgrlzFormController</prop>
+	           <prop key="/module/@MODULE_ID@/fillOutSurvey.form">fillOutSurvey</prop>
+				<prop key="/module/@MODULE_ID@/startSurvey.form">startSurvey</prop>
+	    	</props>
+		</property>
+    </bean>
+	
+    <bean id="pearlgrlzFormController" class="@MODULE_PACKAGE@.web.controller.PearlgrlzFormController">
+		<property name="commandName"><value>theSurveySubjectList</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzForm</value></property>
+		<property name="successView"><value>pearlgrlzLink.form</value></property>
+    </bean>
+	
+	<bean id="fillOutSurvey" class="@MODULE_PACKAGE@.web.controller.FillOutFormController">
+		<property name="commandName"><value>fillOutSurveyObject</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/fillOutSurvey</value></property>
+		<property name="successView"><value>fillOutSurvey.form</value></property>
+	</bean>
+	<bean id="startSurvey" class="@MODULE_PACKAGE@.web.controller.StartSurveyController">
+		<property name="commandName"><value>startSurveyObject</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/startSurvey</value></property>
+		<property name="successView"><value>startSurvey.form</value></property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.pearlgrlz.service.PearlgrlzService</value> <!-- service interface name -->
+				<bean class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager"><ref bean="transactionManager"/></property>
+					<property name="target">
+						<bean class="org.openmrs.module.pearlgrlz.impl.PearlgrlzServiceImpl">
+							<property name="pearlgrlzDAO">
+								<bean class="org.openmrs.module.pearlgrlz.db.hibernate.HibernatePearlgrlzDAO">
+									<property name="sessionFactory"><ref bean="sessionFactory"/></property>	
+								</bean>
+							</property>	
+						</bean>
+					</property>
+					<property name="preInterceptors">
+						<list>
+							<ref bean="authorizationInterceptor"/>
+						</list>
+					</property>
+					<property name="transactionAttributeSource">
+						<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource"/>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="logicObsDAO" class="org.openmrs.logic.db.hibernate.HibernateLogicObsDAO">
+       <property name="sessionFactory"><ref bean="sessionFactory"/></property>      </bean>
+   <bean id="logicObsDataSource" class="org.openmrs.logic.datasource.ObsDataSource">
+       <property name="logicObsDAO"><ref bean="logicObsDAO"></ref></property>
+   </bean>
+
+   <bean parent="logicServiceTarget">
+        <property name="logicDataSources">
+         <map>
+           <entry key="PerlGirlz"><ref bean="logicObsDataSource" /></entry>
+         </map>
+        </property>
+   </bean>
+   
+</beans>

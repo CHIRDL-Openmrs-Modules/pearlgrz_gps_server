@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="web/src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="metadata"/>
+	<classpathentry kind="lib" path="lib-common/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="lib-common/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-webmvc.jar"/>
+	<classpathentry kind="lib" path="lib-common/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib-common/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib-common/chirdlutil-1.0.5.jar" sourcepath="/chirdlutil/src"/>
+	<classpathentry kind="lib" path="lib-common/atd-1.56.9.jar" sourcepath="/atd/src"/>
+	<classpathentry kind="lib" path="lib-common/dss-2.27.11.jar" sourcepath="/dss/src"/>
+	<classpathentry exported="true" kind="lib" path="lib-common/openmrs-api-1.5.0.10396-dev.jar"/>
+	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.5.0.10396-dev.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>
