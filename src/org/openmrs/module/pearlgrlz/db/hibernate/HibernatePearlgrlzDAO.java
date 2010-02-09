@@ -48,7 +48,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
 	 * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getReprintRescanStatesByEncounter(java.lang.Integer, java.util.Date, java.lang.Integer, java.lang.Integer)
 	 */
-	@Override
 	public List<PatientState> getReprintRescanStatesByEncounter(Integer encounterId, Date optionalDateRestriction,
 	                                                            Integer locationTagId, Integer locationId) {
 		// TODO Auto-generated method stub
