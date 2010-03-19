@@ -8,9 +8,14 @@
     <bean id="pearlgrlzUrlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
     	<property name="mappings">
             <props>
-	           <prop key="module/@MODULE_ID@/pearlgrlzLink.form">pearlgrlzFormController</prop>
-	           <prop key="/module/@MODULE_ID@/fillOutSurvey.form">fillOutSurvey</prop>
-				<prop key="/module/@MODULE_ID@/startSurvey.form">startSurvey</prop>
+	           <prop key="module/@MODULE_ID@/pearlgrlzForm.form">pearlgrlzFormController</prop>
+	           <prop key="/module/@MODULE_ID@/fillOutSurvey.form">fillOutSurveyController</prop>
+				<prop key="/module/@MODULE_ID@/startSurvey.form">startSurveyController</prop>
+				<prop key="/module/@MODULE_ID@/surveyPearlgrlzPage1.form">page1Controller</prop>
+				<prop key="/module/@MODULE_ID@/pearlgrlzsurvey.form">page1Controller</prop>
+				<prop key="/module/@MODULE_ID@/surveyPearlgrlzComplete.form">completeController</prop>
+				<prop key="/module/@MODULE_ID@/pearlgrlzSurveyAlcohol.form">alcoholController</prop>
+				<prop key="/module/@MODULE_ID@/pearlgrlzSurveySmoking.form">smokingController</prop>
 	    	</props>
 		</property>
     </bean>
@@ -18,19 +23,46 @@
     <bean id="pearlgrlzFormController" class="@MODULE_PACKAGE@.web.controller.PearlgrlzFormController">
 		<property name="commandName"><value>theSurveySubjectList</value></property>
 		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzForm</value></property>
-		<property name="successView"><value>pearlgrlzLink.form</value></property>
+		<property name="successView"><value>pearlgrlzForm.form</value></property>
     </bean>
 	
-	<bean id="fillOutSurvey" class="@MODULE_PACKAGE@.web.controller.FillOutFormController">
-		<property name="commandName"><value>fillOutSurveyObject</value></property>
+	<bean id="fillOutSurveyController" class="@MODULE_PACKAGE@.web.controller.FillOutFormController">
 		<property name="formView"><value>/module/@MODULE_ID@/fillOutSurvey</value></property>
 		<property name="successView"><value>fillOutSurvey.form</value></property>
 	</bean>
-	<bean id="startSurvey" class="@MODULE_PACKAGE@.web.controller.StartSurveyController">
+	<bean id="startSurveyController" class="@MODULE_PACKAGE@.web.controller.StartSurveyController">
 		<property name="commandName"><value>startSurveyObject</value></property>
 		<property name="formView"><value>/module/@MODULE_ID@/startSurvey</value></property>
 		<property name="successView"><value>startSurvey.form</value></property>
 	</bean>
+	
+	
+	
+	<bean id="page1Controller" class="@MODULE_PACKAGE@.web.controller.Page1FormController">
+		<property name="sessionForm"><value>false</value></property>
+		<property name="commandName"><value>command</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/surveyPearlgrlzPage1</value></property>
+		<property name="successView"><value>surveyPearlgrlzPage1.form</value></property>
+	</bean>
+	<bean id="alcoholController" class="@MODULE_PACKAGE@.web.controller.AlcoholFormController">
+		<property name="commandName"><value>command</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzSurveyAlcohol</value></property>
+		<property name="successView"><value>pearlgrlzSurveyAlcohol.form</value></property>
+	</bean>
+	<bean id="smokingController" class="@MODULE_PACKAGE@.web.controller.SmokingFormController">
+		<property name="commandName"><value>command</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzSurveySmoking</value></property>
+		<property name="successView"><value>pearlgrlzSurveySmoking.form</value></property>
+	</bean>
+	<bean id="completeController" class="@MODULE_PACKAGE@.web.controller.CompleteFormController">
+		<property name="closeDialogView"><value>/module/@MODULE_ID/closeDialog</value></property>
+		<property name="commandName"><value>command</value></property>
+		<property name="formView"><value>/module/@MODULE_ID@/surveyPearlgrlzComplete</value></property>
+		<property name="successView"><value>surveyPearlgrlzComplete.form</value></property>
+	</bean>
+	
+	<!-- TODO: Need to double check if want to put singleton here.  -->
+	<bean id="parameterHandler" class="@MODULE_PACKAGE@.SurveyParameterHandler"/>
 	
 	<bean parent="serviceContext">
 		<property name="moduleService">
@@ -44,7 +76,8 @@
 								<bean class="org.openmrs.module.pearlgrlz.db.hibernate.HibernatePearlgrlzDAO">
 									<property name="sessionFactory"><ref bean="sessionFactory"/></property>	
 								</bean>
-							</property>	
+							</property>
+							<property name="parameterHandler"><ref bean="parameterHandler"/></property>	
 						</bean>
 					</property>
 					<property name="preInterceptors">
@@ -61,7 +94,9 @@
 	</bean>
 	
 	<bean id="logicObsDAO" class="org.openmrs.logic.db.hibernate.HibernateLogicObsDAO">
-       <property name="sessionFactory"><ref bean="sessionFactory"/></property>      </bean>
+       <property name="sessionFactory"><ref bean="sessionFactory"/></property>      
+   </bean>
+   
    <bean id="logicObsDataSource" class="org.openmrs.logic.datasource.ObsDataSource">
        <property name="logicObsDAO"><ref bean="logicObsDAO"></ref></property>
    </bean>
@@ -69,7 +104,7 @@
    <bean parent="logicServiceTarget">
         <property name="logicDataSources">
          <map>
-           <entry key="PerlGirlz"><ref bean="logicObsDataSource" /></entry>
+           <entry key="PearlGrlz"><ref bean="logicObsDataSource" /></entry>
          </map>
         </property>
    </bean>

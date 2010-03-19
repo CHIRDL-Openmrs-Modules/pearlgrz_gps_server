@@ -13,18 +13,113 @@
  */
 package org.openmrs.module.pearlgrlz.service;
 
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.Patient;
 import org.openmrs.User;
+import org.openmrs.module.atd.TeleformTranslator;
+import org.openmrs.module.atd.hibernateBeans.FormInstance;
+import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
+import org.openmrs.module.atd.hibernateBeans.Session;
+import org.openmrs.module.dss.hibernateBeans.Rule;
 
 
 /**
  *
  */
 public interface PearlgrlzService {
-	public void createSurveyXML(Patient patient,PatientState patientState,
-	                            OutputStream output,Integer locationId,Integer formId,
-	                            Integer numQuestions,User provider);
+	
+	/**
+	 * 
+	 * 
+	 * @param patient
+	 * @param state
+	 * @param output
+	 * @param locationId
+	 * @param formId
+	 * @param numQuestions
+	 * @param provider
+	 * 
+	 * @deprecated use {@link #createSurveyXML(Patient patient, Integer locationId,Integer formId, Integer numQuestions,User provider)}
+	 */
+	public void createSurveyXML(Patient patient, PatientState state, OutputStream output, Integer locationId,Integer formId, Integer numQuestions,User provider);	// for backward compat.
+	
+	
+	public void createSurveyXML(Patient patient, Integer locationId,Integer formId, Integer numQuestions,User provider);
+	
+	public Integer getSurveyLatestLink(Patient patient, String surveyType);
+	
+	public void setSurveyLatestLink(Patient patient,  ArrayList<Concept> listToAdd, ArrayList<Concept> listToRemove);
+	
+	public String initSurvey(Integer personId,  String surveyType);
+	
+	public void preRender(Map map, Integer formId, Integer formInstanceId, Integer locationId,
+                           TeleformTranslator translator, InputStream inputMergeFile)  throws Exception;
+	
+	public void saveForm(Map map, Integer formId, Integer formInstanceId, Integer locationTagId, Integer locationId,
+	                     TeleformTranslator translator, InputStream inputMergeFile, HttpServletRequest request);
+	
+	public int getNumberQuestions(Integer formId);
+	
+	public Integer getPageToAdd(Concept concept); 
+	
+	public String getConceptPormpt(Concept concept);
+	
+	public String getConceptPormptSP(Concept concept);
+	
+	public void setActivePage(Patient patient, Integer  formId) ;		// each patient at current page can use this method in controller
+	
+	public Integer getActivePage(Patient patient);							// tracking current stage for this patient
+	
+	public Integer getPreviousPage(Patient patient, Integer activePage);
+	
+	public ArrayList<Integer> getPreviousPages(Patient patient, Integer activePage);
+	
+	public void getDefaultInfor();
+	
+	 public Patient getPatientByUserId(Integer userId);
+	 
+	 public String getSurveyType(Patient patient);
+	 
+	 public void setSurveyType(Patient patient, String surveyType);
+	 
+	public Integer getEncounterId();
+	
+	public Encounter getEncounter(Patient patient);
+	
+	public void setEncounter(Patient patient, Encounter value) ;
+	
+	public Location getLocation();
+	
+	 public LocationTag getLocationTag();
+	
+	public FormInstance getFormInstance(Patient patient) ;
+	
+	public void setFormInstance(Patient patient, FormInstance formInstance);
+	
+	public Session getSurveySession(Patient patient, String SurveyType);
+	
+	public Session getSession(Patient patient);
+	
+	public void setSession(Patient patient, Session session);
+	
+	public String calculateSurveyType();
+	
+	public void endSurveySession(Patient patient, String surveyType, Boolean voided);
+	
+	public List<String>  populatePartnerList(Patient patient);
+	
+	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
+	
 }

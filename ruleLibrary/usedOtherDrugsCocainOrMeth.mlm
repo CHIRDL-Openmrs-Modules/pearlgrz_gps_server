@@ -1,0 +1,63 @@
+Maintenance:
+	Title:		Drugs Cocain or Meth Question;;
+	Filename:	usedOtherDrugsCocainOrMeth.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-01-29T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify drugs related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+ usedOtherDrugsCocainOrMeth := read Exist {Used other drugs cocain or meth} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		62;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (usedOtherDrugsCocainOrMeth = True) then conclude False;
+conclude True;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Used other drugs cocain or meth","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Used other drugs cocain or meth","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you use other drugs: Cocain or Meth?");
+write ("¿Ha utilizado otras drogas: cocaína o metanfetamina?") At Spanish;
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

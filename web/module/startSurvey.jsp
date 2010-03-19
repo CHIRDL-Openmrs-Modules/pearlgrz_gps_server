@@ -26,7 +26,6 @@
 			var openmrsContextPath = '${pageContext.request.contextPath}';
 		</script>
 
-
 <link
 	href="${pageContext.request.contextPath}/moduleResources/pearlgrlz/pearlgrlz.css"
 	type="text/css" rel="stylesheet" />
@@ -47,19 +46,18 @@
 	<div id="openmrs_error"><spring:message code="${err}"  text="${err}" arguments="${errArgs}" /></div>
 </c:if>
 
-
 <!--  This information will eventually come from a user login  -->
 <form name="fillOutSurvey.form" method="post">
 
 <p><b>Please enter the patient id of the survey participant:</b></p>
 <b>Patient id: </b>&nbsp;<input type="text" size="8" name="patientId"
-	tabindex="1" /><br>
-<br>
+	tabindex="1" /><br></br>
+<b>Provider id:</b><input type="text" size="8" name="providerId" tabindex="2"/>
 <table>
 	<tr>
 		<td><input type="button" value="Cancel" onclick='window.close()'
 			tabindex="3" /></td>
-		<td><input type="submit" value="OK" tabindex="2" /></td>
+		<td><input type="submit" value="OK" tabindex="4" /></td>
 	</tr>
 </table>
 </form>

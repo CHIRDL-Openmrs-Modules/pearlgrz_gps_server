@@ -16,12 +16,15 @@ package org.openmrs.module.pearlgrlz.db;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
 import org.openmrs.Concept;
-import org.openmrs.Obs;
+import org.openmrs.Patient;
+import org.openmrs.module.atd.hibernateBeans.FormInstance;
+import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
+import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.pearlgrlz.SurveyPartner;
+import org.openmrs.module.pearlgrlz.SurveyRecord;
+import org.openmrs.module.pearlgrlz.SurveySession;
 
 /**
  *
@@ -30,4 +33,34 @@ public interface PearlgrlzDAO {
 	
 	public List<PatientState> getReprintRescanStatesByEncounter(Integer encounterId, Date optionalDateRestriction, 
 		Integer locationTagId,Integer locationId);
+	
+	public SurveyRecord getLatestSurveyRecord(Patient patient);
+	
+//	public List<SurveyRecord> getPrevSurveyRecords(Integer patientId); 	// Used to purge the records ?
+	
+	public void cupSurveyRecord(SurveyRecord record);
+	
+	public void cupSurveySession(SurveySession surveySession);
+	
+	public void cupSurveyPartner(SurveyPartner surveyPartner);
+	
+	public String getConceptPormpt(Concept concept);
+	
+	public Integer getPageToAdd(Concept concept);
+	
+	public String getConceptPormptSP(Concept concept);
+	
+	public SurveySession getOpenSurveySession(Patient patient, String surveyType);
+	
+	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
+
+	public List<SurveyPartner> getSurveyPartners(Patient patient);
+	
+	public List<String>  populatePartnerList(Patient patient);
+	
+	public void addPartner(SurveyPartner partner);
+
+	public void voidPartner(SurveyPartner partner);
+	
+	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
 }

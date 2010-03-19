@@ -1,0 +1,61 @@
+Maintenance:
+	Title:		smoking weed related Question;;
+	Filename:	timesSmokedWeed.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-16T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify smoking weed related problems.  ,,singleSelect ,,frequencyOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:ClassLoaderTask
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input1Value:=read {input1value from Parameters};
+
+If (mode = PRODUCE) then
+ smokedWeed := read Last {Smoked weed} Where it Occurred Within Past 1 Days;
+ frequency := read Exist {Number of times smoking weed since last survey} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		103;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (smokedWeed = Yes) AND (frequency = False) then conclude True; 
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Number of times smoking weed since last survey", "Input1Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Number of times smoked weed?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

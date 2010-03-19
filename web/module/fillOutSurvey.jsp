@@ -1,123 +1,103 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
-<%@ include file="/WEB-INF/template/header.jsp"%>
+
+<head>
+<script language="JavaScript">
+function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
+</script>
+</head>
+
 <link
 	href="${pageContext.request.contextPath}/moduleResources/pearlgrlz/pearlgrlz.css"
 	type="text/css" rel="stylesheet" />
 <c:choose>
-	<c:when test="${scanned == 'scanned'}">
-		<p>Survey ID: ${formInstanceId} was successfully scanned.</p>
+	<c:when test="${finished == 'finished'}">
+		<p><h2>Thank you very much for your time and effort.</h2></p>
 	</c:when>
-	<c:otherwise>
-		<form name="input" action="fillOutSurvey.form" method="get"><input
-			type="submit" value="Scan">
-		<table class="rightAlign">
-			<tr>
-				<td colspan="3">
-				<table style="padding: 10px" width="100%">
+	
+	<c:when test="${contSurvey == 'contSurvey'}">
+	<p><h2>going to call pearlgrlzForm.form</h2></p>
+		<form name="pearlgrlzSelfSubmitForm"  action="pearlgrlzForm.form" method="post">
+			<input type="hidden" name="patientId" value="${patientId}" /> 
+			<input type="hidden"  name="providerId" value="${providerId}" /> 
+			<input  type="hidden" name="locationId" value="${locationId}" /> 
+			<input  type="hidden" name="locationTagId" value="${locationTagId}" /> 
+			<input  type="hidden" name="formName" value="${formName}" /> 
+			<input  type="hidden" name="formNumberQuestions" value="${formNumberQuestions}" /> 
+			<input type="hidden" name="formInstance" value="${formInstance}"  />
+			<input  type="hidden" name="nonInit" value="${nonInit}" /> 
+			<input type="submit" value="Continue""/>
+		</form>
+		<script>document.pearlgrlzSelfSubmitForm.submit();</script>
+	</c:when> 
+	
+<c:when test="${formNumberQuestions <= 5}">
+<table style="padding: 10px" width="100%">
 					<tr>
-						<td style="vertical-align: middle; text-align: center;">${formInstanceId}</td>
-						<td style="vertical-align: middle; text-align: center;"><b
-							style="font-size: 22px">Pearl Grlz Survey Form</b></td>
+						<td style="vertical-align: middle; text-align: center;">${formInstance}</td>
+						<td style="vertical-align: middle; text-align: center;"><b style="font-size: 22px">Pearl Grlz Survey Form</b></td>
+						<td style="text-align: left">Name:  ${PatientName}</td>
+						<td style="text-align: left">Date: ${CurrentDate}</td>
 					</tr>
-				</table>
-				</td>
-				<td rowspan="3">
-				<table style="font-weight: bold;">
-					<tr>
-						<td style="vertical-align: bottom">MRN:</td>
-						<td style="text-align: left; vertical-align: bottom;"><b
-							style="font-size: 22px">${MRN}</b></td>
-					</tr>
-					<tr>
-						<td>Name:</td>
-						<td style="text-align: left">${PatientName}</td>
-					</tr>
-					<tr>
-						<td>Age:</td>
-						<td style="text-align: left">${Age}&nbsp;&nbsp;&nbsp;DOB:
-						${DOB}</td>
-					</tr>
-					<tr>
-						<td>Date:</td>
-						<td style="text-align: left">${ScheduledTime}</td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			<tr>
-				<td>${Height_HL}Height:</td>
-				<td style="text-align: left"><input type="text" size="3"
-					maxlength="3" name="HeightP" />. <input type="text" size="1"
-					maxlength="1" name="HeightS" />&nbsp;${HeightSUnits}</td>
-				<td>Uncooperative/Unable to Screen:<br>
-				<center><input type="checkbox" name="NoVision" value="Y" />Vision&nbsp;
-				<input type="checkbox" name="NoHearing" value="Y" />Hearing&nbsp; <input
-					type="checkbox" name="NoBP" value="Y" />BP</center>
-				</td>
-			</tr>
-			<tr>
-				<td>${Weight_HL}Weight:</td>
-				<td style="text-align: left"><input type="text" size="3"
-					maxlength="3" name="WeightP" />${WeightPUnits}<input type="text"
-					size="2" maxlength="2" name="WeightS" />&nbsp;${WeightSUnits}</td>
-				<td>${VisionL_HL}Vision Left: 20/<input type="text" size="3"
-					maxlength="3" name="VisionL" /></td>
-			</tr>
-			<tr>
-				<td>${HC_HL}HC:</td>
-				<td style="text-align: left"><input type="text" size="3"
-					maxlength="3" name="HCP" />.<input type="text" size="1"
-					maxlength="1" name="HCS" />&nbsp;cm.</td>
-				<td>${VisionR_HL}Vision Right: 20/<input type="text" size="3"
-					maxlength="3" name="VisionR" /></td>
-				<td>Pulse Ox:<input type="text" size="3" maxlength="3"
-					name="PulseOx" />%</td>
-			</tr>
-			<tr>
-				<td>${BP_HL}BP:</td>
-				<td style="text-align: left"><input type="text" size="3"
-					maxlength="3" name="BPS" />/<input type="text" size="3"
-					maxlength="3" name="BPD" /></td>
-				<td rowspan="3" align="right">
-				<table class="rightAlign">
-					<tr>
-						<td>${HearL_HL}Left Ear @ 25db:</td>
-						<td style="text-align: center">P</td>
-						<td style="text-align: center">F</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox" value="P" name="HearL" /></td>
-						<td><input type="checkbox" value="F" name="HearL" /></td>
-					</tr>
-				</table>
-				</td>
-				<td rowspan="3" align="right">
-				<table class="rightAlign">
-					<tr>
-						<td>${HearR_HL}Right Ear @ 25db:</td>
-						<td style="text-align: center">P</td>
-						<td style="text-align: center">F</td>
-					</tr>
-					<tr>
-						<td><input type="checkbox" value="P" name="HearR" /></td>
-						<td><input type="checkbox" value="F" name="HearR" /></td>
-					</tr>
-				</table>
-				</td>
-			</tr>
-			<tr>
-				<td style="vertical-align: top">Temp:</td>
-				<td style="text-align: left; vertical-align: top;"><input
-					type="text" size="3" maxlength="3" name="TempP" />.<input
-					type="text" size="1" maxlength="1" name="TempS" />&nbsp;deg. F</td>
-			</tr>
-			<tr>
-				<td style="vertical-align: top">Pulse:</td>
-				<td style="text-align: left; vertical-align: top;"><input
-					type="text" size="3" maxlength="3" name="Pulse" />/min&nbsp;&nbsp;&nbsp;&nbsp;RR:<input
-					type="text" size="3" maxlength="3" name="RR" />
-			</tr>
+			</table>
+			
+		<form name="input" action="fillOutSurvey.form" method="get">
+			<br></br>
+			<table>
+				<tr>	
+					<th></th><th>From ~ To</th>
+				</tr>
+				<tr>
+					<td>${Question1}</td>
+					<td> <input type="text" name="QuestionEntry_1"/> </td>
+				</tr>
+				<tr>
+					<td>${Question2}</td>
+					<td> <input type="text" name="QuestionEntry_2"/> </td>
+				</tr>
+				<tr>
+					<td>${Question3}</td>
+					<td> <input type="text" name="QuestionEntry_3"/> </td>
+				</tr>
+				<tr>
+					<td>${Question4}</td>
+					<td> <input type="text" name="QuestionEntry_4"/> </td>
+				</tr>
+				<tr></tr>
+				
+				<tr>
+					<td>${Question5}</td>
+					<td><input type="text" name="QuestionEntry_5" /></td>
+				</tr>
+			</table>
+			
+		<p>
+		<table>
+		<tr>
+		<td>
+			<input type="button" value="Prev" onCLick="history.back()"/>
+		</td> <td></td>
+		<td>
+			<input  type="submit" value="Next"/>
+			</td>
+		</tr>
 		</table>
+		 </p>
+		 
+		</form>
+	</c:when>
+
+
+	<c:otherwise>
+		<form name="input" action="fillOutSurvey.form" method="get">
+			<table style="padding: 10px" width="100%">
+					<tr>
+						<td style="vertical-align: middle; text-align: center;">${formInstance}</td>
+						<td style="vertical-align: middle; text-align: center;"><b style="font-size: 22px">Pearl Grlz Survey Form</b></td>
+						<td style="text-align: left">Name:  ${PatientName}</td>
+						<td style="text-align: left">Date: ${CurrentDate}</td>
+					</tr>
+			</table>
+		
 		<p><b>English Questions</b></p>
 		<table>
 			<tr>
@@ -169,9 +149,20 @@
 				<td>${Question10}</td>
 			</tr>
 		</table>
+		
 		<p>
-		<center>${CurrentDate}</center>
+		<table>
+		<tr>
+		<td>
+			<input type="button" value="Prev" onCLick="history.back()"/>
+		</td> <td></td>
+		<td>
+			<input  type="submit" value="Next"/>
+			</td>
+		</tr>
+		</table>
 		</p>
+		
 		<p><b>Spanish Questions</b></p>
 		<table>
 			<tr>
@@ -223,8 +214,9 @@
 				<td>${Question10_SP}</td>
 			</tr>
 		</table>
-		<input type="hidden" name="submitAnswers" value="submitAnswers" /> <input
-			type="hidden" value="${formInstance}" name="formInstance" /></form>
+		<input type="hidden" name="submitAnswers" value="submitAnswers" /> 
+		<input type="hidden" value="${formInstance}" name="formInstance" />
+
+		</form>
 	</c:otherwise>
 </c:choose>
-<%@ include file="/WEB-INF/template/footer.jsp"%>

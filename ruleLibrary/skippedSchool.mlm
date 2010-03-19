@@ -1,0 +1,63 @@
+Maintenance:
+	Title:		Skipped School Question;;
+	Filename:	skippedSchool.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-01-29T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify school related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+skippedSchool := read Exist {Skipped school} Where it Occurred Within Past 1 Days; 
+endif
+;;
+
+Priority:		51;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (skippedSchool = True) then conclude False; 
+conclude True;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Skipped school","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Skipped school","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you skip school?");
+write ("¿Te faltan a la escuela?") At Spanish;
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

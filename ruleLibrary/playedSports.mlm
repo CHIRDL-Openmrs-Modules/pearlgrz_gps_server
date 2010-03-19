@@ -1,0 +1,68 @@
+Maintenance:
+	Title:		played sports Question;;
+	Filename:	playedSports.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-01-29T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify sports related problems.;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
+Box3:=read {box3 from Parameters};
+Box4:=read {box4 from Parameters};
+Box5:=read {box5 from Parameters};
+Box6:=read {box6 from Parameters};
+
+If (mode = PRODUCE) then
+/* playedSports := read Last {Played sports} Where it Occurred Within Past 1 Days; */
+endif
+;;
+
+Priority:		125;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+/* If (playedSports = Yes) then conclude False; */
+conclude True;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeObs With "Played sports","Yes";
+endif;
+If  (Box2=true) then
+ CALL storeObs With "Played sports","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you play sports?");
+write ("¿Sabía usted practicar deportes?") At Spanish;
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

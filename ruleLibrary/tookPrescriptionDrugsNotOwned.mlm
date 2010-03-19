@@ -1,0 +1,63 @@
+Maintenance:
+	Title:		Took prescription drugs not owned Question;;
+	Filename:	tookPrescriptionDrugsNotOwned.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-01-29T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify drugs related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+ tookPrescriptionDrugsNotOwned := read Exist {Took prescription drugs not prescribed to you} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		61;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (tookPrescriptionDrugsNotOwned = True) then conclude False;
+conclude True;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Took prescription drugs not prescribed to you","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Took prescription drugs not prescribed to you","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you take prescription drugs not prescribed to you?");
+write ("¿Sabía usted toma medicamentos recetados que no han sido recetados a usted?") At Spanish;
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

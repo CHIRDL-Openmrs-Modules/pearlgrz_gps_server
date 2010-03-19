@@ -17,6 +17,9 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.openmrs.Relationship;
+import org.openmrs.RelationshipType;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.Extension.MEDIA_TYPE;
 import org.openmrs.module.pearlgrlz.extension.html.AdminList;
 
@@ -45,6 +48,10 @@ public class AdminListExtensionTest extends TestCase {
 		AdminList ext = new AdminList();
 		
 		assertTrue("The media type of this extension should be html", ext.getMediaType().equals(MEDIA_TYPE.html));
+		
+		RelationshipType rltnshpType = Context.getPersonService().getRelationshipTypeByName("Survey Provider");
+		
+		
 	}
 	
 }

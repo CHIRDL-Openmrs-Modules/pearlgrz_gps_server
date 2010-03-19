@@ -69,6 +69,7 @@ public class StartSurveyController extends SimpleFormController {
 		
 		try {
 			if (patientIdString != null) {
+
 				patientId = Integer.parseInt(patientIdString);
 			}
 		}
@@ -86,7 +87,8 @@ public class StartSurveyController extends SimpleFormController {
 		//locationId and locationTagId will eventually come from login information
 		//Hard code them for now
 		UserService userService = Context.getUserService();
-		User provider = userService.getUserByUsername("lbwana");
+		String providerId = request.getParameter("providerId");
+		User provider = userService.getUser(Integer.parseInt(providerId));
 		Integer LOCATION_TAG_ID = 1;
 		Integer LOCATION_ID = 1;
 		Integer NUM_QUESTIONS = 10; //needs to be a form attribute value

@@ -47,15 +47,12 @@ public class AdminList extends AdministrationSectionExt {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		map.put("module/pearlgrlz/pearlgrlzLink.form", "Welcome to Pearl Grlz Survey");
+		map.put("module/pearlgrlz/pearlgrlzsurvey.form", "Yet Another Prototype");
+		map.put("module/pearlgrlz/surveyPearlgrlzPage1.form", "Another Prototype");
+		map.put("module/pearlgrlz/pearlgrlzForm.form", "Welcome to Pearl Grlz Survey");
 		map.put("module/pearlgrlz/startSurvey.form", "Start Survey");
-		//-----------------------------------------------------------------------------------------------------------------------
-		//TODO: Once the fillOutSurvey gets the formInstanceId (saved from the startSurvey)
-		// we need to bring the following back.  Since currently logic is either fail or
-		// the hardcoded stuff no good (specially the form_id on each database installed will
-		// be different)
-		//-----------------------------------------------------------------------------------------------------------------------
-//		map.put("module/pearlgrlz/fillOutSurvey.form", "Fill out Survey");
+		map.put("module/pearlgrlz/fillOutSurvey.form", "Fill out Survey");
+		
 		
 		
 		return map;
