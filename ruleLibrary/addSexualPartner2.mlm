@@ -1,0 +1,62 @@
+Maintenance:
+	Title:		sexual partner related Question;;
+	Filename:	addSexualPartner2.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-18T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	add new sexual partners.  ,,singleInput;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input1Value:=read {input1value from Parameters};
+
+If (mode = PRODUCE) then
+ interactedWithSexualPartners := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
+ newSexualPartners := read Last {New sexual partners to add} Where it Occurred Within Past 1 Days;
+ sexualPartner2 := read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		101;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (interactedWithSexualPartners = Yes) AND (newSexualPartners = Yes) AND (sexualPartner2 = False)  then conclude True; 
+conclude false;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Sexual partner2", "Input1Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Please add sexual partner interacted with since last survey?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

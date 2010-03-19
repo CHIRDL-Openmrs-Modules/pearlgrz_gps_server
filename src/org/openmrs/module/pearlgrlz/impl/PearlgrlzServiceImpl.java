@@ -91,9 +91,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	private LocationTag locationTag;
 	
 	private HashMap<Integer, Patient> mPatient;
-	private HashMap<Patient, Integer> mFormId;
 	private HashMap<Integer, Integer> mFormQuestions;
-	private HashMap<Patient, Integer> mActivePage;
 	private HashMap<Patient, String> mSurveyType;
 	private HashMap<Patient, Encounter> mEncounter;
 	private HashMap<Patient, FormInstance> mFormInstance;
@@ -105,12 +103,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	private HashMap<Patient, List<String>> mPatientPartnersOptions;	// The List may be changed every survey.
 	
 	
-	private final static String   SURVEY_LINKS_DELIMITOR = ",";
-	private final static String   SURVEY_DONE = "finished";
-	private final static String   SURVEY_INIT = "init";
-	private final static String   SURVEY_WIP = "wip";
-
-	
 	public final static String   SURVEY_STATE = "pearlgrlz_state";
 	public final static String   SURVEY_TYPE_DAILY = "pearlgrlz_daily";
 	public final static String   SURVEY_TYPE_WEEKLY = "pearlgrlz_weekly";
@@ -119,15 +111,16 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	
 	
 
+	/**
+	 *  Default constructor
+	 */
 	public PearlgrlzServiceImpl() {
 		
-		mActivePage = new HashMap<Patient, Integer>();
 		mPatient = new HashMap<Integer, Patient>();
 		mSurveyType = new HashMap<Patient, String>();
 		mEncounter = new HashMap<Patient, Encounter>();
 		mFormInstance = new HashMap<Patient, FormInstance>();
 		mSession = new HashMap<Patient, Session>();
-		mFormId = new HashMap<Patient, Integer>();
 		mFormQuestions = new HashMap<Integer, Integer>();
 		
 		lFrequencyOptions = new ArrayList<String>();
@@ -160,6 +153,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	}
 	
 	
+	/**
+	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getDefaultInfor()
+	 */
 	public void getDefaultInfor() {
 		
 		// Get the default locationId and locationTagId
@@ -280,6 +276,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	
 	
 	
+	/**
+	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#calculateSurveyType()
+	 */
 	public String calculateSurveyType() {
 		String surveyType = null;
 		Date now = new Date();
@@ -311,46 +310,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	
 	
 
-	/**
-	 * @param personId
-	 * @param surveyType
-	 */
-	public String initSurvey(Integer personId,  String surveyType) {
-		// Get the default locationId and locationTagId
-		if(location == null)
-			location = Context.getLocationService().getDefaultLocation();
-		if(locationTag == null) 
-			locationTag = Context.getLocationService().getLocationTagByName("Default Location Tag");
-		
-//		personId = Context.getUserContext().getAuthenticatedUser().getPersonId();		// Move to the initial-page controller ......
-		if(provider == null) 
-			provider = Context.getUserService().getUsersByRole(new Role("Survey Provider")).get(0);   
-		
-		
-		Patient patient = null;
-		
-		if( (patient = Context.getPatientService().getPatient(personId)) == null) {
-			patient = createPatient(personId);
-		}
-		
-		// Cache the surveyType
-		mSurveyType.put(patient, surveyType);
-		
-		// Get link
-		Integer link = getSurveyLatestLink(patient, surveyType);
-		
-		if(link != null) 
-			return Context.getFormService().getForm(link).getName();
-		else
-			return null;
-	}
-	
-	
 	public void finishSurvey() {
-		
-	}
-	
-	public void getNextState(Patient patient) {
 		
 	}
 	
@@ -478,7 +438,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     	
     	List<FormField> fields = Context.getFormService().getForm(formId).getOrderedFormFields();
     	
-		//store the values of fields in the jsp map
+		//store the values of fields
 		for (FormField currField : fields) {
 			FieldType fieldType = currField.getField().getFieldType();
 			String fieldName = currField.getField().getName();
@@ -621,6 +581,13 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     
 	
     
+    /**
+     * Parse and get the parameter list.
+     * 
+     * @param string
+     * @param delimitor
+     * @return
+     */
     private List<String> parseParameters(String string, String delimitor) {
     	List<String> parameters = new ArrayList<String>();
     	
@@ -644,6 +611,13 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     
     
     
+    /**
+     * Auto generated method comment
+     * 
+     * @param parametersMap
+     * @param questionFldNm
+     * @param parameters
+     */
     private void addParameters(Map<String, List<String>> parametersMap, String questionFldNm, List<String> parameters) {
     	String idx;
     	
@@ -680,6 +654,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     
     
     
+    /**
+     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#populatePartnerList(org.openmrs.Patient)
+     */
     public List<String> populatePartnerList(Patient patient) {
     	List<String> list = dao.populatePartnerList(patient);
     	return list;
@@ -783,176 +760,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	}
 	
 	
-	
-
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getSurveyLatestLink(org.openmrs.Patient, java.lang.String)
-	 */
-	public Integer getSurveyLatestLink(Patient patient, String surveyType) {
-		
-		final String SURVEY_COMPLETE_PAGE = "surveyComplete";
-		
-		Integer link = null;
-		boolean startNew = false;
-		Encounter encounter = null;
-		
-		SurveyRecord record = dao.getLatestSurveyRecord(patient);
-		
-		// Only starts new when the loop is done, and now's a new day
-		if(record != null && record.getStatus() != null && record.getStatus().equalsIgnoreCase(SURVEY_DONE) ) {
-			long tm = record.getDateChanged().getTime();
-			
-			GregorianCalendar calc = new GregorianCalendar();
-			calc.setTimeInMillis(tm);
-			
-			GregorianCalendar now = new GregorianCalendar();
-			
-			if(now.get(Calendar.DAY_OF_YEAR) > calc.get(Calendar.DAY_OF_YEAR)) {
-				startNew = true;
-			}
-		}
-		
-		if(record == null || startNew || (record.getStatus() == null) ) {
-			encounter = createEncounter(patient, provider, location);
-			
-			ATDService atdService = Context.getService(ATDService.class);
-			Session session = atdService.addSession();
-			session.setEncounterId(encounter.getEncounterId());
-//			session = ((ATDServiceImpl)atdService).getATDDAO().addSession(session);	// Populate the sessionId in the obj
-			session = atdService.updateSession(session);
-			
-			setSession(patient, session);
-			
-			record = new SurveyRecord();
-			record.setParticipantId(patient.getPatientId());
-			record.setLoop(session.getSessionId());
-			record.setStatus(SURVEY_INIT);
-			record.setDateCreated(new Date());
-			record.setDateChanged(new Date());
-			
-			// Populate the mand links
-			String records = "";
-			List<Form> forms = Context.getFormService().getForms(surveyType, false);
-			
-			for(int i=0; i<forms.size(); ++i) {
-	            records += forms.get(i).getFormId();
-	            if(i != forms.size()-1) 
-	            	records += ",";
-            }
-			
-			record.setRecords(records);
-			
-			dao.cupSurveyRecord(record);
-		
-		} else {
-			String []  links = record.getRecords().split(SURVEY_LINKS_DELIMITOR);
-			int idx = -1;
-			
-			try {
-				// Init state come 
-				if(record.getLink() == null) {
-					setActivePage(patient, Integer.parseInt(links[0]));
-				} else {
-					for (idx = 0; idx < links.length; ++idx) {
-						if (Integer.parseInt(links[idx]) == record.getLink())
-							break;
-					}
-					
-					// Complete, mark it
-					if (idx == links.length) {
-						record.setStatus(SURVEY_DONE);
-						record.setDateChanged(new Date());
-						dao.cupSurveyRecord(record);
-						link = Context.getFormService().getForm(SURVEY_COMPLETE_PAGE).getFormId();
-					} else {
-						link = Integer.parseInt(links[idx + 1]);
-					}
-				}
-			} catch (Exception e) {
-				;
-			}
-		}
-		
-		if(link != null) 
-			setActivePage(patient, link);
-		
-		// If finished survey
-		if(!startNew && record.getStatus().equalsIgnoreCase(SURVEY_DONE) )
-			link = Context.getFormService().getForm(SURVEY_COMPLETE_PAGE).getFormId();
-		
-		return link;
-	}
-	
-	
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#setSurveyLatestLink(org.openmrs.Patient, java.lang.Integer)
-	 */
-	public void setSurveyLatestLink(Patient patient, ArrayList<Concept> listToAdd, ArrayList<Concept> listToRemove) {
-		Integer currActivePage = getActivePage(patient);	// To update the SurveyRecord.link field
-		
-		String linksStr = dao.getLatestSurveyRecord(patient).getRecords();
-		String [] currLinks =linksStr.split(SURVEY_LINKS_DELIMITOR);
-		
-		ArrayList<Integer> links  = new ArrayList<Integer>();
-		
-		for(int i=0; i<currLinks.length; ++i) {
-			links.add(Integer.parseInt(currLinks[i]));
-		}
-		
-		
-		if(listToAdd != null) {
-			for (int i = 0; i < listToAdd.size(); ++i) {
-				if(getPageToAdd(listToAdd.get(i)) != null && !linksStr.contains(getPageToAdd(listToAdd.get(i)) + SURVEY_LINKS_DELIMITOR)) {
-					links.add(getPageToAdd(listToAdd.get(i)));
-				}
-			}
-		}
-		
-		if(listToRemove != null) {
-			for(int i=0; i<listToRemove.size(); ++i) {
-				if(getPageToAdd(listToRemove.get(i)) != null && linksStr.contains(getPageToAdd(listToRemove.get(i)) +SURVEY_LINKS_DELIMITOR)) {
-					links.remove(getPageToAdd(listToRemove.get(i)));
-				}
-			}
-		}
-		
-		linksStr = "";
-		for(int i=0; i<links.size(); ++i) {
-			linksStr += links.get(i);
-			
-			if (i != links.size() - 1)
-				linksStr += SURVEY_LINKS_DELIMITOR;
-		}
-		
-		
-		SurveyRecord record = dao.getLatestSurveyRecord(patient);
-		record.setDateChanged(new Date());
-		record.setRecords(linksStr);
-		record.setLink(currActivePage);
-		
-		// After all the check, if current-active-page is the last one to work on
-		if(links.get(links.size() -1).equals(currActivePage)) {
-			record.setStatus(SURVEY_DONE);
-		} else
-			record.setStatus(SURVEY_WIP);
-		
-		dao.cupSurveyRecord(record);
-		
-	}
-	
-	
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getPageToAdd(org.openmrs.Concept)
-	 */
-	public Integer getPageToAdd(Concept concept) {
-		return dao.getPageToAdd(concept);
-	}
-	
-	
 	/**
 	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getConceptPormpt(org.openmrs.Concept)
 	 */
@@ -960,63 +767,8 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		return dao.getConceptPormpt(concept);
 	}
 	
-	
-	public String getConceptPormptSP(Concept concept) {
-		return dao.getConceptPormptSP(concept);
-	}
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#setActivePage(org.openmrs.Patient, java.lang.Integer)
-	 */
-	public void setActivePage(Patient patient, Integer  formId) {
-		mActivePage.put(patient, formId);
-	}
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getActivePage(org.openmrs.Patient)
-	 */
-	public Integer getActivePage(Patient patient) {
-		return mActivePage.get(patient);
-	}
 
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getPreviousPages(org.openmrs.Patient, java.lang.Integer)
-	 */
-	public ArrayList<Integer> getPreviousPages(Patient patient, Integer activePage) {
-		ArrayList<Integer> pages = new ArrayList<Integer>();
-		
-		SurveyRecord record = dao.getLatestSurveyRecord(patient);
-		
-		Integer lastPage = record.getLink();
-		String list = record.getRecords();
-		
-		String lists[] = list.split(SURVEY_LINKS_DELIMITOR);
-		
-		for (String string : lists) {
-			pages.add(Integer.parseInt(string));
-
-			if(string.equals(lastPage)) 
-	        	break;
-        }
-		
-		return pages;
-	}
-	
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getPreviousPage(org.openmrs.Patient, java.lang.Integer)
-	 */
-	public  Integer getPreviousPage(Patient patient, Integer activePage) {
-		ArrayList<Integer> prevPages = getPreviousPages(patient, activePage);
-		
-		return prevPages.get(prevPages.size() -1);
-	}
-	
-	
-    public User getProvider() {
+	public User getProvider() {
     	return provider;
     }
 
@@ -1084,12 +836,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     }
     
    
-    public Integer getEncounterId() {
-    	// Note, this method does not 
-    	return (mEncounter.get(mPatient.get(Context.getAuthenticatedUser().getPersonId()))).getEncounterId();
-    }
-    
-    
     public Encounter getEncounter(Patient patient) {
     	if(mEncounter.get(patient)  ==  null)  {
     		getSurveySession(patient, null);		// this will setEncounter

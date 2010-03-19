@@ -58,12 +58,6 @@ public interface PearlgrlzService {
 	
 	public void createSurveyXML(Patient patient, Integer locationId,Integer formId, Integer numQuestions,User provider);
 	
-	public Integer getSurveyLatestLink(Patient patient, String surveyType);
-	
-	public void setSurveyLatestLink(Patient patient,  ArrayList<Concept> listToAdd, ArrayList<Concept> listToRemove);
-	
-	public String initSurvey(Integer personId,  String surveyType);
-	
 	public void preRender(Map map, Integer formId, Integer formInstanceId, Integer locationId,
                            TeleformTranslator translator, InputStream inputMergeFile)  throws Exception;
 	
@@ -72,19 +66,7 @@ public interface PearlgrlzService {
 	
 	public int getNumberQuestions(Integer formId);
 	
-	public Integer getPageToAdd(Concept concept); 
-	
 	public String getConceptPormpt(Concept concept);
-	
-	public String getConceptPormptSP(Concept concept);
-	
-	public void setActivePage(Patient patient, Integer  formId) ;		// each patient at current page can use this method in controller
-	
-	public Integer getActivePage(Patient patient);							// tracking current stage for this patient
-	
-	public Integer getPreviousPage(Patient patient, Integer activePage);
-	
-	public ArrayList<Integer> getPreviousPages(Patient patient, Integer activePage);
 	
 	public void getDefaultInfor();
 	
@@ -94,8 +76,6 @@ public interface PearlgrlzService {
 	 
 	 public void setSurveyType(Patient patient, String surveyType);
 	 
-	public Integer getEncounterId();
-	
 	public Encounter getEncounter(Patient patient);
 	
 	public void setEncounter(Patient patient, Encounter value) ;

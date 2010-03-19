@@ -1,0 +1,64 @@
+Maintenance:
+	Title:		sexual partner Question;;
+	Filename:	sexualPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-18T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify sexual partner related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+
+sexualPartner := read Exist {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+
+endif
+;;
+
+Priority:		50;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (sexualPartner = True) then conclude False;
+conclude True;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt", "Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you interact with someone you had sex or are interested in having sex since last survey?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:
