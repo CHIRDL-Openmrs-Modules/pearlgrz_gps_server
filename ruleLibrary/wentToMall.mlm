@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify activity related problems.;;
+	Purpose:	Identify activity related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -21,35 +21,31 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
+
 
 If (mode = PRODUCE) then
-/* wentToMall := read Last {Went to mall} Where it Occurred Within Past 1 Days; */
+ wentToMall := read Exist {Went to mall} Where it Occurred Within Past 1 Days; 
 endif
 ;;
 
-Priority:		165;;
+Priority:		72;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (wentToMall = Yes) then conclude False; */
+If (wentToMall = Yes) then conclude False;
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Went to mall","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Went to mall","No";
 endif;
 

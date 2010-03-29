@@ -33,12 +33,26 @@ import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
 import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.pearlgrlz.SurveyPartner;
 
 
 /**
  *
  */
 public interface PearlgrlzService {
+	
+
+	public final static String   SURVEY_STATE = "pearlgrlz_state";
+	public final static String   SURVEY_TYPE_DAILY = "pearlgrlz_daily";
+	public final static String   SURVEY_TYPE_WEEKLY = "pearlgrlz_weekly";
+	public final static String   SURVEY_TYPE_MONTHLY = "pearlgrlz_monthly";
+	public final static String   SURVEY_VOIDED_REASON_TIMESUP = "Patient did NOT finish the survey on time.";
+	public final static String   SURVEY_GENERAL_PARTNER_TYPE = "general partner";
+	public final static String   SURVEY_GENERAL_PARTNER_TYPE2 = "general-partner";
+	public final static String   SURVEY_SEXUAL_PARTNER_TYPE = "sexual partner";
+	public final static String   SURVEY_SEXUAL_PARTNER_TYPE2 = "sexual-partner";
+	public final static String   SURVEY_VALUE_DELIMITOR = ":";
+	
 	
 	/**
 	 * 
@@ -98,8 +112,16 @@ public interface PearlgrlzService {
 	
 	public void endSurveySession(Patient patient, String surveyType, Boolean voided);
 	
-	public List<String>  populatePartnerList(Patient patient);
+	public List<String>  populatePartnerList(Patient patient, String partnerType);
 	
+	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType);
+
 	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
+	
+	public void addPartner(SurveyPartner partner);
+
+	public void voidPartner(SurveyPartner partner);
+
+	public boolean isSurveyCompleted(Patient patient);
 	
 }

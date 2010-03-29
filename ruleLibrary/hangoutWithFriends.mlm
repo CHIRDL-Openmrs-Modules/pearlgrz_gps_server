@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify school related problems.;;
+	Purpose:	Identify school related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;

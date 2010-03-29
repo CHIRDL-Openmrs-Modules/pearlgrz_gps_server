@@ -1,0 +1,66 @@
+Maintenance:
+	Title:		partner after sex Question;;
+	Filename:	usedOtherDrugsCocainMethAfterSexSexPartner2.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-26T13:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner after sex related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+
+usedOtherDrugsCocainMethAfterSexSexPartner2 := read Exist {Used other drugs like cocaine or meth after sex with sexual-partner2} Where it Occurred Within Past 1 Days;
+hasSexualPartner2:=read Exist {Sexual partner2} Where it Occurred Within Past 1 Days;
+sexualPartner2:=read Last {Sexual partner2} Where it Occurred Within Past 1 Days;
+
+endif
+;;
+
+Priority:		463;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (hasSexualPartner2 = True) AND (usedOtherDrugsCocainMethAfterSexSexPartner2 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Used other drugs like cocaine or meth after sex with sexual-partner2","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Used other drugs like cocaine or meth after sex with sexual-partner2","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Used other drugs like cocaine or meth after sex with || sexualPartner1_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

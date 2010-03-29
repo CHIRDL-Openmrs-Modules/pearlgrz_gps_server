@@ -1,0 +1,62 @@
+Maintenance:
+	Title:		general partner related Question;;
+	Filename:	voidGeneralPartners.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-18T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	void general partners.  ,,multiSelect ,,generalPartnerOptions;; 
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+ needVoidGeneralPartners := read Last {Remove general partners} Where it Occurred Within Past 1 Days;
+ voidGeneralPartners := read Exist {Voided general partners} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		264;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (needVoidGeneralPartners = Yes) AND (voidGeneralPartners = False)  then conclude True; 
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Voided general partners", "Yes";
+Else
+ CALL storeObs With "Voided general partners", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Select as many <b> general partners </b> from the list <b> to remove </b> from the record?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

@@ -29,6 +29,10 @@
             <column name="date_created" />
         </property>
         
+        <property name="dateChanged" type="java.util.Date">
+            <column name="date_changed" />
+        </property>
+        
         <property name="voided" type="boolean" not-null="true" />
         
 		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />

@@ -15,7 +15,7 @@ Library:
 	Citations:	;;
 	Links:		;;
 
-Knowledge:ClassLoaderTask
+Knowledge:
 	Type:		data_driven;;
 
 Data:
@@ -37,7 +37,7 @@ Logic:
 If (mode = PRODUCE) then
 
 If (drankAlcohol = Yes) AND (frequency = False) then conclude True; 
-conclude false;
+conclude False;
 
 endif
 

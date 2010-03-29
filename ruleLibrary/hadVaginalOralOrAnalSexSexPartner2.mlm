@@ -1,0 +1,64 @@
+Maintenance:
+	Title:		Had vaginal oral or anal sex with partner Question;;
+	Filename:	hadVaginalOralOrAnalSexSexPartner2.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify sexual partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+hadVaginalOralOrAnalSexSexPartner2 := read Exist {Had vaginal oral or anal sex with sexual-partner2} Where it Occurred Within Past 1 Days;
+hasSexualPartner2:=read Exist {Sexual partner2} Where it Occurred Within Past 1 Days;
+sexualPartner2:=read Last {Sexual partner2} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		317;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (hadVaginalOralOrAnalSexSexPartner2 = False) AND (hasSexualPartner2  = True) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Had vaginal oral or anal sex with sexual-partner2", "Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Had vaginal oral or anal sex with sexual-partner2", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> have vaginal, oral or anal sex with ||  sexualPartner2_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

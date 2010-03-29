@@ -8,7 +8,7 @@
 	<name>Pearl Grlz</name>
 	<version>1.0.1</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
-	<author>Vibha Anand, Tammy Dugan,  Jun Wang</author>
+	<author>Children's Health Services Research</author>
 	<description>
 			Pearl Grlz Module enables users to take survey, 
 			track the locations and correlate where they spend time with their self-reported health risk behavior.

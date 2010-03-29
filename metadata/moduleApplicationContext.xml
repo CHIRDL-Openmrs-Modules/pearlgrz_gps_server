@@ -11,8 +11,8 @@
 	           <prop key="module/@MODULE_ID@/pearlgrlzForm.form">pearlgrlzFormController</prop>
 	           <prop key="/module/@MODULE_ID@/fillOutSurvey.form">fillOutSurveyController</prop>
 				<prop key="/module/@MODULE_ID@/startSurvey.form">startSurveyController</prop>
-				<prop key="/module/@MODULE_ID@/surveyPearlgrlzPage1.form">page1Controller</prop>
 				<prop key="/module/@MODULE_ID@/pearlgrlzsurvey.form">page1Controller</prop>
+				<prop key="/module/@MODULE_ID@/surveyPearlgrlzPage1.form">page1Controller</prop>
 				<prop key="/module/@MODULE_ID@/surveyPearlgrlzComplete.form">completeController</prop>
 				<prop key="/module/@MODULE_ID@/pearlgrlzSurveyAlcohol.form">alcoholController</prop>
 				<prop key="/module/@MODULE_ID@/pearlgrlzSurveySmoking.form">smokingController</prop>

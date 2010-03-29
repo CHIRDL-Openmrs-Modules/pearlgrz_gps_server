@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	remove sexual partners.  ,,multiSelect ,,partnerOptions;;
+	Purpose:	remove sexual partners.  ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -28,7 +28,7 @@ If (mode = PRODUCE) then
 endif
 ;;
 
-Priority:		10;;
+Priority:		263;;
 	Evoke:		;;
 
 Logic:
@@ -53,7 +53,7 @@ endif
 ;;
 
 Action:
-write ("Please select sexual partners to remove from history?");
+write ("Want to <b> remove some sexual partners </b> from the record?");
 ;;
 
 Age_Min: 14 years;;

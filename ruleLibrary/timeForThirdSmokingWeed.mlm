@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify smoking weed related problems. ,,doubleInput;;
+	Purpose:	Identify smoking weed related problems. ,,doubleInput ,,ampmOptions;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -29,8 +29,8 @@ Input2Value:=read {input2value from Parameters};
 If (mode = PRODUCE) then
  smokedWeed := read Last {Smoked weed} Where it Occurred Within Past 1 Days;
  frequency := read Last {Number of times smoking weed since last survey} Where it Occurred Within Past 1 Days;
- answered1 := read Last {Starting-time for the Third smoking weed since last survey} Where it Occurred Within Past 1 Days;
- answered2 := read Last {Ending-time for the Third smoking weed since last survey} Where it Occurred Within Past 1 Days;
+ answered1 := read Exist {Starting-time for the Third smoking weed since last survey} Where it Occurred Within Past 1 Days;
+ answered2 := read Exist {Ending-time for the Third smoking weed since last survey} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -40,7 +40,10 @@ Priority:		141;;
 Logic:
 If (mode = PRODUCE) then
 
- If (smokedWeed = Yes) AND (frequency = "Three times") AND ((answered1 = False) OR (answered2 = False)) then conclude True;
+ If (smokedWeed = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
+ If (smokedWeed = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (smokedWeed = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
+ If (smokedWeed = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
@@ -57,7 +60,7 @@ endif
 ;;
 
 Action:
-write ("When was the Third smoking weed?");
+write ("When was the Third smoking weed since last survey?");
 ;;
 
 Age_Min: 14 years;;

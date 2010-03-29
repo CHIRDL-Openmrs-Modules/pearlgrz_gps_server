@@ -152,15 +152,39 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartners(org.openmrs.Patient)
      */
     @Override
-    public List<SurveyPartner> getSurveyPartners(Patient patient) {
+    public List<SurveyPartner> getSurveyPartners(Patient patient, String partnerType) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
     	
     	criteria.add(Restrictions.eq("patientId", patient.getPatientId()));
+    	criteria.add(Restrictions.eq("partnerType", partnerType));
     	criteria.add(Restrictions.eq("voided", Boolean.FALSE));
+    	criteria.addOrder(Order.desc("dateChanged"));
+    	criteria.addOrder(Order.desc("nbrTimeSelected"));
 
     	return criteria.list();
     }
+    
+    
+    
+    /**
+     * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartner(org.openmrs.Patient, java.lang.String, java.lang.String)
+     */
+    @Override
+    public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType) {
+    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
+    	
+    	criteria.add(Restrictions.eq("patientId", patient.getPatientId()));
+    	criteria.add(Restrictions.eq("partnerName", partnerName));
+    	criteria.add(Restrictions.eq("partnerType", partnerType));
+    	criteria.add(Restrictions.eq("voided", Boolean.FALSE));
+    	criteria.addOrder(Order.desc("dateChanged"));
+    	criteria.addOrder(Order.desc("nbrTimeSelected"));
+    	criteria.setMaxResults(1);
 
+    	return (SurveyPartner) criteria.uniqueResult();
+    }
+    
+    
 
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#cupSurveyPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
@@ -200,15 +224,18 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#populatePartnerList(org.openmrs.Patient)
      */
     @Override
-    public List<String> populatePartnerList(Patient patient) {
+    public List<SurveyPartner> populatePartnerList(Patient patient, String partnerType) {
 	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
 	    
 	    criteria.add(Restrictions.eq("patientId", patient.getPatientId()));
+	    criteria.add(Restrictions.eq("partnerType", partnerType));
 	    criteria.add(Restrictions.eq("voided", Boolean.FALSE));
 	    criteria.addOrder(Order.desc("dateChanged")); 
 	    criteria.addOrder(Order.desc("nbrTimeSelected")); 
 	    
-	    return (List<String>) criteria.list();
+	    System.out.println("patientId<" + patient.getPatientId() + "> partnerType<" + partnerType + ">");
+	    
+	    return (List<SurveyPartner>) criteria.list();
     }
 
 
@@ -220,40 +247,50 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
     	if(partner == null || partner.getVoided())
     		return;
 	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
-	    SurveyPartner lookup = null;
+	    SurveyPartner match = null;
+	    Date now = new Date();
 	    
 	    
 	    criteria.add(Restrictions.eq("patientId", partner.getPatientId()));
+	    criteria.add(Restrictions.eq("partnerType", partner.getPartnerType()));
 	    criteria.add(Restrictions.eq("voided", partner.getVoided()));
 	    criteria.add(Restrictions.eq("partnerName", partner.getPartnerName()));
 	    criteria.addOrder(Order.desc("dateChanged")); 
 	    criteria.addOrder(Order.desc("nbrTimeSelected")); 
 	    criteria.setMaxResults(1);
 	    
-	    if( (lookup = (SurveyPartner) criteria.uniqueResult()) != null) 
-	    	if(partner.getNbrTimeSelected() == null)
-	    		partner.setNbrTimeSelected(1 + lookup.getNbrTimeSelected());
-	    	else
-	    		partner.setNbrTimeSelected(partner.getNbrTimeSelected() + lookup.getNbrTimeSelected());
-	    
+	    if( (match = (SurveyPartner) criteria.uniqueResult()) != null) {
+	    	match.setDateChanged(now);
+	    	match.setDateCreated(now);
+	    	match.setNbrTimeSelected(match.getNbrTimeSelected() + 1);
+	    	sessionFactory.getCurrentSession().saveOrUpdate(match);
+	    } else
 	    sessionFactory.getCurrentSession().saveOrUpdate(partner);
     }
 	
 	
     
     public void voidPartner(SurveyPartner partner) {
-    	 if(partner == null || partner.getVoided())
+    	 if(partner == null)
  	    	return;
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
+    	SurveyPartner match = null;
+    	Date now = new Date();
 	    
 	    criteria.add(Restrictions.eq("patientId", partner.getPatientId()));
+	    criteria.add(Restrictions.eq("partnerType", partner.getPartnerType()));
 	    criteria.add(Restrictions.eq("voided", partner.getVoided()));
 	    criteria.addOrder(Order.desc("dateChanged")); 
 	    criteria.setMaxResults(1);
 	    
-	    if( criteria.uniqueResult() != null) {
-	    	partner.setVoided(Boolean.TRUE);
-	    	sessionFactory.getCurrentSession().saveOrUpdate(partner);
+	    if( (match = (SurveyPartner) criteria.uniqueResult()) != null) {
+	    	System.out.println("inside HibernateDAO, got a match, so to set VOID");
+	    	match.setDateCreated(now);
+	    	match.setDateChanged(now);
+	    	match.setVoided(Boolean.TRUE);
+	    	match.setVoidedBy(partner.getVoidedBy());
+	    	match.setVoidReason(partner.getVoidReason());
+	    	sessionFactory.getCurrentSession().saveOrUpdate(match);
 	    }
     }
 

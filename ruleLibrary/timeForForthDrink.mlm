@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify drinking alcohol related problems. ,,doubleInput;;
+	Purpose:	Identify drinking alcohol related problems. ,,doubleInput ,,ampmOptions;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -41,7 +41,8 @@ Priority:		134;;
 Logic:
 If (mode = PRODUCE) then
 
-If (drankAlcohol = Yes)  AND (frequency = "Four or more times") AND ((answered1 = False) OR (answered2 = False)) then conclude True;
+If (drankAlcohol = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+If (drankAlcohol = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
@@ -58,7 +59,7 @@ endif
 ;;
 
 Action:
-write ("When was the Forth drinking since last survey?");
+write ("When was the Forth drinking alcohol since last survey?");
 ;;
 
 Age_Min: 14 years;;

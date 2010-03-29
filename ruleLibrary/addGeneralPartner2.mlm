@@ -27,16 +27,18 @@ Input1Value:=read {input1value from Parameters};
 If (mode = PRODUCE) then
  interactedWithGeneralPartners := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
  newGeneralPartners := read Last {New general partners to add} Where it Occurred Within Past 1 Days;
- generalPartner2 := read Exist {General partner1} Where it Occurred Within Past 1 Days;
+ generalPartner2 := read Exist {New general partner2} Where it Occurred Within Past 1 Days;
+ generalPartner2Input := read Last {New general partner2} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		101;;
+Priority:		256;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
+If (generalPartner2Input = "SKIPPED") then conclude False;
 If (interactedWithGeneralPartners = Yes) AND (newGeneralPartners = Yes) AND (generalPartner2 = False)  then conclude True; 
 conclude false;
 
@@ -45,7 +47,9 @@ endif
 If (mode = CONSUME) then
 
 If  (Input1=true) then
- CALL storeObs With "General partner2", "Input1Value";
+ CALL storeObs With "New general partner2", "Input1Value";
+Else
+ CALL storeObs With "New general partner2", "SKIPPED";
 endif;
 
 
@@ -53,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Please add non-sexual partner interacted with since last survey?");
+write ("Add (if have) general partner interacted with (did not have sex with) since last survey?");
 ;;
 
 Age_Min: 14 years;;

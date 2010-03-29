@@ -1,0 +1,66 @@
+Maintenance:
+	Title:		Went to School Question;;
+	Filename:	sexPartner3GaveOralSex.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify school related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+
+sexPartner3GaveOralSex := read Exist {Sexual-partner3 gave oral sex to patient} Where it Occurred Within Past 1 Days;
+hasSexualPartner3:=read Exist {Sexual partner3} Where it Occurred Within Past 1 Days;
+sexualPartner3:=read Last {Sexual partner3} Where it Occurred Within Past 1 Days;
+
+endif
+;;
+
+Priority:		339;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (hasSexualPartner3 = True) AND (sexPartner3GaveOralSex = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Sexual-partner3 gave oral sex to patient","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Sexual-partner3 gave oral sex to patient","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Was <b> || sexualPartner3_value || mouth </b> on your genitals?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

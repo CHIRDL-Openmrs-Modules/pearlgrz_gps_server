@@ -24,7 +24,7 @@ mode:=read {mode from Parameters};
 Input1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
- tookPrescriptionDrugsNotOwned := read Exist {Took prescription drugs not prescribed to you} Where it Occurred Within Past 1 Days;
+ tookPrescriptionDrugsNotOwned := read Exist {Took prescription drugs not prescribed to patient} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -42,10 +42,10 @@ endif
 If (mode = CONSUME) then
 
 If  (Input1=true) then
- CALL storeObs With "Took prescription drugs not prescribed to you","Yes";
+ CALL storeObs With "Took prescription drugs not prescribed to patient","Yes";
 endif;
 If  (Input1=false) then
- CALL storeObs With "Took prescription drugs not prescribed to you","No";
+ CALL storeObs With "Took prescription drugs not prescribed to patient","No";
 endif;
 
 

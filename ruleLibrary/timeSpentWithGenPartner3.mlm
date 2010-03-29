@@ -1,0 +1,62 @@
+Maintenance:
+	Title:		Time spent with partner Question;;
+	Filename:	timeSpentWithGenPartner3.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleSelect  ,,durationOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input1Value:=read {input1value from Parameters};
+
+If (mode = PRODUCE) then
+timeSpentWithGenPartner3 := read Exist {Time spent with general-partner3} Where it Occurred Within Past 1 Days;
+hasGeneralPartner3:=read Exist {General partner3} Where it Occurred Within Past 1 Days;
+generalPartner3:=read Last {General partner3} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		298;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (timeSpentWithGenPartner3 = False) AND (hasGeneralPartner3  = True) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Time spent with general-partner3", "Input1Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("How much time did you spend <b> with || generalPartner3_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

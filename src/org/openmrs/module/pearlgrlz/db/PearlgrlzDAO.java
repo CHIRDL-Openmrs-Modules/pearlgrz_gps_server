@@ -54,9 +54,11 @@ public interface PearlgrlzDAO {
 	
 	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
 
-	public List<SurveyPartner> getSurveyPartners(Patient patient);
+	public List<SurveyPartner> getSurveyPartners(Patient patient, String partnerType);
+
+	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType);
 	
-	public List<String>  populatePartnerList(Patient patient);
+	public List<SurveyPartner>  populatePartnerList(Patient patient, String partnerType);
 	
 	public void addPartner(SurveyPartner partner);
 

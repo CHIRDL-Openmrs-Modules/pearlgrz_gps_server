@@ -30,7 +30,7 @@ generalPartner := read Exist {Interacted with someone that subject is interested
 endif
 ;;
 
-Priority:		10;;
+Priority:		251;;
 	Evoke:		;;
 
 Logic:
@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Did you interact with someone you are talking to or interested in since last survey?");
+write ("Interact with someone <b>talked to or interested in</b> since last survey?");
 ;;
 
 Age_Min: 14 years;;

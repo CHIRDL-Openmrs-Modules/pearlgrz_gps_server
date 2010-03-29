@@ -6,10 +6,10 @@ Maintenance:
 	Author:		Jun Wang;;
 	Specialist:	Software Engineer;;
 	Date:		2010-01-29T16:12:57-0500;;
-	Validation:		;;
+	Validation:	research;;
 
 Library:
-	Purpose:	Identify interests related problems;;
+	Purpose:	Identify interests related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -21,35 +21,30 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
-/* gotOnSocialNetwork := read Last {Got on a social networking site, Facebook, MySpace, or other sites} Where it Occurred Within Past 1 Days; */
+ gotOnSocialNetwork := read Exist {Got on a social networking site, Facebook, MySpace, or other sites} Where it Occurred Within Past 1 Days; 
 endif
 ;;
 
-Priority:		160;;
+Priority:		71;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (gotOnSocialNetwork = Yes) then conclude False; */
+If (gotOnSocialNetwork = Yes) then conclude False; 
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Got on a social networking site, Facebook, MySpace, or other sites","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Got on a social networking site, Facebook, MySpace, or other sites","No";
 endif;
 

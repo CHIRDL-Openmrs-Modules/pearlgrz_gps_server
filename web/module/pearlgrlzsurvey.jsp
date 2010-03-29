@@ -34,6 +34,11 @@
 		</form>
 	 -->		
 		<h2 align="center">Thank you very much for your contribution.</h2>
+		<c:choose>
+		<c:when test="${! empty completeMessage}">
+			<h2 align="center">${completeMessage}</h2>
+		</c:when>
+		</c:choose>
 		<h2 align="center">Please click the Logout button to exit.</h2>
 		<br></br>
 		<form name="logout" method="post">
@@ -58,7 +63,7 @@
 		<!-- 
 			<h4>Which of these things have you done since your last prompt....${category } </h4>
 		 -->
-			<h4>Which of these things have you done since your last prompt....</h4>
+			<h4>Which of the following have you done since your last prompt....[${category}]</h4>
 			<br></br>
 
 			<c:choose>
@@ -203,15 +208,59 @@
 						</tr>
 						<tr>
 							<td>${Question1} </td>
-							<td><input type="text" size="8" name="QuestionEntry_1_1"/></td>
-							<td><input type="text" size="8" name="QuestionEntry_1_2"/></td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_1_1"/>
+								<c:choose>
+								<c:when test="${fn:length(Question1List) > 0}">
+									<select  name="QuestionEntry_1_1_1" id="QuestionEntry_1_1_1">
+										<c:forEach var="q1" items="${Question1List}">
+											<option value="${q1}">${q1}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_1_2"/>
+								<c:choose>
+								<c:when test="${fn:length(Question1List) > 0}">
+									<select  name="QuestionEntry_1_2_1" id="QuestionEntry_1_2_1">
+										<c:forEach var="q1" items="${Question1List}">
+											<option value="${q1}">${q1}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
 						</tr>
 						<c:choose>
 						<c:when test="${!empty Question2}">
 						<tr>
 							<td>${Question2} </td>
-							<td><input type="text" size="8" name="QuestionEntry_2_1"/></td>
-							<td><input type="text" size="8" name="QuestionEntry_2_2"/></td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_2_1"/>
+								<c:choose>
+								<c:when test="${fn:length(Question2List) > 0}">
+									<select  name="QuestionEntry_2_1_1" id="QuestionEntry_2_1_1">
+										<c:forEach var="q2" items="${Question2List}">
+											<option value="${q2}">${q2}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_2_2"/>
+								<c:choose>
+								<c:when test="${fn:length(Question2List) > 0}">
+									<select  name="QuestionEntry_2_2_1" id="QuestionEntry_2_2_1">
+										<c:forEach var="q2" items="${Question2List}">
+											<option value="${q2}">${q2}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
 						</tr>
 						</c:when>
 						</c:choose>
@@ -219,8 +268,30 @@
 						<c:when test="${!empty Question3}">
 						<tr>
 							<td>${Question3} </td>
-							<td><input type="text" size="8" name="QuestionEntry_3_1"/></td>
-							<td><input type="text" size="8" name="QuestionEntry_3_2"/></td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_3_1"/>
+								<c:choose>
+								<c:when test="${fn:length(Question3List) > 0}">
+									<select  name="QuestionEntry_3_1_1" id="QuestionEntry_3_1_1">
+										<c:forEach var="q3" items="${Question3List}">
+											<option value="${q3}">${q3}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_3_2"/>
+								<c:choose>
+								<c:when test="${fn:length(Question3List) > 0}">
+									<select  name="QuestionEntry_3_2_1" id="QuestionEntry_3_2_1">
+										<c:forEach var="q3" items="${Question3List}">
+											<option value="${q3}">${q3}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
 						</tr>
 						</c:when>
 						</c:choose>
@@ -228,8 +299,30 @@
 						<c:when test="${!empty Question4}">
 						<tr>
 							<td>${Question4} </td>
-							<td><input type="text" size="8" name="QuestionEntry_4_1"/></td>
-							<td><input type="text" size="8" name="QuestionEntry_4_2"/></td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_4_1"/>
+								<c:choose>
+								<c:when test="${fn:length(Question4List) > 0}">
+									<select  name="QuestionEntry_4_1_1" id="QuestionEntry_4_1_1">
+										<c:forEach var="q4" items="${Question4List}">
+											<option value="${q4}">${q4}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_4_2"/>
+								<c:choose>
+								<c:when test="${fn:length(Question4List) > 0}">
+									<select  name="QuestionEntry_4_2_1" id="QuestionEntry_4_2_1">
+										<c:forEach var="q4" items="${Question4List}">
+											<option value="${q4}">${q4}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
 						</tr>
 						</c:when>
 						</c:choose>
@@ -237,8 +330,30 @@
 						<c:when test="${!empty Question5}">
 						<tr>
 							<td>${Question5} </td>
-							<td><input type="text" size="8" name="QuestionEntry_5_1"/></td>
-							<td><input type="text" size="8" name="QuestionEntry_5_2"/></td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_5_1"/>
+								<c:choose>
+								<c:when test="${fn:length(Question5List) > 0}">
+									<select  name="QuestionEntry_5_1_1" id="QuestionEntry_5_1_1">
+										<c:forEach var="q5" items="${Question5List}">
+											<option value="${q5}">${q5}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
+							<td>
+								<input type="text" size="8" name="QuestionEntry_5_2"/>
+								<c:choose>
+								<c:when test="${fn:length(Question5List) > 0}">
+									<select  name="QuestionEntry_5_2_1" id="QuestionEntry_5_2_1">
+										<c:forEach var="q5" items="${Question5List}">
+											<option value="${q5}">${q5}</option>
+										</c:forEach> 
+									</select>
+								</c:when>
+								</c:choose>
+							</td>
 						</tr>
 						</c:when>
 						</c:choose>
@@ -246,10 +361,10 @@
 					<br></br>
 				</c:when>
 
+
 				<c:when test="${category== 'multiSelect'}">  <!-- Scrollable TextArea with multiple selection.  -->
-				---Select Upto ${multiSelectRoof} of the following---
 					${Question1}
-						<select  name="QuestionEntry_1_1" size=2 multiple>
+						<select  name="QuestionEntry_1_1" size=4 multiple>
 							<c:forEach var="q1" items="${Question1List}">
 								<option name="${q1}" value="${q1}">${q1}</option>
 							</c:forEach> 
@@ -258,7 +373,7 @@
 					<c:choose>
 					<c:when test="${!empty Question2}">
 						${Question2}
-							<select  name="QuestionEntry_2_1" size=2 multiple>
+							<select  name="QuestionEntry_2_1" size=4 multiple>
 								<c:forEach var="q2" items="${Question2List}">
 									<option name="${q2}" value="${q2}">${q2}</option>
 								</c:forEach> 
@@ -269,7 +384,7 @@
 					<c:choose>
 					<c:when test="${!empty Question3}">
 						${Question3}
-							<select  name="QuestionEntry_3_1" size=2 multiple>
+							<select  name="QuestionEntry_3_1" size=4 multiple>
 								<c:forEach var="q3" items="${Question3List}">
 									<option name="${q3}" value="${q3}">${q3}</option>
 								</c:forEach> 
@@ -280,7 +395,7 @@
 					<c:choose>
 					<c:when test="${!empty Question4}">
 						${Question4}
-							<select  name="QuestionEntry_4_1" size=2 multiple>
+							<select  name="QuestionEntry_4_1" size=4 multiple>
 								<c:forEach var="q4" items="${Question4List}">
 									<option name="${q4}" value="${q4}">${q4}</option>
 								</c:forEach> 
@@ -291,7 +406,7 @@
 					<c:choose>
 					<c:when test="${!empty Question5}">
 						${Question5}
-							<select  name="QuestionEntry_5_1" size=2 multiple>
+							<select  name="QuestionEntry_5_1" size=4 multiple>
 								<c:forEach var="q5" items="${Question5List}">
 									<option name="${q5}" value="${q5}">${q5}</option>
 								</c:forEach> 

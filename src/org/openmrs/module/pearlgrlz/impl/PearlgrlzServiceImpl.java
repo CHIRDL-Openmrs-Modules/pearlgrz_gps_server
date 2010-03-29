@@ -26,8 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,6 +65,7 @@ import org.openmrs.module.dss.DssManager;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
+import org.openmrs.module.pearlgrlz.SurveyPartner;
 import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.db.PearlgrlzDAO;
@@ -96,18 +95,13 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	private HashMap<Patient, Encounter> mEncounter;
 	private HashMap<Patient, FormInstance> mFormInstance;
 	private HashMap<Patient, Session> mSession;
+	private HashMap<Patient, Boolean> mSessionCompleted;
 	private List<String> lFrequencyOptions;	// One time, Two times, ..., Not Applicable
 	private List<String> lMoodOptions;		// None, Some, A lot
 	private List<String> lDurationOptions;		// 1 to 3 hours, stuff
+	private List<String> lLocationOptions;		// 1 to 3 hours, stuff
 	private List<String> lScaleOptions;	// 1....5
-	private HashMap<Patient, List<String>> mPatientPartnersOptions;	// The List may be changed every survey.
-	
-	
-	public final static String   SURVEY_STATE = "pearlgrlz_state";
-	public final static String   SURVEY_TYPE_DAILY = "pearlgrlz_daily";
-	public final static String   SURVEY_TYPE_WEEKLY = "pearlgrlz_weekly";
-	public final static String   SURVEY_TYPE_MONTHLY = "pearlgrlz_monthly";
-	public final static String   SURVEY_VOIDED_REASON_TIMESUP = "Patient did NOT finish the survey on time.";
+	private List<String> lAmpmOptions;	// AM...PM
 	
 	
 
@@ -121,6 +115,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		mEncounter = new HashMap<Patient, Encounter>();
 		mFormInstance = new HashMap<Patient, FormInstance>();
 		mSession = new HashMap<Patient, Session>();
+		mSessionCompleted = new HashMap<Patient, Boolean>();
 		mFormQuestions = new HashMap<Integer, Integer>();
 		
 		lFrequencyOptions = new ArrayList<String>();
@@ -141,8 +136,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		lDurationOptions.add("4 to 6 hours");
 		lDurationOptions.add("More than 6 hours");
 		
-		mPatientPartnersOptions = new HashMap<Patient, List<String>>(); // every patient can choose upto three partner (can pick up from the previous List);
-		
 		lScaleOptions = new ArrayList<String>();
 		lScaleOptions.add("1");
 		lScaleOptions.add("2");
@@ -150,6 +143,18 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		lScaleOptions.add("4");
 		lScaleOptions.add("5");
 		
+		lAmpmOptions = new ArrayList<String>();
+		lAmpmOptions.add("AM");
+		lAmpmOptions.add("PM");
+		
+		lLocationOptions = new ArrayList<String>();
+		lLocationOptions.add("In School");
+		lLocationOptions.add("At my house");
+		lLocationOptions.add("At his/her house");
+		lLocationOptions.add("Outside");
+		lLocationOptions.add("Mall");
+		lLocationOptions.add("Someonw else's house");
+		lLocationOptions.add("Somewhere else");
 	}
 	
 	
@@ -199,7 +204,8 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 				if(cal.get(Calendar.DAY_OF_YEAR) - endCal.get(Calendar.DAY_OF_YEAR) > 0) {
 					newSession = true;
 				} else {
-					log.info(Context.getAuthenticatedUser().getUserId() + "have already completed today's Survey.  A new survey will start on tomorrow");
+					log.info(Context.getAuthenticatedUser().getUsername() + " have already completed today's Survey.  A new survey will start on tomorrow");
+					mSessionCompleted.put(patient, Boolean.TRUE);
 					return null;
 				}
 			} else {
@@ -238,6 +244,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 			surveySession.setEncounterId(encounter.getEncounterId());
 			surveySession.setStartTime(now);
 			dao.cupSurveySession(surveySession);
+			mSessionCompleted.put(patient, Boolean.FALSE);
 		}
 		
 		setSession(patient, session);
@@ -269,9 +276,10 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 			surveySession.setEndTime(new Date());
 			dao.cupSurveySession(surveySession);
 		}
-		
 		setEncounter(patient, null);
 		setSession(patient, null);
+		mSessionCompleted.put(patient, Boolean.TRUE);
+		System.out.println("Trye to end session for patientId <" + patient.getPatientId() + "> surveyType = <" + surveyType + ">");
 	}
 	
 	
@@ -471,6 +479,8 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		if(nbrQuestions <= 0) {
 			map.put("redirectto", "redirectto");
 			map.put("nextPage", "surveyComplete");
+			System.out.println("calling endSurveySession from Service");
+			endSurveySession(Context.getPatientService().getPatient(Context.getAuthenticatedUser().getUserId()), null, Boolean.FALSE);
 		}
     }
     
@@ -518,10 +528,21 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 				String name = currField.getId();
 				
 				if (inputFields.contains(name)) {
-					String inputVal = request.getParameter(name);
+					// Check what's inside the multiselect
+					String inputVal = "";
+					String[] vals = request.getParameterValues(name);
+					if(vals != null && vals.length >=1) {
+						for(int i=0; i<vals.length; ++i) {
+							inputVal += vals[i];
+							if(i != vals.length -1) 
+								inputVal += SURVEY_VALUE_DELIMITOR;
+						}
+					}
 					currField.setValue(inputVal);
+					System.out.println("added combined/or nor value<" + inputVal + "> for field <" + name + ">");
 				}
 			}
+			
 			
 			String exportDirectory = IOUtil.formatDirectoryName(org.openmrs.module.atd.util.Util.getFormAttributeValue(
 			    formId, "defaultExportDirectory", locationTagId, locationId));
@@ -541,7 +562,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 			InputStream input = new FileInputStream(exportFilename);
 			
 			TeleformExportXMLDatasource xmlDatasource = (TeleformExportXMLDatasource) logicService.getLogicDataSource("xml");
-			xmlDatasource.deleteParsedFile(formInstance);	// yinweiyiqian dedongxizhaineichun.
+			xmlDatasource.deleteParsedFile(formInstance);
 			formInstance = xmlDatasource.parse(input, formInstance, locationTagId);
 			
 			// make sure storeObs gets loaded before running consume rules       
@@ -620,6 +641,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
      */
     private void addParameters(Map<String, List<String>> parametersMap, String questionFldNm, List<String> parameters) {
     	String idx;
+    	Patient patient = Context.getPatientService().getPatient(Context.getAuthenticatedUser().getUserId());
     	
     	if(!questionFldNm.contains("Question") || (idx = questionFldNm.substring("Question".length())) == null || idx.isEmpty() 
     			|| parameters.size() <= 0 )
@@ -638,16 +660,25 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     			System.out.println("it's durationOptions select");
     			parametersMap.put(questionFldNm + "List", lDurationOptions);
     		}
+    		else if(parameters.get(1).equalsIgnoreCase("locationOptions") )  {
+    			System.out.println("it's locationOptions select");
+    			parametersMap.put(questionFldNm + "List", lLocationOptions);
+    		}
     		else if(parameters.get(1).equalsIgnoreCase("scaleOptions") )   {
     			System.out.println("it's scaleOptions select");
     			parametersMap.put(questionFldNm + "List", lScaleOptions);
     		}
-    		else if(parameters.get(1).equalsIgnoreCase("partnerOptions") ) { 
-    			System.out.println("it's partnerOptions select");
-    			Patient patient = Context.getPatientService().getPatient(Context.getAuthenticatedUser().getUserId());
-    			if(mPatientPartnersOptions.get(patient) == null)
-    				populatePartnerList(patient);
-    			parametersMap.put(questionFldNm + "List",  mPatientPartnersOptions.get(patient));
+    		else if(parameters.get(1).equalsIgnoreCase("ampmOptions") )   {
+    			System.out.println("it's ampmOptions select");
+    			parametersMap.put(questionFldNm + "List", lAmpmOptions);
+    		}
+    		else if(parameters.get(1).equalsIgnoreCase("generalPartnerOptions") ) { 
+    			System.out.println("it's generalPartnerOptions select");
+    			parametersMap.put(questionFldNm + "List",  populatePartnerList(patient, SURVEY_GENERAL_PARTNER_TYPE));
+    		}
+    		else if(parameters.get(1).equalsIgnoreCase("sexualPartnerOptions") ) { 
+    			System.out.println("it's sexualPartnerOptions select");
+    			parametersMap.put(questionFldNm + "List",  populatePartnerList(patient, SURVEY_SEXUAL_PARTNER_TYPE));
     		}
     	}
     }
@@ -657,9 +688,15 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     /**
      * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#populatePartnerList(org.openmrs.Patient)
      */
-    public List<String> populatePartnerList(Patient patient) {
-    	List<String> list = dao.populatePartnerList(patient);
-    	return list;
+    public List<String> populatePartnerList(Patient patient, String partnerType) {
+    	List<String> partnerNms = new ArrayList<String>();
+    	List<SurveyPartner> list = dao.populatePartnerList(patient, partnerType);
+    	System.out.println("check the partner List patientId <" + patient.getPatientId() + "> partnerType<" + partnerType + ">");
+    	for(SurveyPartner ptr : list)  {
+    		System.out.println(ptr.getPartnerName());
+    		partnerNms.add(ptr.getPartnerName());
+    	}
+    	return partnerNms;
     }
     
     
@@ -757,6 +794,33 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		mPatient.put(personId, patient);
 		
 		return patient;
+	}
+	
+	
+	/**
+	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#addPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
+	 */
+	@Override
+	public void addPartner(SurveyPartner partner) {
+		dao.addPartner(partner);
+	}
+	
+	
+	/**
+	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getSurveyPartner(org.openmrs.Patient, java.lang.String, java.lang.String)
+	 */
+	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType) {
+		return dao.getSurveyPartner(patient, partnerName, partnerType);
+	}
+	
+	
+	
+	/**
+	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#voidPartner(org.openmrs.module.pearlgrlz.SurveyPartner, java.lang.String)
+	 */
+	@Override
+	public void voidPartner(SurveyPartner partner) {
+		dao.voidPartner(partner);
 	}
 	
 	
@@ -877,6 +941,18 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     @Override
     public PatientATD getPatientATD(FormInstance formInstance, Rule rule) {
 	    return dao.getPatientATD(formInstance, rule);
+    }
+
+
+	/**
+     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#isSurveyCompleted(org.openmrs.Patient)
+     */
+    @Override
+    public boolean isSurveyCompleted(Patient patient) {
+	    if(mSessionCompleted.get(patient) != null) 
+	    	return mSessionCompleted.get(patient).booleanValue();
+	    else
+	    	return false;
     }
 		
     

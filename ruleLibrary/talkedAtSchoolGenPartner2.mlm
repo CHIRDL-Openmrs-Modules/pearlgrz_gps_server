@@ -1,0 +1,64 @@
+Maintenance:
+	Title:		Talked to at school with partner Question;;
+	Filename:	talkedAtSchoolGenPartner2.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+talkedAtSchoolGenPartner2 := read Exist {Talked to general-partner2 at school} Where it Occurred Within Past 1 Days;
+hasGeneralPartner2:=read Exist {General partner2} Where it Occurred Within Past 1 Days;
+generalPartner2:=read Last {General partner2} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		283;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (talkedAtSchoolGenPartner2 = False) AND (hasGeneralPartner2  = True) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Talked to general-partner2 at school", "Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Talked to general-partner2 at school", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> talk to || generalPartner2_value  || at school </b> ?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

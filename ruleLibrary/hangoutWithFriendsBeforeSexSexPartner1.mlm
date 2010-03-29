@@ -1,0 +1,66 @@
+Maintenance:
+	Title:		partner before sex Question;;
+	Filename:	hangoutWithFriendsBeforeSexSexPartner1.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-26T13:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner before sex related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+
+hangoutWithFriendsBeforeSexSexPartner1 := read Exist {Hang out with friends before sex with sexual-partner1} Where it Occurred Within Past 1 Days;
+hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
+sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+
+endif
+;;
+
+Priority:		357;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (hasSexualPartner1 = True) AND (hangoutWithFriendsBeforeSexSexPartner1 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Hang out with friends before sex with sexual-partner1","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Hang out with friends before sex with sexual-partner1","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Hang out with friends before sex with || sexualPartner1_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

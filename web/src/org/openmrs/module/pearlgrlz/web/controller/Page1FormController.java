@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,7 +135,9 @@ public class Page1FormController extends SimpleFormController {
 			// If complete all the survey questions. 
 			if(nextPage.equalsIgnoreCase("surveyComplete")) {
 				modelMap.put("nextPage", nextPage + ".form");		// may not use
-				modelMap.put("redirectto", "redirectto");					// 		
+				modelMap.put("redirectto", "redirectto");					//
+				System.out.println("calling endSurveySession from Controller");
+				pearlgrlzSvc.endSurveySession(patient, null, Boolean.FALSE);
 				return modelMap;
 			}
 			
@@ -150,6 +153,11 @@ public class Page1FormController extends SimpleFormController {
 		} 
 
 		session = pearlgrlzSvc.getSession(patient);
+		if(session == null && pearlgrlzSvc.isSurveyCompleted(patient)) {
+			modelMap.put("completeMessage", "You have already completed today's Survey.  Please come back tomorrow to take a new survey.");
+			modelMap.put("redirectto", "redirectto");
+			return modelMap;
+		}
 		patientState = atdService.addPatientState(patient, atdState, session.getSessionId(), 
 											pearlgrlzSvc.getLocationTag().getLocationTagId(), pearlgrlzSvc.getLocation().getLocationId());
 		
@@ -160,6 +168,7 @@ public class Page1FormController extends SimpleFormController {
 		atdService.updatePatientState(patientState);
 		
 		modelMap.put("formInstance", formInstance.toString());
+		modelMap.put("participant", patient.getNames());
 		modelMap.put("formName", Context.getFormService().getForm(formId).getName());
 		
 		if (input == null && file.exists())

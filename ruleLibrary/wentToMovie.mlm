@@ -24,11 +24,11 @@ mode:=read {mode from Parameters};
 Input1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
-wentToMovie := read Last {Went to a movie} Where it Occurred Within Past 1 Days;
+wentToMovie := read Exist {Went to a movie} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		170;;
+Priority:		73;;
 	Evoke:		;;
 
 Logic:

@@ -29,6 +29,7 @@ import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.service.ATDService;
 import org.openmrs.module.atd.xmlBeans.Field;
 import org.openmrs.module.dss.hibernateBeans.Rule;
+import org.openmrs.module.pearlgrlz.impl.PearlgrlzServiceImpl;
 import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
 
 
@@ -53,6 +54,9 @@ public class SurveyParameterHandler implements ParameterHandler {
 		String value = null;
 		String input1Lookup = null;
 		String input2Lookup = null;
+		String input1Unit = null;
+		String input2Unit = null;
+		String tmpStr = null;
 		String ruleType = rule.getRuleType();
 		
 		if (ruleType == null||formInstance==null)  
@@ -68,7 +72,7 @@ public class SurveyParameterHandler implements ParameterHandler {
 			return;
 		}
 		
-		 fieldId = patientATD.getFieldId();
+		 fieldId = patientATD.getFieldId(); 
 		 fieldName = Context.getFormService().getField(fieldId).getName();
 		 
 		 if(!fieldName.contains("Question")) {
@@ -81,25 +85,85 @@ public class SurveyParameterHandler implements ParameterHandler {
 		 
 		input1Lookup = "QuestionEntry_" + idx + "_1"; 
 		input2Lookup = "QuestionEntry_" + idx + "_2"; 
+		input1Unit =input1Lookup + "_1"; 
+		input2Unit = input2Lookup + "_1"; 
 		
-		if(fieldMap.get(input1Lookup) != null && (value = fieldMap.get(input1Lookup).getValue()) != null) {
+		if(fieldMap.get(input1Lookup) != null && (value = fieldMap.get(input1Lookup).getValue()) != null 
+				&& (value = value.trim()) != null && !value.isEmpty()) {
 			parameters.put("Input1", "true");
 			
-			if(value.equals("Y"))  
+			if(value.equalsIgnoreCase("Y"))  
 				value = "Yes";
-			else if(value.equals("N")) {
+			else if(value.equalsIgnoreCase("N")) {
 				parameters.put("Input1", "false");
 				value = "No";
-			}
-			else
+			} else  {
+				if(fieldMap.get(input1Unit) != null && (tmpStr = fieldMap.get(input1Unit).getValue()) != null && !tmpStr.isEmpty())
+					value += " " + tmpStr;
 				parameters.put("Input1Value", value );
+				
+				String prompt = patientATD.getText();
+				System.out.println("Prompt <" + prompt + "> value=<" + value + ">");
+				if(prompt.contains(PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE) || 
+						prompt.contains(PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE) ||
+						prompt.contains(PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE2) ||
+						prompt.contains(PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE2))  {
+					Date now = new Date();
+					String type = PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE;
+					if(prompt.contains(PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE) || 
+							prompt.contains(PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE2))
+						type = PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE;
+					if(prompt.contains("add") || prompt.contains("Add")) {
+						SurveyPartner partner = new SurveyPartner();
+						partner.setPatientId(patientATD.getPatientId());
+						partner.setPartnerName(value);
+						partner.setDateCreated(now);
+						partner.setDateChanged(now);
+						partner.setNbrTimeSelected(1);
+						partner.setPartnerType(type);
+						Context.getService(PearlgrlzService.class).addPartner(partner);
+					} else {
+						String [] vals = value.split(PearlgrlzService.SURVEY_VALUE_DELIMITOR);
+						if(prompt.contains("remove") || prompt.contains("Remove")) {
+							for (String val : vals) {
+								SurveyPartner ptnr = new SurveyPartner();
+								ptnr.setPatientId(patientATD.getPatientId());
+								ptnr.setPartnerName(val);
+								ptnr.setPartnerType(type);
+								ptnr.setDateCreated(now);
+								ptnr.setDateChanged(now);
+								ptnr.setVoidedBy(Context.getUserService().getUser(patientATD.getPatientId()));
+								ptnr.setVoidReason("Deleted by user");
+								System.out.println("To void partner<" + val + ">");
+								pearlgrlzService.voidPartner(ptnr);
+							}
+						} else if(prompt.contains("select") || prompt.contains("Select")) {
+							for(int i = 0; i < vals.length; ++i) {
+								// Update the counter
+								SurveyPartner partner = pearlgrlzService.getSurveyPartner(
+															Context.getPatientService().getPatient(patientATD.getPatientId()), vals[i], type);
+								System.out.println("Working on Partner <" + vals[i] + "> Retrieved partner from database is: " + partner);
+								if(partner != null && i < 3) {
+									int pstn = i+1;
+									System.out.println("To SELECT partner<" + vals[i] + "> push the paramter  KEY <Input" + pstn + "Value>  and the VALUE <" + partner.getPartnerName() + "> ");
+									parameters.put("Input" + pstn + "Value", partner.getPartnerName());
+									parameters.put("Input" + pstn, "true");
+									System.out.println("Push another set KEY <Input" + pstn + "> VALUE <" + "ture" + ">");
+								}
+							}
+						}
+					}
+				}
+			}
 		}
-		if(fieldMap.get(input2Lookup) != null && (value = fieldMap.get(input2Lookup).getValue()) != null) {
+		if(fieldMap.get(input2Lookup) != null && (value = fieldMap.get(input2Lookup).getValue()) != null 
+				&& (value = value.trim()) != null && !value.isEmpty()) {
+			if(fieldMap.get(input2Unit) != null && (tmpStr = fieldMap.get(input2Unit).getValue()) != null && !tmpStr.isEmpty())
+				value += " " + tmpStr;
 			parameters.put("Input2", "true");
 			parameters.put("Input2Value", value);
 		}
-		
-	}  // close method
+	}
 	
 }
 	

@@ -1,0 +1,64 @@
+Maintenance:
+	Title:		Talked to on phone with partner Question;;
+	Filename:	talkedOnPhoneGenPartner3.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-21T16:47:25-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+talkedOnPhoneGenPartner3 := read Exist {Talked to general-partner3 on phone} Where it Occurred Within Past 1 Days;
+hasGeneralPartner3:=read Exist {General partner3} Where it Occurred Within Past 1 Days;
+generalPartner3:=read Last {General partner3} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		291;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (talkedOnPhoneGenPartner3 = False) AND (hasGeneralPartner3  = True) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Talked to general-partner3 on phone", "Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Talked to general-partner3 on phone", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> talk to || generalPartner3_value || on phone </b> ?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify school related problems.;;
+	Purpose:	Identify school related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -21,35 +21,31 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
+
 
 If (mode = PRODUCE) then
-/* watchedTVOrMovie := read Last {Watched TV or a movie} Where it Occurred Within Past 1 Days; */
+ watchedTVOrMovie := read Exist {Watched TV or a movie} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		180;;
+Priority:		75;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (watchedTVOrMovie = Yes) then conclude False; */
+If (watchedTVOrMovie = Yes) then conclude False;
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Watched TV or a movie","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Watched TV or a movie","No";
 endif;
 

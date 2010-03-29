@@ -174,7 +174,7 @@ public class PearlgrlzFormController extends SimpleFormController {
 				map.put("sessionId", sessionId);
 				map.put("locationId", request.getParameter("locationDropDown"));
 				map.put("locationTagId", request.getParameter("locationTagDropDown"));
-				map.put("encounterId", pearlgrlzService.getEncounterId());
+				map.put("encounterId", pearlgrlzService.getEncounter(patient).getEncounterId());
 				map.put("formName", formName);
 				map.put("formNumberQuestions", NUM_QUESTIONS);
 				

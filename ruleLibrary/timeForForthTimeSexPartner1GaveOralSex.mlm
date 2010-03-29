@@ -1,0 +1,69 @@
+Maintenance:
+	Title:		partner gave oral sex related Question;;
+	Filename:	timeForForthTimeSexPartner1GaveOralSex.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-16T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner gave oral sex related problems. ,,doubleInput ,,ampmOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input2:=read {input2 from Parameters};
+Input1Value:=read {input1value from Parameters};
+Input2Value:=read {input2value from Parameters};
+
+If (mode = PRODUCE) then
+ sexualPartner1GaveOralSex := read Last {Sexual-partner1 gave oral sex to patient} Where it Occurred Within Past 1 Days;
+ frequency := read Last {Number of times sexual-partner1 gave oral sex to patient} Where it Occurred Within Past 1 Days;
+ answered1 := read Exist {Starting-time for the Forth time sexual-partner1 gave oral sex to patient} Where it Occurred Within Past 1 Days;
+ answered2 := read Exist {Ending-time for the Forth time sexual-partner1 gave oral sex to patient} Where it Occurred Within Past 1 Days;
+ hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
+ sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		558;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+ If (hasSexualPartner1 = Yes) AND (sexualPartner1GaveOralSex = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (hasSexualPartner1 = Yes) AND (sexualPartner1GaveOralSex = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) AND (Input2=true) then
+ CALL storeObs With "Starting-time for the Forth time sexual-partner1 gave oral sex to patient", "Input1Value";
+ CALL storeObs With "Ending-time for the Forth time sexual-partner1 gave oral sex to patient", "Input2Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("When was the Forth time did you receive oral sex from <b> || sexualPartner1_value || </b> since last scheduled prompt?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

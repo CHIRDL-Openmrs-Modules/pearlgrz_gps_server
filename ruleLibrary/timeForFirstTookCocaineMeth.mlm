@@ -1,0 +1,73 @@
+Maintenance:
+	Title:		somking weed related Question;;
+	Filename:	timeForFirstTookCocaineMeth.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-16T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify using other drugs cocain or meth problems. ,,doubleInput ,,ampmOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input2:=read {input2 from Parameters};
+Input1Value:=read {input1value from Parameters};
+Input2Value:=read {input2value from Parameters};
+
+If (mode = PRODUCE) then
+ usedCocaineMeth := read Last {Used other drugs cocain or meth} Where it Occurred Within Past 1 Days;
+ frequency := read Last {Number of times using other drugs cocain or meth} Where it Occurred Within Past 1 Days;
+ answered1 := read Exist {Starting-time for the First using other drugs cocain or meth} Where it Occurred Within Past 1 Days;
+ answered2 := read Exist {Ending-time for the First using other drugs cocain or meth} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		147;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+ If (usedCocaineMeth = Yes) AND (frequency = "One time") AND (answered1 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Two times") AND (answered1 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "One time") AND (answered2 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Two times") AND (answered2 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
+ If (usedCocaineMeth = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) AND (Input2=true) then
+ CALL storeObs With "Starting-time for the First using other drugs cocain or meth", "Input1Value";
+ CALL storeObs With "Ending-time for the First using other drugs cocain or meth", "Input2Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("When was the First time using other drugs cocain or meth since last survey?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

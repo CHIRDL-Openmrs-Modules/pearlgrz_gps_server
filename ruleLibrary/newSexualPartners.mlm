@@ -30,7 +30,7 @@ newSexualPartners := read Exist {New sexual partners to add} Where it Occurred W
 endif
 ;;
 
-Priority:		10;;
+Priority:		254;;
 	Evoke:		;;
 
 Logic:
@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Want to add new sexual partners since last survey?");
+write ("Want to <b> add new partners had sex with </b> since last survey?");
 ;;
 
 Age_Min: 14 years;;

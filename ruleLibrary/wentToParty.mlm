@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify school related problems.;;
+	Purpose:	Identify school related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -21,35 +21,31 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
+
 
 If (mode = PRODUCE) then
-/* wentToParty := read Last {Went to a party} Where it Occurred Within Past 1 Days; */
+ wentToParty := read Exist {Went to a party} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		145;;
+Priority:		69;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (wentToParty = Yes) then conclude False; */
+If (wentToParty = Yes) then conclude False;
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Went to a party","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Went to a party","No";
 endif;
 

@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify work related problems.;;
+	Purpose:	Identify work related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -21,35 +21,30 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
-/* wentToWork := read Last {Went to work} Where it Occurred Within Past 1 Days; */
+ wentToWork := read Exist {Went to work} Where it Occurred Within Past 1 Days; 
 endif
 ;;
 
-Priority:		115;;
+Priority:		63;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (wentToWork = Yes) then conclude False; */
+ If (wentToWork = Yes) then conclude False; 
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Went to work","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Went to work","No";
 endif;
 

@@ -15,7 +15,7 @@ Library:
 	Citations:	;;
 	Links:		;;
 
-Knowledge:ClassLoaderTask
+Knowledge:
 	Type:		data_driven;;
 
 Data:
@@ -52,7 +52,7 @@ endif
 ;;
 
 Action:
-write ("Number of times smoked weed?");
+write ("Number of times smoked weed since last survey?");
 ;;
 
 Age_Min: 14 years;;

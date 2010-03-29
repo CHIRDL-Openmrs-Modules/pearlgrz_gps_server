@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify drinking alcohol related problems. ,,doubleInput;;
+	Purpose:	Identify drinking alcohol related problems. ,,doubleInput ,,ampmOptions;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -41,15 +41,20 @@ Priority:		132;;
 Logic:
 If (mode = PRODUCE) then
 
- If (drankAlcohol = Yes)  AND (frequency = "Two times") AND ((answered1 = False) OR (answered2 = False)) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Two times") AND (answered1 = False) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Two times") AND (answered2 = False) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
+ If (drankAlcohol = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true AND Input2=true) then
- CALL storeObs With "Starting-ime for the Second drinking since last survey", "Input1Value";
+If  (Input1=true) AND (Input2=true) then
+ CALL storeObs With "Starting-time for the Second drinking since last survey", "Input1Value";
  CALL storeObs With "Ending-time for the Second drinking since last survey", "Input2Value";
 endif;
 
@@ -58,7 +63,7 @@ endif
 ;;
 
 Action:
-write ("When was the Second drinking since last survey?");
+write ("When was the Second drinking alcohol since last survey?");
 ;;
 
 Age_Min: 14 years;;

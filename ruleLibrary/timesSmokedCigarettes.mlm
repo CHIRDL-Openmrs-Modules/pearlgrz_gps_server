@@ -15,7 +15,7 @@ Library:
 	Citations:	;;
 	Links:		;;
 
-Knowledge:ClassLoaderTask
+Knowledge:
 	Type:		data_driven;;
 
 Data:
@@ -36,7 +36,7 @@ Priority:		102;;
 Logic:
 If (mode = PRODUCE) then
 
-If (smokedCigarettes = Yes) AND (frequency = False)  then conclude True; 
+If (smokedCigarettes = Yes) AND (frequency = False) then conclude True; 
 conclude False;
 
 endif

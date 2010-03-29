@@ -30,7 +30,7 @@ sexualPartner := read Exist {Interacted with someone that subject had sex or is 
 endif
 ;;
 
-Priority:		50;;
+Priority:		252;;
 	Evoke:		;;
 
 Logic:
@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Did you interact with someone you had sex or are interested in having sex since last survey?");
+write ("Interact with someone you <b>had sex or are interested in having sex</b> since last survey?");
 ;;
 
 Age_Min: 14 years;;

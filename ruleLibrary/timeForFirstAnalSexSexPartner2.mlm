@@ -1,0 +1,75 @@
+Maintenance:
+	Title:		partner anal sex related Question;;
+	Filename:	timeForFirstAnalSexSexPartner2.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-16T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner anal sex related problems. ,,doubleInput ,,ampmOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+Input2:=read {input2 from Parameters};
+Input1Value:=read {input1value from Parameters};
+Input2Value:=read {input2value from Parameters};
+
+If (mode = PRODUCE) then
+ sexualPartner2AnalSex := read Last {Sexual-partner2 had anal sex with patient} Where it Occurred Within Past 1 Days;
+ frequency := read Last {Number of times anal sex with sexual-partner2} Where it Occurred Within Past 1 Days;
+ answered1 := read Exist {Starting-time for the First anal sex with sexual-partner2} Where it Occurred Within Past 1 Days;
+ answered2 := read Exist {Ending-time for the First anal sex with sexual-partner2} Where it Occurred Within Past 1 Days;
+ hasSexualPartner2:=read Exist {Sexual partner2} Where it Occurred Within Past 1 Days;
+ sexualPartner2:=read Last {Sexual partner2} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		587;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "One time") AND (answered1 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Two times") AND (answered1 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "One time") AND (answered2 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Two times") AND (answered2 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
+ If (hasSexualPartner2 = Yes) AND (sexualPartner2AnalSex = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) AND (Input2=true) then
+ CALL storeObs With "Starting-time for the First anal sex with sexual-partner2", "Input1Value";
+ CALL storeObs With "Ending-time for the First anal sex with sexual-partner2", "Input2Value";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("When was the First anal sex with <b> || sexualPartner2_value || </b> since last scheduled prompt?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

@@ -1,0 +1,66 @@
+Maintenance:
+	Title:		partner after sex Question;;
+	Filename:	sexPartner3GaveMasturbationAfterSex.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-26T13:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner after sex related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+If (mode = PRODUCE) then
+
+sexPartner3GaveMasturbationAfterSex := read Exist {Sexual-partner3 gave masturbation to patient after sex} Where it Occurred Within Past 1 Days;
+hasSexualPartner3:=read Exist {Sexual partner3} Where it Occurred Within Past 1 Days;
+sexualPartner3:=read Last {Sexual partner3} Where it Occurred Within Past 1 Days;
+
+endif
+;;
+
+Priority:		516;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (hasSexualPartner3 = True) AND (sexPartner3GaveMasturbationAfterSex = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Sexual-partner3 gave masturbation to patient after sex","Yes";
+endif;
+If  (Input1=false) then
+ CALL storeObs With "Sexual-partner3 gave masturbation to patient after sex","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("After sex, <b> sexualPartner3_value || </b> touched your genitals?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

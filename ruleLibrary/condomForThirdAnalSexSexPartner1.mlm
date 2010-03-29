@@ -1,0 +1,68 @@
+Maintenance:
+	Title:		partner anal sex related Question;;
+	Filename:	condomForThirdAnalSexSexPartner1.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-16T16:12:57-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner anal sex related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Input1:=read {input1 from Parameters};
+
+
+If (mode = PRODUCE) then
+ sexualPartner1AnalSex := read Last {Sexual-partner1 had anal sex with patient} Where it Occurred Within Past 1 Days;
+ frequency := read Last {Number of times anal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
+ existCondomUsedThirdTimeSexPartner1 := read Exist {Condom used for the Third anal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
+ hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
+ sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		541;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+ If (hasSexualPartner1 = Yes) AND (sexualPartner1AnalSex = Yes) AND (frequency = "Three times") AND (existCondomUsedThirdTimeSexPartner1 = False) then conclude True;
+ If (hasSexualPartner1 = Yes) AND (sexualPartner1AnalSex = Yes) AND (frequency = "Four or more times") AND (existCondomUsedThirdTimeSexPartner1 = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Input1=true) then
+ CALL storeObs With "Condom used for the Third anal sex with sexual-partner1", "Yes";
+endif;
+if (Input1=false) then
+ CALL storeObs With "Condom used for the Third anal sex with sexual-partner1", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you use condom the Third anal sex with <b> || sexualPartner1_value || </b> since last scheduled prompt?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

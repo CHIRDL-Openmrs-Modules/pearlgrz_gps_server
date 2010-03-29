@@ -9,47 +9,43 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify alcohol related problems.;;
+	Purpose:	Identify alcohol related problems. ,,singleChoice;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
 	Links:		;;
 
-Knowledge:ClassLoaderTask
+Knowledge:
 	Type:		data_driven;;
 
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {box2 from Parameters};
-Box3:=read {box3 from Parameters};
-Box4:=read {box4 from Parameters};
-Box5:=read {box5 from Parameters};
-Box6:=read {box6 from Parameters};
+Input1:=read {input1 from Parameters};
+
 
 If (mode = PRODUCE) then
-/* gotIntoFight := read Last {Got into a fight} Where it Occurred Within Past 1 Days; */
+ gotIntoFight := read Exist {Got into a fight} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		140;;
+Priority:		68;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-/* If (gotIntoFight = Yes) then conclude False; */
+If (gotIntoFight = Yes) then conclude False;
 conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
+If  (Input1=true) then
  CALL storeObs With "Got into a fight","Yes";
 endif;
-If  (Box2=true) then
+If  (Input1=false) then
  CALL storeObs With "Got into a fight","No";
 endif;
 

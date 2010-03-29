@@ -9,7 +9,7 @@ Maintenance:
 	Validation:	research;;
 
 Library:
-	Purpose:	Identify smoking cigarettes related problems. ,,doubleInput;;
+	Purpose:	Identify smoking cigarettes related problems. ,,doubleInput ,,ampmOptions;;
 	Explanation:	;;
 	Keywords:	;;
 	Citations:	;;
@@ -29,8 +29,8 @@ Input2Value:=read {input2value from Parameters};
 If (mode = PRODUCE) then
  smokedCigarettes := read Last {Smoked cigarettes} Where it Occurred Within Past 1 Days;
  frequency := read Last {Number of times smoking cigarettes since last survey} Where it Occurred Within Past 1 Days;
- answered1 := read Last {Starting-time for the Third smoking cigarettes since last survey} Where it Occurred Within Past 1 Days;
- answered2 := read Last {Ending-time for the Third smoking cigarettes since last survey} Where it Occurred Within Past 1 Days;
+ answered1 := read Exist {Starting-time for the Third smoking cigarettes since last survey} Where it Occurred Within Past 1 Days;
+ answered2 := read Exist {Ending-time for the Third smoking cigarettes since last survey} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -40,7 +40,10 @@ Priority:		137;;
 Logic:
 If (mode = PRODUCE) then
 
- If (smokedCigarettes = Yes) AND (frequency = "Three times") AND ((answered1 = False) OR (answered2 = False)) then conclude True;
+ If (smokedCigarettes = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
+ If (smokedCigarettes = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
+ If (smokedCigarettes = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
+ If (smokedCigarettes = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
