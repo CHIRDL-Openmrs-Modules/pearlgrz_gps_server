@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Form>
+	<Page>
+		<Entity type='Entry'  name="Question1" taborder="1"/>
+		<Entity type='Entry'  name="Question2" taborder="2"/>
+		<Entity type='Entry'  name="Question3" taborder="3"/>
+		<Entity type='Entry'  name="Question4" taborder="4"/>
+		<Entity type='Entry'  name="Question5" taborder="5"/>
+		<Entity type='Entry'  name="QuestionEntry_1_1" taborder="6"/>
+		<Entity type='Entry'  name="QuestionEntry_1_1_1" taborder="7"/>
+		<Entity type='Entry'  name="QuestionEntry_1_2" taborder="8"/>
+		<Entity type='Entry'  name="QuestionEntry_1_2_1" taborder="9"/>
+		<Entity type='Entry'  name="QuestionEntry_2_1" taborder="10"/>
+		<Entity type='Entry'  name="QuestionEntry_2_1_1" taborder="11"/>
+		<Entity type='Entry'  name="QuestionEntry_2_2" taborder="11"/>
+		<Entity type='Entry'  name="QuestionEntry_2_2_1" taborder="13"/>
+		<Entity type='Entry'  name="QuestionEntry_3_1" taborder="14"/>
+		<Entity type='Entry'  name="QuestionEntry_3_1_1" taborder="15"/>
+		<Entity type='Entry'  name="QuestionEntry_3_2" taborder="16"/>
+		<Entity type='Entry'  name="QuestionEntry_3_2_1" taborder="17"/>
+		<Entity type='Entry'  name="QuestionEntry_4_1" taborder="18"/>
+		<Entity type='Entry'  name="QuestionEntry_4_1_1" taborder="19"/>
+		<Entity type='Entry'  name="QuestionEntry_4_2" taborder="20"/>
+		<Entity type='Entry'  name="QuestionEntry_4_2_1" taborder="21"/>
+		<Entity type='Entry'  name="QuestionEntry_5_1" taborder="22"/>
+		<Entity type='Entry'  name="QuestionEntry_5_1_1" taborder="23"/>
+		<Entity type='Entry'  name="QuestionEntry_5_2" taborder="24"/>
+		<Entity type='Entry'  name="QuestionEntry_5_2_1" taborder="25"/>
+		<Entity type='Entry'  name="PatientName"/>
+		<Entity type='Entry'  name="MRN"/>
+		<Entity type='Entry'  name="Age"/>
+		<Entity type='Entry'  name="CurrentDate"/>
+		<Entity type='Entry'  name="ID_Barcode"/>
+		<Entity type='Entry'  name="ID_BarcodeBack"/>
+	</Page>
+</Form>
