@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Used other drugs like cocaine or meth after sex with || sexualPartner3_value || ? </b>");
+write ("Used other drugs like cocaine or meth after sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

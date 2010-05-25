@@ -60,7 +60,7 @@ endif
 ;;
 
 Action:
-write ("When was the Third time did you eat at a fast food restaurant since last survey?");
+write ("When was the Third time you ate at a fast food restaurant since last survey?");
 ;;
 
 Age_Min: 14 years;;

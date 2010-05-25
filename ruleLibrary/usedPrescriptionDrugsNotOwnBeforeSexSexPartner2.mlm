@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Did you use prescription drugs that weren't yours before sex with || sexualPartner1_value || ? </b>");
+write ("Did you use prescription drugs that weren't yours before sex with <b> || sexualPartner1_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

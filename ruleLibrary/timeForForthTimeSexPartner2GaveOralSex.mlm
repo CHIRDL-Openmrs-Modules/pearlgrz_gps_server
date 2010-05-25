@@ -60,7 +60,7 @@ endif
 ;;
 
 Action:
-write ("When was the Forth time did you receive oral sex from <b> || sexualPartner2_value || </b> since last scheduled prompt?");
+write ("When was the Forth time you received oral sex from <b> || sexualPartner2_value || </b> since last scheduled prompt?");
 ;;
 
 Age_Min: 14 years;;

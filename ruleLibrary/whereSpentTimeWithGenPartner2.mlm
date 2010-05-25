@@ -54,7 +54,7 @@ endif
 ;;
 
 Action:
-write ("Where did you spend time <b> with || generalPartner2_value  || ? </b>");
+write ("Where did you <b> spend time with || generalPartner2_value  || ? </b>");
 ;;
 
 Age_Min: 14 years;;

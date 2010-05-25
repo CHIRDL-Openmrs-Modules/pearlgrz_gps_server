@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Want to <b> add new partners did not have sex with </b> since last survey?");
+write ("Want to <b> add new general partners not have sex with </b> since last survey?");
 ;;
 
 Age_Min: 14 years;;

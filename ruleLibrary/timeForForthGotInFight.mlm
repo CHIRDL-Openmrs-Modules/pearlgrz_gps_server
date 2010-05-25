@@ -58,7 +58,7 @@ endif
 ;;
 
 Action:
-write ("When was the Forth time did you get in a fight since last survey?");
+write ("When was the Forth time you got in a fight since last survey?");
 ;;
 
 Age_Min: 14 years;;

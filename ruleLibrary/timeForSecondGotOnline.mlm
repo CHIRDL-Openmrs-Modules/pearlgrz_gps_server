@@ -62,7 +62,7 @@ endif
 ;;
 
 Action:
-write ("When was the Second time did you get online since last survey?");
+write ("When was the Second time you got online since last survey?");
 ;;
 
 Age_Min: 14 years;;

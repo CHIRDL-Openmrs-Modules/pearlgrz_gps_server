@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Was your mouth on <b> || sexualPartner3_value || 's penis? </b>");
+write ("Did you give <b> || sexualPartner3_value || </b> oral sex?");
 ;;
 
 Age_Min: 14 years;;

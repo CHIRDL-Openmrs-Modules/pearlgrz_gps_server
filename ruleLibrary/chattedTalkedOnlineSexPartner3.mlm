@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Did you <b> chatted or talked to || sexualPartner3_value || online </b> ?");
+write ("Did you <b> chat or talk to || sexualPartner3_value || online </b> ?");
 ;;
 
 Age_Min: 14 years;;

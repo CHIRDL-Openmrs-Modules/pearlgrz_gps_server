@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Listened to music after sex with || sexualPartner1_value || ? </b>");
+write ("Listened to music after sex with <b> || sexualPartner1_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

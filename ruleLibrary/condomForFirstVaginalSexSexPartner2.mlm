@@ -61,7 +61,7 @@ endif
 ;;
 
 Action:
-write ("Did you use condom the First vaginal sex with <b> || sexualPartner2_value || </b> since last scheduled prompt?");
+write ("Did you use condom for the First vaginal sex with <b> || sexualPartner2_value || </b> since last scheduled prompt?");
 ;;
 
 Age_Min: 14 years;;

@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Went to movie after sex with || sexualPartner3_value || ? </b>");
+write ("Went to movie after sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

@@ -55,7 +55,7 @@ endif
 ;;
 
 Action:
-write ("Did you <b> have vaginal, oral or anal sex with ||  sexualPartner2_value || ? </b>");
+write ("Did you <b> have vaginal, oral or anal sex with <b> ||  sexualPartner2_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

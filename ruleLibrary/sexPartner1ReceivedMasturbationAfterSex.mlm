@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("After sex, did you touch <b> || sexualPartner1_value || penis? </b>");
+write ("After sex, did you give <b> || sexualPartner1_value || </b> masturbation?");
 ;;
 
 Age_Min: 14 years;;

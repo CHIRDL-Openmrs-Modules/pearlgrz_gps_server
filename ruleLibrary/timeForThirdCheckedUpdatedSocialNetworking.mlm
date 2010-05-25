@@ -60,7 +60,7 @@ endif
 ;;
 
 Action:
-write ("When was the Third time did you check or update social networking sites (myspace, facebook, twitter) since last survey?");
+write ("When was the Third time you checked or updated social networking sites (myspace, facebook, twitter) since last survey?");
 ;;
 
 Age_Min: 14 years;;

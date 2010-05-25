@@ -62,7 +62,7 @@ endif
 ;;
 
 Action:
-write ("When was the Second time did you go to a party since last survey");
+write ("When was the Second time you went to a party since last survey");
 ;;
 
 Age_Min: 14 years;;

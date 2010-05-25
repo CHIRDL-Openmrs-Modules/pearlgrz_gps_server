@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Smoked a weed after sex with || sexualPartner3_value || ? </b>");
+write ("Smoked a weed after sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

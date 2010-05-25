@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Held hands before sex with || sexualPartner3_value || ? </b>");
+write ("Held hands before sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

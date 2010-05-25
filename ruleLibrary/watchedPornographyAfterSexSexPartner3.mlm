@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Watched pornography after sex with || sexualPartner3_value || ? </b>");
+write ("Watched pornography after sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Dance before sex with || sexualPartner1_value || ? </b>");
+write ("Dance before sex with <b> || sexualPartner1_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

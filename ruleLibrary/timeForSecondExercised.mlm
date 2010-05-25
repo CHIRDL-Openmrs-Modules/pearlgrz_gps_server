@@ -62,7 +62,7 @@ endif
 ;;
 
 Action:
-write ("When was the Second time did you exercise at least 30 minutes since last survey?");
+write ("When was the Second time you exercised at least 30 minutes since last survey?");
 ;;
 
 Age_Min: 14 years;;

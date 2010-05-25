@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Was <b> || sexualPartner2_value || s penis in your butt (anal sex)? </b>");
+write ("Did <b> || sexualPartner2_value || </b> have anal sex with you?");
 ;;
 
 Age_Min: 14 years;;

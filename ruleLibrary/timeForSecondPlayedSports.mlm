@@ -62,7 +62,7 @@ endif
 ;;
 
 Action:
-write ("When was the Second time did you play sports since last survey?");
+write ("When was the Second time you played sports since last survey?");
 ;;
 
 Age_Min: 14 years;;

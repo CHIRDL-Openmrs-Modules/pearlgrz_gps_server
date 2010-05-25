@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Ate a snack or meal after sex with || sexualPartner3_value || ? </b>");
+write ("<b> Ate a snack or meal after sex with || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

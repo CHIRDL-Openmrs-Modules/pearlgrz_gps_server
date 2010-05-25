@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Watched TV or movie after sex with || sexualPartner1_value || ? </b>");
+write ("Watched TV or movie after sex with <b> || sexualPartner1_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;

@@ -64,7 +64,7 @@ endif
 ;;
 
 Action:
-write ("Select <b> upto Three general partners </b> talked to, intereted in since last scheduled prompt:");
+write ("Select <b> upto Three partners (not have sex with) </b> talked to, intereted in since last scheduled prompt:");
 ;;
 
 Age_Min: 14 years;;

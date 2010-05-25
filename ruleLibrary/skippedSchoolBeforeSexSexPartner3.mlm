@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Skipped school before sex with || sexualPartner3_value || ? </b>");
+write ("Skipped school before sex with <b> || sexualPartner3_value || ? </b>");
 ;;
 
 Age_Min: 14 years;;
