@@ -233,8 +233,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	    criteria.addOrder(Order.desc("dateChanged")); 
 	    criteria.addOrder(Order.desc("nbrTimeSelected")); 
 	    
-	    System.out.println("patientId<" + patient.getPatientId() + "> partnerType<" + partnerType + ">");
-	    
 	    return (List<SurveyPartner>) criteria.list();
     }
 
@@ -284,7 +282,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	    criteria.setMaxResults(1);
 	    
 	    if( (match = (SurveyPartner) criteria.uniqueResult()) != null) {
-	    	System.out.println("inside HibernateDAO, got a match, so to set VOID");
 	    	match.setDateCreated(now);
 	    	match.setDateChanged(now);
 	    	match.setVoided(Boolean.TRUE);

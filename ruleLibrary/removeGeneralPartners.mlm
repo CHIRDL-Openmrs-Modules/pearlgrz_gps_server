@@ -53,7 +53,7 @@ endif
 ;;
 
 Action:
-write ("Want to <b> remove some partners not have sex with </b> from the record?");
+write ("Want to <b> remove some general partners not have sex with </b> from the record?");
 ;;
 
 Age_Min: 14 years;;

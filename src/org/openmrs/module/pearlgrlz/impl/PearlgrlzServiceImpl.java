@@ -279,7 +279,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		setEncounter(patient, null);
 		setSession(patient, null);
 		mSessionCompleted.put(patient, Boolean.TRUE);
-		System.out.println("Trye to end session for patientId <" + patient.getPatientId() + "> surveyType = <" + surveyType + ">");
 	}
 	
 	
@@ -479,7 +478,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		if(nbrQuestions <= 0) {
 			map.put("redirectto", "redirectto");
 			map.put("nextPage", "surveyComplete");
-			System.out.println("calling endSurveySession from Service");
 			endSurveySession(Context.getPatientService().getPatient(Context.getAuthenticatedUser().getUserId()), null, Boolean.FALSE);
 		}
     }
@@ -539,7 +537,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 						}
 					}
 					currField.setValue(inputVal);
-					System.out.println("added combined/or nor value<" + inputVal + "> for field <" + name + ">");
 				}
 			}
 			
@@ -649,35 +646,27 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     	
     	if(parameters.size() > 1) {
     		if(parameters.get(1).equalsIgnoreCase("frequencyOptions") )   {
-    			System.out.println("it's frequencyOptions select");
     			parametersMap.put(questionFldNm + "List", lFrequencyOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("moodOptions") )  {
-    			System.out.println("it's moodOptions select");
     			parametersMap.put(questionFldNm + "List", lMoodOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("durationOptions") )  {
-    			System.out.println("it's durationOptions select");
     			parametersMap.put(questionFldNm + "List", lDurationOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("locationOptions") )  {
-    			System.out.println("it's locationOptions select");
     			parametersMap.put(questionFldNm + "List", lLocationOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("scaleOptions") )   {
-    			System.out.println("it's scaleOptions select");
     			parametersMap.put(questionFldNm + "List", lScaleOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("ampmOptions") )   {
-    			System.out.println("it's ampmOptions select");
     			parametersMap.put(questionFldNm + "List", lAmpmOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("generalPartnerOptions") ) { 
-    			System.out.println("it's generalPartnerOptions select");
     			parametersMap.put(questionFldNm + "List",  populatePartnerList(patient, SURVEY_GENERAL_PARTNER_TYPE));
     		}
     		else if(parameters.get(1).equalsIgnoreCase("sexualPartnerOptions") ) { 
-    			System.out.println("it's sexualPartnerOptions select");
     			parametersMap.put(questionFldNm + "List",  populatePartnerList(patient, SURVEY_SEXUAL_PARTNER_TYPE));
     		}
     	}
@@ -691,9 +680,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     public List<String> populatePartnerList(Patient patient, String partnerType) {
     	List<String> partnerNms = new ArrayList<String>();
     	List<SurveyPartner> list = dao.populatePartnerList(patient, partnerType);
-    	System.out.println("check the partner List patientId <" + patient.getPatientId() + "> partnerType<" + partnerType + ">");
     	for(SurveyPartner ptr : list)  {
-    		System.out.println(ptr.getPartnerName());
     		partnerNms.add(ptr.getPartnerName());
     	}
     	return partnerNms;

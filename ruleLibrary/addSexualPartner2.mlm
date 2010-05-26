@@ -57,7 +57,7 @@ endif
 ;;
 
 Action:
-write ("Add new partner you had sex with since last survey?");
+write ("Add new sexual partner you had sex with since last survey?");
 ;;
 
 Age_Min: 14 years;;

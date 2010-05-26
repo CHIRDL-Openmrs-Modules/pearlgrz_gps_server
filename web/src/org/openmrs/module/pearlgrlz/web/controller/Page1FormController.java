@@ -134,15 +134,14 @@ public class Page1FormController extends SimpleFormController {
 			
 			// If complete all the survey questions. 
 			if(nextPage.equalsIgnoreCase("surveyComplete")) {
-				modelMap.put("nextPage", nextPage + ".form");		// may not use
-				modelMap.put("redirectto", "redirectto");					//
-				System.out.println("calling endSurveySession from Controller");
+				modelMap.put("nextPage", nextPage + ".form");		
+				modelMap.put("redirectto", "redirectto");					
 				pearlgrlzSvc.endSurveySession(patient, null, Boolean.FALSE);
 				return modelMap;
 			}
 			
-			modelMap.put("surveyType", nextPage);					// can get from Service
-			modelMap.put("submitAnswers", "");						// so that next time will createXML, if use one view to handle the survey.
+			modelMap.put("surveyType", nextPage);					
+			modelMap.put("submitAnswers", "");						
 		
 			numberOfQuestions = pearlgrlzSvc.getNumberQuestions(formId);
 			formInstance = Context.getService(ATDService.class).addFormInstance(formId, pearlgrlzSvc.getLocation().getLocationId());

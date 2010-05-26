@@ -103,7 +103,6 @@ public class SurveyParameterHandler implements ParameterHandler {
 				parameters.put("Input1Value", value );
 				
 				String prompt = patientATD.getText();
-				System.out.println("Prompt <" + prompt + "> value=<" + value + ">");
 				if(prompt.contains(PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE) || 
 						prompt.contains(PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE) ||
 						prompt.contains(PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE2) ||
@@ -134,7 +133,6 @@ public class SurveyParameterHandler implements ParameterHandler {
 								ptnr.setDateChanged(now);
 								ptnr.setVoidedBy(Context.getUserService().getUser(patientATD.getPatientId()));
 								ptnr.setVoidReason("Deleted by user");
-								System.out.println("To void partner<" + val + ">");
 								pearlgrlzService.voidPartner(ptnr);
 							}
 						} else if(prompt.contains("select") || prompt.contains("Select")) {
@@ -142,13 +140,10 @@ public class SurveyParameterHandler implements ParameterHandler {
 								// Update the counter
 								SurveyPartner partner = pearlgrlzService.getSurveyPartner(
 															Context.getPatientService().getPatient(patientATD.getPatientId()), vals[i], type);
-								System.out.println("Working on Partner <" + vals[i] + "> Retrieved partner from database is: " + partner);
 								if(partner != null && i < 3) {
 									int pstn = i+1;
-									System.out.println("To SELECT partner<" + vals[i] + "> push the paramter  KEY <Input" + pstn + "Value>  and the VALUE <" + partner.getPartnerName() + "> ");
 									parameters.put("Input" + pstn + "Value", partner.getPartnerName());
 									parameters.put("Input" + pstn, "true");
-									System.out.println("Push another set KEY <Input" + pstn + "> VALUE <" + "ture" + ">");
 								}
 							}
 						}
