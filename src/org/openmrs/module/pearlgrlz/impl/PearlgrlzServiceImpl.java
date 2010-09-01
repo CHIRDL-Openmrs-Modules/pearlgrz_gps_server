@@ -359,7 +359,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     /** 
      * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#createSurveyXML(org.openmrs.Patient, java.lang.Integer, java.lang.Integer, java.lang.Integer, org.openmrs.User)
      */
-    @Override
     public void createSurveyXML(Patient patient, Integer locationId, Integer formId, Integer numQuestions, User provider) {
 		if(locationId == null) locationId = this.location.getLocationId();
 		if(provider == null) provider = this.provider;
@@ -787,7 +786,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	/**
 	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#addPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
 	 */
-	@Override
 	public void addPartner(SurveyPartner partner) {
 		dao.addPartner(partner);
 	}
@@ -805,7 +803,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	/**
 	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#voidPartner(org.openmrs.module.pearlgrlz.SurveyPartner, java.lang.String)
 	 */
-	@Override
 	public void voidPartner(SurveyPartner partner) {
 		dao.voidPartner(partner);
 	}
@@ -925,7 +922,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	/**
      * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getPatientATD(org.openmrs.module.atd.hibernateBeans.FormInstance, org.openmrs.module.dss.hibernateBeans.Rule)
      */
-    @Override
     public PatientATD getPatientATD(FormInstance formInstance, Rule rule) {
 	    return dao.getPatientATD(formInstance, rule);
     }
@@ -934,7 +930,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	/**
      * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#isSurveyCompleted(org.openmrs.Patient)
      */
-    @Override
     public boolean isSurveyCompleted(Patient patient) {
 	    if(mSessionCompleted.get(patient) != null) 
 	    	return mSessionCompleted.get(patient).booleanValue();

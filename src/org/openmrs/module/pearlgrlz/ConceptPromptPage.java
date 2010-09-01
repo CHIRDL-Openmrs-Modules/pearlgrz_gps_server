@@ -80,7 +80,6 @@ public class ConceptPromptPage extends BaseOpenmrsData implements OpenmrsObject 
 	/**
      * @see org.openmrs.OpenmrsObject#getId()
      */
-    @Override
     public Integer getId() {
 	    // TODO Auto-generated method stub
 	    return null;
@@ -89,7 +88,6 @@ public class ConceptPromptPage extends BaseOpenmrsData implements OpenmrsObject 
 	/**
      * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
      */
-    @Override
     public void setId(Integer id) {
 	    // TODO Auto-generated method stub
 	    

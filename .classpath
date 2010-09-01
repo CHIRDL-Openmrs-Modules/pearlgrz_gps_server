@@ -41,7 +41,6 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.5.0.10396-dev.jar"/>
 	<classpathentry kind="lib" path="/chica"/>
-	<classpathentry kind="lib" path="/openmrs-chirdl-1-5"/>
 	<classpathentry kind="lib" path="/rgccd"/>
 	<classpathentry kind="lib" path="/sockethl7listener"/>
 	<classpathentry kind="output" path="build"/>

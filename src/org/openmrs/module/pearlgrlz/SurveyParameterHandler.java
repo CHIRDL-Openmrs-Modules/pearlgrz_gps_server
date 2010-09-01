@@ -42,7 +42,6 @@ public class SurveyParameterHandler implements ParameterHandler {
 	/**
 	 * @see org.openmrs.module.atd.ParameterHandler#addParameters(java.util.Map, org.openmrs.module.dss.hibernateBeans.Rule)
 	 */
-	@Override
 	public void addParameters(Map<String, Object> parameters, Rule rule) {
 		FormInstance formInstance = (FormInstance) parameters.get("formInstance");
 		LogicService logicService = Context.getLogicService();

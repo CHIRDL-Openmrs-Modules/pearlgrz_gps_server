@@ -75,7 +75,6 @@ public class SurveyPartner extends BaseOpenmrsData implements OpenmrsObject {
 	/**
      * @see org.openmrs.OpenmrsObject#getId()
      */
-    @Override
     public Integer getId() {
 	    // TODO Auto-generated method stub
 	    return id;
@@ -84,7 +83,6 @@ public class SurveyPartner extends BaseOpenmrsData implements OpenmrsObject {
 	/**
      * @see org.openmrs.OpenmrsObject#setId(java.lang.Integer)
      */
-    @Override
     public void setId(Integer integer) {
 	    // TODO Auto-generated method stub
 	    this.id = integer;

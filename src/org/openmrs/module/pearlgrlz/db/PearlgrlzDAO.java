@@ -30,10 +30,7 @@ import org.openmrs.module.pearlgrlz.SurveySession;
  *
  */
 public interface PearlgrlzDAO {
-	
-	public List<PatientState> getReprintRescanStatesByEncounter(Integer encounterId, Date optionalDateRestriction, 
-		Integer locationTagId,Integer locationId);
-	
+
 	public SurveyRecord getLatestSurveyRecord(Patient patient);
 	
 //	public List<SurveyRecord> getPrevSurveyRecords(Integer patientId); 	// Used to purge the records ?

@@ -57,16 +57,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
     public void setSessionFactory(SessionFactory sessionFactory) {
     	this.sessionFactory = sessionFactory;
     }
-
-	/**
-	 * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getReprintRescanStatesByEncounter(java.lang.Integer, java.util.Date, java.lang.Integer, java.lang.Integer)
-	 */
-	@Override
-	public List<PatientState> getReprintRescanStatesByEncounter(Integer encounterId, Date optionalDateRestriction,
-	                                                            Integer locationTagId, Integer locationId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 	
 	/**
@@ -133,8 +123,7 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getOpenSession(org.openmrs.Patient)
      */
-    @Override
-    public SurveySession getOpenSurveySession(Patient patient, String surveyType) {
+        public SurveySession getOpenSurveySession(Patient patient, String surveyType) {
 
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveySession.class);
     	
@@ -151,7 +140,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
     /**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartners(org.openmrs.Patient)
      */
-    @Override
     public List<SurveyPartner> getSurveyPartners(Patient patient, String partnerType) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
     	
@@ -169,7 +157,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
     /**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartner(org.openmrs.Patient, java.lang.String, java.lang.String)
      */
-    @Override
     public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
     	
@@ -189,7 +176,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#cupSurveyPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
      */
-    @Override
     public void cupSurveyPartner(SurveyPartner surveyPartner) {
 	    sessionFactory.getCurrentSession().saveOrUpdate(surveyPartner);
     }
@@ -198,7 +184,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#cupSurveySession(org.openmrs.module.pearlgrlz.SurveySession)
      */
-    @Override
     public void cupSurveySession(SurveySession surveySession) {
 	    sessionFactory.getCurrentSession().saveOrUpdate(surveySession);
     }
@@ -207,7 +192,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getLatestSurveySession(java.lang.Integer, java.lang.String)
      */
-    @Override
     public SurveySession getLatestSurveySession(Patient patient, String surveyType) {
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveySession.class);
     	
@@ -223,7 +207,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#populatePartnerList(org.openmrs.Patient)
      */
-    @Override
     public List<SurveyPartner> populatePartnerList(Patient patient, String partnerType) {
 	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
 	    
@@ -240,7 +223,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#addPartner(org.openmrs.Patient, org.openmrs.module.pearlgrlz.SurveyPartner)
      */
-    @Override
     public void addPartner(SurveyPartner partner) {
     	if(partner == null || partner.getVoided())
     		return;
@@ -295,7 +277,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getPatientATD(org.openmrs.module.atd.hibernateBeans.FormInstance, org.openmrs.module.dss.hibernateBeans.Rule)
      */
-    @Override
     public PatientATD getPatientATD(FormInstance formInstance, Rule rule) {
     	PatientATD patientATD = null;
     	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(PatientATD.class);
