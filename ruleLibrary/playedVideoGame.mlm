@@ -21,7 +21,7 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
+Box1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
 playedVideoGame := read Exist {Played a video game} Where it Occurred Within Past 1 Days;
@@ -41,10 +41,10 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
+If  (Box1=true) then
  CALL storeObs With "Played a video game","Yes";
 endif;
-If  (Input1=false) then
+If  (Box1=false) then
  CALL storeObs With "Played a video game","No";
 endif;
 

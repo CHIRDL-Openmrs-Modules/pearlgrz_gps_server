@@ -21,7 +21,7 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
+Box1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
 
@@ -45,10 +45,10 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
+If  (Box1=true) then
  CALL storeObs With "Listened to music after sex with sexual-partner2","Yes";
 endif;
-If  (Input1=false) then
+If  (Box1=false) then
  CALL storeObs With "Listened to music after sex with sexual-partner2","No";
 endif;
 

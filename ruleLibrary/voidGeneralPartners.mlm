@@ -21,7 +21,7 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
+Box1:=read {input1 from Parameters};
 
 If (mode = PRODUCE) then
  needVoidGeneralPartners := read Last {Remove general partners} Where it Occurred Within Past 1 Days;
@@ -42,7 +42,7 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
+If  (Box1=true) then
  CALL storeObs With "Voided general partners", "Yes";
 Else
  CALL storeObs With "Voided general partners", "No";

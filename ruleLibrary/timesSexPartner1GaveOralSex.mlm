@@ -21,8 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
-Input1Value:=read {input1value from Parameters};
+Box1:=read {input1 from Parameters};
+Box2:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  sexPartner1GaveOralSex := read Last {Sexual-partner1 gave oral sex to patient} Where it Occurred Within Past 1 Days;
@@ -45,8 +45,8 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
- CALL storeObs With "Number of times sexual-partner1 gave oral sex to patient", "Input1Value";
+If  (Box1=true) then
+ CALL storeObs With "Number of times sexual-partner1 gave oral sex to patient", "Box2";
 endif;
 
 

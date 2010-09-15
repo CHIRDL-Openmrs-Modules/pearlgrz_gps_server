@@ -21,8 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
-Input1Value:=read {input1value from Parameters};
+Box1:=read {input1 from Parameters};
+Box2:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  gotOnSocialNetworkingSites := read Last {Got on a social networking site, Facebook, MySpace, or other sites} Where it Occurred Within Past 1 Days;
@@ -43,8 +43,8 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
- CALL storeObs With "Number of times checking or updating social networking sites", "Input1Value";
+If  (Box1=true) then
+ CALL storeObs With "Number of times checking or updating social networking sites", "Box2";
 endif;
 
 

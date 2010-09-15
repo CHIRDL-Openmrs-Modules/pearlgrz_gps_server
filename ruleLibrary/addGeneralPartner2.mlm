@@ -21,8 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
-Input1Value:=read {input1value from Parameters};
+Box1:=read {input1 from Parameters};
+Box2:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  interactedWithGeneralPartners := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
@@ -46,8 +46,8 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) then
- CALL storeObs With "New general partner2", "Input1Value";
+If  (Box1=true) then
+ CALL storeObs With "New general partner2", "Box2";
 Else
  CALL storeObs With "New general partner2", "SKIPPED";
 endif;

@@ -21,10 +21,10 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Input1:=read {input1 from Parameters};
-Input2:=read {input2 from Parameters};
-Input1Value:=read {input1value from Parameters};
-Input2Value:=read {input2value from Parameters};
+Box1:=read {input1 from Parameters};
+Box3:=read {input2 from Parameters};
+Box2:=read {input1value from Parameters};
+Box4:=read {input2value from Parameters};
 
 If (mode = PRODUCE) then
  exercised := read Last {Exercised for at least 30 minutes} Where it Occurred Within Past 1 Days;
@@ -52,9 +52,9 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Input1=true) AND (Input2=true) then
- CALL storeObs With "Starting-time for the Second time exercising at least 30 minutes", "Input1Value";
- CALL storeObs With "Ending-time for the Second time exercising at least 30 minutes", "Input2Value";
+If  (Box1=true) AND (Box3=true) then
+ CALL storeObs With "Starting-time for the Second time exercising at least 30 minutes", "Box2";
+ CALL storeObs With "Ending-time for the Second time exercising at least 30 minutes", "Box4";
 endif;
 
 
