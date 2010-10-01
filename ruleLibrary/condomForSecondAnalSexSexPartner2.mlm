@@ -21,7 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1 from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
 
 
 If (mode = PRODUCE) then
@@ -51,7 +52,7 @@ If (mode = CONSUME) then
 If  (Box1=true) then
  CALL storeObs With "Condom used for the Second anal sex with sexual-partner2", "Yes";
 endif;
-if (Box1=false) then
+if (Box2=true) then
  CALL storeObs With "Condom used for the Second anal sex with sexual-partner2", "No";
 endif;
 

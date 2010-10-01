@@ -21,8 +21,7 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1 from Parameters};
-Box2:=read {input1value from Parameters};
+Box1:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  sexPartner2AnalSex := read Last {Sexual-partner2 had anal sex with patient} Where it Occurred Within Past 1 Days;
@@ -45,8 +44,8 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
- CALL storeObs With "Number of times anal sex with sexual-partner2", "Box2";
+If NOT (Box1 = NULL) then
+ CALL storeObs With "Number of times anal sex with sexual-partner2", "Box1";
 endif;
 
 
@@ -55,6 +54,8 @@ endif
 
 Action:
 write ("How many times did you have anal sex with <b> || sexualPartner2_value || </b> since last scheduled prompt?");
+write ("translate@Spanish");
+write ("number_entry@input_type");
 ;;
 
 Age_Min: 14 years;;

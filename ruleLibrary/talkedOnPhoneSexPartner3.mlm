@@ -21,7 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1 from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 talkedOnPhoneSexPartner3 := read Exist {Talked to sexual-partner3 on phone} Where it Occurred Within Past 1 Days;
@@ -46,7 +47,7 @@ If (mode = CONSUME) then
 If  (Box1=true) then
  CALL storeObs With "Talked to sexual-partner3 on phone", "Yes";
 endif;
-If  (Box1=false) then
+If  (Box2=true) then
  CALL storeObs With "Talked to sexual-partner3 on phone", "No";
 endif;
 

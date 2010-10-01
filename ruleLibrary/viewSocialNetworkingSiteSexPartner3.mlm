@@ -21,7 +21,8 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1 from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 viewSocialNetworkingSiteSexPartner3 := read Exist {View your social networking page with sexual-partner3} Where it Occurred Within Past 1 Days;
@@ -46,7 +47,7 @@ If (mode = CONSUME) then
 If  (Box1=true) then
  CALL storeObs With "View your social networking page with sexual-partner3", "Yes";
 endif;
-If  (Box1=false) then
+If  (Box2=true) then
  CALL storeObs With "View your social networking page with sexual-partner3", "No";
 endif;
 

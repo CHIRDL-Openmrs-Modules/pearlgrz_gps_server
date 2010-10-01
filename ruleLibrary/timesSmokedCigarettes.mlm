@@ -21,8 +21,7 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1 from Parameters};
-Box2:=read {input1value from Parameters};
+Box1:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  smokedCigarettes := read Last {Smoked cigarettes} Where it Occurred Within Past 1 Days;
@@ -43,8 +42,8 @@ endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
- CALL storeObs With "Number of times smoking cigarettes since last survey", "Box2";
+If NOT (Box1 = NULL) then
+ CALL storeObs With "Number of times smoking cigarettes since last survey", "Box1";
 endif;
 
 
@@ -53,6 +52,8 @@ endif
 
 Action:
 write ("Number of times smoked cigarettes since last survey?");
+write ("translate@Spanish");
+write ("number_entry@input_type");
 ;;
 
 Age_Min: 14 years;;
