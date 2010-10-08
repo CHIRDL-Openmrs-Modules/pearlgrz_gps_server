@@ -51,7 +51,7 @@ endif
 ;;
 
 Action:
-write ("Number of times took prescription drugs not yours since last survey?");
+write ("Number of times using other drugs cocain or meth?");
 write ("translate@Spanish");
 write ("number_entry@input_type");
 ;;
