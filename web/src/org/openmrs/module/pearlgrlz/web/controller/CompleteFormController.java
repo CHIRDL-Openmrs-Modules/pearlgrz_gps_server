@@ -47,24 +47,6 @@ public class CompleteFormController extends SimpleFormController {
     	this.closeDialogView = closeDialogView;
     }
 	
-	
-	/**
-	 * Returns any extra data in a key-->value pair kind of way
-	 * 
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#referenceData(javax.servlet.http.HttpServletRequest,
-	 *      java.lang.Object, org.springframework.validation.Errors)
-	 */
-	@Override
-	protected Map<String, Object> referenceData(HttpServletRequest request, Object obj, Errors err) throws Exception {
-		
-		// this method doesn't return any extra data right now, just an empty map
-		HashMap<String, Object>  modelMap = new HashMap<String, Object> ();
-		
-		return modelMap;
-	}
-	
-	
-	
 	/**
 	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest,
 	 *      javax.servlet.http.HttpServletResponse, java.lang.Object,
@@ -73,9 +55,7 @@ public class CompleteFormController extends SimpleFormController {
 	@Override
 	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object object,
 	                                BindException exceptions) throws Exception {
-		
-		// TODO:  set patientId, providerId, locationId, locationTagId, and more as SESSION variable ..............
-		
+			
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		// Check HtmlFormEntryController.java
@@ -85,7 +65,6 @@ public class CompleteFormController extends SimpleFormController {
         	return new ModelAndView(new RedirectView("surveyPearlgrlzComplete.form"), map);
         }
 		
-//		return new ModelAndView(new RedirectView("surveyPearlgrlzComplete.form"), map);
 	}
 	
 	

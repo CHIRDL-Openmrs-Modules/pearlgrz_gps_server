@@ -46,15 +46,23 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
+import org.openmrs.User;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.FormService;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.PatientService;
+import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicService;
+import org.openmrs.module.atd.ParameterHandler;
+import org.openmrs.module.atd.StateManager;
 import org.openmrs.module.atd.TeleformTranslator;
 import org.openmrs.module.atd.datasource.TeleformExportXMLDatasource;
 import org.openmrs.module.atd.hibernateBeans.FormInstance;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
+import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.atd.hibernateBeans.State;
 import org.openmrs.module.atd.service.ATDService;
 import org.openmrs.module.atd.xmlBeans.Field;
@@ -62,28 +70,14 @@ import org.openmrs.module.atd.xmlBeans.Record;
 import org.openmrs.module.atd.xmlBeans.Records;
 import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.XMLUtil;
-import org.springframework.validation.BindException;
-import org.springframework.web.servlet.ModelAndView;
+import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
+import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-import org.springframework.web.servlet.view.RedirectView;
 
 public class FillOutFormController extends SimpleFormController {
 	
 	/** Logger for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
-	
-	private static Integer patientId = null;
-	private static Integer providerId = null;
-	private static Integer encounterId = null;
-	private static Integer formId = null;
-	private static Integer sessionId = null;
-	private static Integer locationId = null;
-	private static Integer locationTagId = null;
-	
-	private static boolean drankAlcoholFlg = false;
-	private static boolean smokedCigarettesFlg = false;
-	
-	private static Integer formNbrQuestions = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -101,9 +95,48 @@ public class FillOutFormController extends SimpleFormController {
 	@Override
 	protected Map referenceData(HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+		Integer locationTagId = 1; //TODO needs to be configurable
+		Integer locationId = 1; //TODO needs to be configurable
+		Integer numQuestions = 5; //TODO needs to be a form attribute value
 		String idString = request.getParameter("formInstance");
 		String encounterIdString = request.getParameter("encounterId");
+		String patientIdString = request.getParameter("patientId");
+		String sessionIdString = request.getParameter("sessionId");
+		String providerIdString = request.getParameter("providerId");
+		
+		Integer encounterId = null;
+		if(encounterIdString != null){
+			try {
+	            encounterId = Integer.parseInt(encounterIdString);
+            }
+            catch (Exception e) {
+            }
+		}
+		Integer patientId = null;
+		if(patientIdString != null){
+			try {
+				patientId = Integer.parseInt(patientIdString);
+            }
+            catch (Exception e) {
+            }
+		}
+		Integer sessionId = null;
+		if(sessionIdString != null){
+			try {
+				sessionId = Integer.parseInt(sessionIdString);
+            }
+            catch (Exception e) {
+            }
+		}
+		
+		Integer providerId = null;
+		if(providerIdString != null){
+			try {
+				providerId = Integer.parseInt(providerIdString);
+            }
+            catch (Exception e) {
+            }
+		}
 		
 		Integer chosenFormId = null;
 		Integer chosenFormInstanceId = null;
@@ -130,7 +163,6 @@ public class FillOutFormController extends SimpleFormController {
 			if (tokenizer.hasMoreTokens()) {
 				try {
 					chosenFormId = Integer.parseInt(tokenizer.nextToken());
-					FillOutFormController.formId = chosenFormId;
 				}
 				catch (NumberFormatException e) {}
 			}
@@ -145,6 +177,40 @@ public class FillOutFormController extends SimpleFormController {
 		
 		String submitAnswers = request.getParameter("submitAnswers");
 		TeleformTranslator translator = new TeleformTranslator();
+
+		//Run this if the form is scanned
+		if (submitAnswers != null && submitAnswers.length() > 0) {
+			//Run this to show the form
+			InputStream input = null;
+			
+			//if a form is chosen or scanned, find the merge file that goes with
+			//that form
+			String defaultMergeDirectory = IOUtil.formatDirectoryName(org.openmrs.module.atd.util.Util.getFormAttributeValue(
+			    chosenFormId, "defaultMergeDirectory", chosenLocationTagId, chosenLocationId));
+			
+			// Parse the merge file
+			FormInstance formInstance = new FormInstance(chosenLocationId, chosenFormId, chosenFormInstanceId);
+			
+			String currFilename = defaultMergeDirectory + formInstance.toString() + ".xml";
+			
+			File file = new File(currFilename);
+			if (file.exists()) {
+				input = new FileInputStream(currFilename);
+			}
+			scanForm(map, chosenFormId, chosenFormInstanceId, chosenLocationTagId, chosenLocationId, translator, input,
+			    request,patientId,sessionId);
+		} 
+		
+		FormInstance formInstance = null;
+		
+		map.put("patientId", patientId);
+		map.put("providerId", providerIdString);
+		map.put("encounterId", encounterId);
+		map.put("sessionId", sessionId);
+		
+		formInstance = generatePage(patientId,providerId,locationTagId,locationId,numQuestions,map);
+
+		//Run this to show the form
 		InputStream input = null;
 		
 		//if a form is chosen or scanned, find the merge file that goes with
@@ -153,7 +219,9 @@ public class FillOutFormController extends SimpleFormController {
 		    chosenFormId, "defaultMergeDirectory", chosenLocationTagId, chosenLocationId));
 		
 		// Parse the merge file
-		FormInstance formInstance = new FormInstance(chosenLocationId, chosenFormId, chosenFormInstanceId);
+		if(formInstance == null){
+			formInstance = new FormInstance(chosenLocationId, chosenFormId, chosenFormInstanceId);
+		}
 		
 		String currFilename = defaultMergeDirectory + formInstance.toString() + ".xml";
 		
@@ -161,63 +229,144 @@ public class FillOutFormController extends SimpleFormController {
 		if (file.exists()) {
 			input = new FileInputStream(currFilename);
 		}
+		showForm(map, chosenFormId, chosenFormInstanceId, chosenLocationId, translator, input);
 
-		if(FillOutFormController.patientId == null && request.getParameter("patientId") != null ) {
-			FillOutFormController.patientId = Integer.parseInt(request.getParameter("patientId"));
-		}
-		if(FillOutFormController.providerId == null && request.getParameter("providerId") != null ) {
-			FillOutFormController.providerId = Integer.parseInt(request.getParameter("providerId"));
-		}
-		if(FillOutFormController.encounterId == null && request.getParameter("encounterId") != null ) {
-			FillOutFormController.encounterId = Integer.parseInt(request.getParameter("encounterId"));
-		}
-		if(FillOutFormController.sessionId == null && request.getParameter("sessionId") != null ) {
-			FillOutFormController.sessionId = Integer.parseInt(request.getParameter("sessionId"));
-		}
-		if(FillOutFormController.locationId == null && request.getParameter("locationId") != null ) {
-			FillOutFormController.locationId = Integer.parseInt(request.getParameter("locationId"));
-		}
-		if(FillOutFormController.locationTagId == null && request.getParameter("locationTagId") != null ) {
-			FillOutFormController.locationTagId = Integer.parseInt(request.getParameter("locationTagId"));
-		}
-		if(request.getParameter("formNumberQuestions") != null ) {
-			FillOutFormController.formNbrQuestions = Integer.parseInt(request.getParameter("formNumberQuestions"));
-		}
-		
-		// Get all the request parameter from previous page.
-//		map.putAll(request.getParameterMap());
-		map.put("formInstance", idString);
-
-		//Run this if the form is scanned
-		if (submitAnswers != null && submitAnswers.length() > 0) {
-			scanForm(map, chosenFormId, chosenFormInstanceId, chosenLocationTagId, chosenLocationId, translator, input,
-			    request);
-		} else {
-			//Run this to show the form
-			showForm(map, chosenFormId, chosenFormInstanceId, chosenLocationId, translator, input);
-			map.put("formNumberQuestions", request.getParameter("formNumberQuestions"));
-//			if(request.getParameter("formNumberQuestions").equals("pearl_alcohol"))
-//				map.put("formNumberQuestions", 5);
-//				map.put("formNumberQuestions", FillOutFormController.formNbrQuestions);
-			
-		}
-		
+		map.put("formInstance", formInstance.getLocationId() + "_" + locationTagId + "_" + formInstance.getFormId() + "_"
+	        + formInstance.getFormInstanceId());
 		return map;
 	}
 	
 	
-	/**
-	 * @see org.springframework.web.servlet.mvc.SimpleFormController#onSubmit(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.validation.BindException)
-	 */
-//	@Override
-//	protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object object,
-//	                                BindException exceptions) throws Exception {
-//		Map<String, Object> map = new HashMap<String, Object>();
-//		
-//		return new ModelAndView(new RedirectView("pearlgrlzForm.form"), map);
-//	}
+	private FormInstance generatePage(Integer patientId,Integer providerId,Integer locationTagId,
+	                                  Integer locationId, Integer numQuestions,Map<String,Object> map){
+		FormInstance formInstance = null;
+		try {
+		ATDService atdService = Context.getService(ATDService.class);
+		PatientService patientService = Context.getPatientService();
+		State initialState = atdService.getStateByName("create_survey");
+		Session session = atdService.addSession();
+		Integer sessionId = session.getSessionId();
+		
+		//locationId and locationTagId will eventually come from login information
+		//Hard code them for now
+		UserService userService = Context.getUserService();
+		User provider = userService.getUser(providerId);
+		LocationService locationService = Context.getLocationService();
+		Location location = locationService.getLocation(locationId);
+		
+		String formName = "PearlGrlz";
+		FormService formService = Context.getFormService();
+		List<Form> allForms = formService.getForms(formName, null, null, false, null, null, null);
+		Form form = allForms.get(0);
+		Integer formId = form.getFormId();
+		
+		if (patientId != null) {
+			//add logic here to figure out whether a new survey should be started
+			//or a previous survey should be completed
+			//assume new survey for now
+			Patient patient = patientService.getPatient(patientId);
+			
+			PatientState patientState = atdService.addPatientState(patient, initialState, sessionId, locationTagId,
+				locationId);
+			formInstance = atdService.addFormInstance(formId, locationId);
+			
+			
+			//write surveyXML to "merge" directory
+			String defaultMergeDirectory = IOUtil.formatDirectoryName(org.openmrs.module.atd.util.Util
+			        .getFormAttributeValue(formId, "defaultMergeDirectory", locationTagId, locationId));
+			String currFilename = defaultMergeDirectory + formInstance.toString() + ".xml";
+			
+			OutputStream output = new FileOutputStream(currFilename);
+			PearlgrlzService pearlgrlzService = Context.getService(PearlgrlzService.class);
+			Encounter encounter = pearlgrlzService.getEncounter(patient, provider, location);
+			session.setEncounterId(encounter.getEncounterId());
+			atdService.updateSession(session);
+			pearlgrlzService.createSurveyXML(patient,locationId, formId, 
+				numQuestions, provider,locationTagId,formInstance,encounter.getEncounterId());
+			output.close();  
+			patientState.setEndTime(new java.util.Date());
+			atdService.updatePatientState(patientState);
+			initialState = atdService.getStateByName("wait_to_submit_survey");
+			
+			patientState = atdService.addPatientState(patient, initialState, sessionId, locationTagId, locationId);
+			map.put("sessionId",sessionId);
+		}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return formInstance;
+	}
 	
+	private void consumeInputXML(Integer patientId,PatientState patientState,
+	                                    FormInstance formInstance,String exportFilename){
+
+		//lookup the patient again to avoid lazy initialization errors
+		PatientService patientService = Context.getPatientService();
+		Patient patient = patientService.getPatient(patientId);
+		
+		Integer locationTagId = patientState.getLocationTagId();
+
+		Integer sessionId = patientState.getSessionId();
+		patientState.setFormInstance(formInstance);
+		ATDService atdService = Context.getService(ATDService.class);
+		atdService.updatePatientState(patientState);
+		consume(sessionId,formInstance,patient,
+				null,locationTagId,exportFilename);
+		StateManager.endState(patientState);
+	}
 	
+	private void consume(Integer sessionId, FormInstance formInstance, Patient patient,
+	                            List<FormField> fieldsToConsume, Integer locationTagId,String exportFilename) {
+		long startTime = System.currentTimeMillis();
+		AdministrationService adminService = Context.getAdministrationService();
+		ATDService atdService = Context.getService(ATDService.class);
+		Integer encounterId = atdService.getSession(sessionId).getEncounterId();
+		
+		try {
+			InputStream input = new FileInputStream(exportFilename);
+			
+			startTime = System.currentTimeMillis();
+			ParameterHandler parameterHandler = new SurveyParameterHandler();
+			//make sure to remove the parsed file before consume to make sure
+			//the file is freshly read
+			LogicService logicService = Context.getLogicService();
+			TeleformExportXMLDatasource xmlDatasource = (TeleformExportXMLDatasource) logicService.getLogicDataSource("xml");
+			xmlDatasource.deleteParsedFile(formInstance); //make sure we are freshly parsing the file
+
+			atdService.consume(input, formInstance, patient, encounterId, null, null,
+			    parameterHandler, fieldsToConsume, locationTagId, sessionId);
+			startTime = System.currentTimeMillis();
+			input.close();
+		}
+		catch (Exception e) {
+			log.error("Error consuming chica file: " + exportFilename);
+			log.error(e.getMessage());
+			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
+		}
+		
+		System.out.println("chicaStateActionHandler.consume: time of saveObs: " + (System.currentTimeMillis() - startTime));
+		startTime = System.currentTimeMillis();
+		// remove the parsed xml from the xml datasource
+		try {
+			Integer purgeXMLDatasourceProperty = null;
+			try {
+				purgeXMLDatasourceProperty = Integer.parseInt(adminService.getGlobalProperty("atd.purgeXMLDatasource"));
+			}
+			catch (Exception e) {}
+			LogicService logicService = Context.getLogicService();
+			
+			TeleformExportXMLDatasource xmlDatasource = (TeleformExportXMLDatasource) logicService.getLogicDataSource("xml");
+			if (purgeXMLDatasourceProperty != null && purgeXMLDatasourceProperty == 1) {
+				xmlDatasource.deleteParsedFile(formInstance);
+			}
+		}
+		catch (Exception e) {
+			log.error(e.getMessage());
+			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
+		}
+	}
+
 	/**
 	 * Auto generated method comment
 	 * 
@@ -237,8 +386,10 @@ public class FillOutFormController extends SimpleFormController {
 		HashMap<String, org.openmrs.module.atd.xmlBeans.Field> fieldMap = xmlDatasource.getParsedFile(new FormInstance(
 		        locationId, formId, formInstanceId));
 		
+		FormInstance formInstance = new FormInstance(locationId,formId,formInstanceId);
 		//Parse the merge file to get the field values to display
-		FormInstance formInstance = xmlDatasource.parse(inputMergeFile, null, null);
+		formInstance = xmlDatasource.parse(inputMergeFile,
+			formInstance, null);
 		inputMergeFile.close();
 		fieldMap = xmlDatasource.getParsedFile(formInstance);
 		
@@ -269,8 +420,13 @@ public class FillOutFormController extends SimpleFormController {
 	 * @param inputMergeFile
 	 * @param request
 	 */
-	private static void scanForm(Map map, Integer formId, Integer formInstanceId, Integer locationTagId, Integer locationId,
-	                             TeleformTranslator translator, InputStream inputMergeFile, HttpServletRequest request) {
+	
+	
+	private void scanForm(Map map, Integer formId, Integer formInstanceId, Integer locationTagId, Integer locationId,
+	                             TeleformTranslator translator, 
+	                             InputStream inputMergeFile, HttpServletRequest request,
+	                             Integer patientId,Integer sessionId) {
+		boolean drankAlcoholFlg = false;
 
 		try {
 			//pull all the input fields from the database for the form
@@ -317,95 +473,14 @@ public class FillOutFormController extends SimpleFormController {
 			XMLUtil.serializeXML(records, output);
 			output.flush();
 			output.close();
-			
-			// TODO: Save the obs
-//			Form form = new Form(formId);									// Bad usage
-			Form form = Context.getFormService().getForm(formId);
-			Set<FormField> lFormFields = form.getFormFields();   
-//			List<FormField> lFormFields = Context.getFormService().getFormFields(form) ;
-//			List<FormField> lFormFields = form.getOrderedFormFields();
-			Map<String, Concept> mConcepts = new HashMap<String, Concept>();
-			
-			// TODO: Currently assume all fields in this form use Concept; 
-			for(FormField ff : lFormFields) {
-				if(ff.getField().getConcept() != null) {
-					mConcepts.put(ff.getField().getName(), ff.getField().getConcept()); 
-				}
-			}
-			
-			ConceptAnswer conceptAnswer = null;
-			
-			Log log = LogFactory.getLog(FillOutFormController.class);
-			
-			// For each field in Record, let's get the Concept and Concept Answers
-			// Check the user-input-answer,  use the correct concept-answer for the obs
-			for(Field currField : record.getFields()) {
-				String name = currField.getId();
-				
-				if(mConcepts.containsKey(name)) {
-					Obs  obs = new Obs();
-					
-					Collection<ConceptAnswer> answers = mConcepts.get(name).getAnswers();
-					
-//					String inputVal = request.getParameter(name);
-					String inputVal = request.getParameter(mFormFieldConceptAnswerField.get(name));  
-					
-					// Set flag if concept is Drank alcohol etc, and the answer is Y (Yes)
-					if(inputVal.equalsIgnoreCase("Y")) {
-						if(mConcepts.get(name).getName().getName().equalsIgnoreCase("Drank alcohol")) 
-							drankAlcoholFlg = true;
-					
-						if(mConcepts.get(name).getName().getName().equalsIgnoreCase("Smoked cigarettes")) 
-							smokedCigarettesFlg = true;
-					} 
-
-					// Get the concept-answer based on user's input (Y or N)
-					for (ConceptAnswer ans : answers) {
-	                    if(inputVal != null && (ans.getAnswerConcept().getName().getName().contains(inputVal) 
-	                    		||  ans.getAnswerConcept().getName().getName().contains(inputVal.toLowerCase())) ) {
-	                    	conceptAnswer = ans;
-	                    }
-                    }
-					
-//					obs.setPerson(new Person(patientId));
-					obs.setPerson(Context.getPersonService().getPerson(patientId));
-					obs.setConcept(mConcepts.get(name));
-//					obs.setEncounter(new Encounter(encounterId));
-					obs.setEncounter(Context.getEncounterService().getEncounter(encounterId));
-//					obs.setLocation(new Location(locationId));
-					obs.setLocation(Context.getLocationService().getLocation(locationId));
-//					obs.setDateCreated(new java.util.Date());				// OpenMRS should add
-					obs.setObsDatetime(new java.util.Date());
-					
-					// The result can be a concept, text, datetime, boolean, or others
-					if(conceptAnswer != null)
-						obs.setValueCoded(conceptAnswer.getAnswerConcept());
-//					else if(mConcepts.get(name).getDatatype().getName().equalsIgnoreCase("Text"))
-					else
-						obs.setValueText(inputVal); 
-					
-					Context.getObsService().saveObs(obs, "new");
-					log.error("Saved one Observation: concept <" + mConcepts.get(name).getName().getName() + ">  the answer is <" + conceptAnswer.getAnswerConcept().getName().getName() + ">");
-				}
-				
-				// Get Concept Name
-				  log.info("current-field is <" + name + ">; has value of <" + currField.getValue() + ">");
-				  
-				  
-						
-				if(inputFields.contains(name)) {
-					String inputVal = request.getParameter(name);
-					
-				}
-			}
-			
-			
-			
+			ATDService atdService = Context.getService(ATDService.class);
 			// Update the state for this participant session
 			Patient patient = Context.getPatientService().getPatient(patientId);
-			ATDService atdService = Context.getService(ATDService.class);
 			State prcsState = atdService.getStateByName("process_survey"); 
 			PatientState patientState = atdService.addPatientState(patient, prcsState, sessionId, locationTagId, locationId);
+
+			consumeInputXML(patientId,patientState,formInstance,exportFilename);
+			
 			patientState.setEndTime(new java.util.Date());
 			atdService.updatePatientState(patientState);
 			
@@ -415,19 +490,13 @@ public class FillOutFormController extends SimpleFormController {
 			map.put("contSurvey", "contSurvey");
 			map.put("nonInit", "nonInit");
 			map.put("submitAnswers", "");
-			
-			map.put("patientId", patientId);
-			map.put("providerId", providerId);
-			map.put("locationId", locationId);
-			map.put("locationTagId", locationTagId);
-			
+						
 			if(drankAlcoholFlg) {
 				map.put("formName", "pearl_alcohol");
 				map.put("formNumberQuestions", "5");
 				drankAlcoholFlg = false;
 			} else {
 				map.put("formName", "pearl_general_cont");
-//				map.put("formNumberQuestions", "5");
 			}
 			
 		}

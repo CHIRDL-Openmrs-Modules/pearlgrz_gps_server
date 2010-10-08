@@ -14,8 +14,6 @@
 				<prop key="/module/@MODULE_ID@/pearlgrlzsurvey.form">page1Controller</prop>
 				<prop key="/module/@MODULE_ID@/surveyPearlgrlzPage1.form">page1Controller</prop>
 				<prop key="/module/@MODULE_ID@/surveyPearlgrlzComplete.form">completeController</prop>
-				<prop key="/module/@MODULE_ID@/pearlgrlzSurveyAlcohol.form">alcoholController</prop>
-				<prop key="/module/@MODULE_ID@/pearlgrlzSurveySmoking.form">smokingController</prop>
 	    	</props>
 		</property>
     </bean>
@@ -43,16 +41,6 @@
 		<property name="commandName"><value>command</value></property>
 		<property name="formView"><value>/module/@MODULE_ID@/surveyPearlgrlzPage1</value></property>
 		<property name="successView"><value>surveyPearlgrlzPage1.form</value></property>
-	</bean>
-	<bean id="alcoholController" class="@MODULE_PACKAGE@.web.controller.AlcoholFormController">
-		<property name="commandName"><value>command</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzSurveyAlcohol</value></property>
-		<property name="successView"><value>pearlgrlzSurveyAlcohol.form</value></property>
-	</bean>
-	<bean id="smokingController" class="@MODULE_PACKAGE@.web.controller.SmokingFormController">
-		<property name="commandName"><value>command</value></property>
-		<property name="formView"><value>/module/@MODULE_ID@/pearlgrlzSurveySmoking</value></property>
-		<property name="successView"><value>pearlgrlzSurveySmoking.form</value></property>
 	</bean>
 	<bean id="completeController" class="@MODULE_PACKAGE@.web.controller.CompleteFormController">
 		<property name="closeDialogView"><value>/module/@MODULE_ID/closeDialog</value></property>

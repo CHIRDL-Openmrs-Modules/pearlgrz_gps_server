@@ -45,7 +45,7 @@ public class SurveyParameterHandler implements ParameterHandler {
 	public void addParameters(Map<String, Object> parameters, Rule rule) {
 		FormInstance formInstance = (FormInstance) parameters.get("formInstance");
 		LogicService logicService = Context.getLogicService();
-		PearlgrlzService pearlgrlzService =  (PearlgrlzService) Context.getService(PearlgrlzService.class);
+		PearlgrlzService pearlgrlzService = Context.getService(PearlgrlzService.class);
 		PatientATD patientATD  = null;
 		Integer fieldId = null;
 		String fieldName = null;
@@ -81,6 +81,8 @@ public class SurveyParameterHandler implements ParameterHandler {
 		 }
 		 
 		 idx = fieldName.substring("Question".length());
+		 
+		 setBoxParameters(parameters,fieldMap);
 		 
 		input1Lookup = "QuestionEntry_" + idx + "_1"; 
 		input2Lookup = "QuestionEntry_" + idx + "_2"; 
@@ -159,5 +161,26 @@ public class SurveyParameterHandler implements ParameterHandler {
 		}
 	}
 	
+	private void setBoxParameters(Map<String, Object> parameters,HashMap<String,Field> fieldMap){
+		String child0Val = (String) parameters.get("child0");
+		String child1Val = (String) parameters.get("child1");
+		
+		if(child0Val != null){
+			String answer = fieldMap.get(child0Val).getValue();
+			if(answer != null){
+				answer = answer.trim();
+				
+				if(answer.equalsIgnoreCase("Y")){
+					parameters.put("Box1", "true");
+					parameters.put("box1", "true");
+				}else if(answer.equalsIgnoreCase("N")){
+					parameters.put("Box2", "true");
+					parameters.put("box2", "true");
+				}else{
+					parameters.put("input1value", answer);
+				}
+			}
+		}
+	}
 }
 	

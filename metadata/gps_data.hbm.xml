@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.pearlgrlz">
+
+	<class name="org.openmrs.module.pearlgrlz.hibernateBeans.GpsData" table="pearlgrlz_gps_data">
+		
+		<id name="gpsDataId" type="java.lang.Integer" column="gps_data_id">
+			<generator class="native" />
+		</id>
+	
+		<property name="longitude" type="java.lang.Double" column="longitude"/>
+		<property name="latitude" type="java.lang.Double" column="latitude"/>
+		<property name="phoneName" type="java.lang.String" column="phone_name"/>
+		<property name="time" type="java.util.Date" column="time"/>
+	</class>
+	
+</hibernate-mapping>

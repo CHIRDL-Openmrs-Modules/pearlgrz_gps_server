@@ -22,17 +22,16 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.module.atd.hibernateBeans.FormInstance;
 import org.openmrs.module.atd.hibernateBeans.PatientATD;
-import org.openmrs.module.atd.hibernateBeans.PatientState;
+import org.openmrs.module.chirdlutil.util.Util;
 import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.pearlgrlz.ConceptPromptPage;
 import org.openmrs.module.pearlgrlz.SurveyPartner;
 import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.db.PearlgrlzDAO;
+import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 
 
 /**
@@ -74,86 +73,6 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 		return (SurveyRecord) criteria.uniqueResult();
 	}
 	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#createSurveyRecord(org.openmrs.module.pearlgrlz.SurveyRecord)
-	 */
-	public void cupSurveyRecord(SurveyRecord record) {
-		sessionFactory.getCurrentSession().saveOrUpdate(record);
-	}
-	
-	
-	public String getConceptPormpt(Concept concept) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ConceptPromptPage.class);
-		
-		criteria.add(Restrictions.eq("conceptId", concept.getConceptId()));
-		criteria.setMaxResults(1);
-		return ((ConceptPromptPage) criteria.uniqueResult()).getPrompt();
-	}
-	
-	
-	
-	public String getConceptPormptSP(Concept concept) {
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ConceptPromptPage.class);
-		
-		criteria.add(Restrictions.eq("conceptId", concept.getConceptId()));
-		criteria.setMaxResults(1);
-		return ((ConceptPromptPage) criteria.uniqueResult()).getPrompt_sp();
-	}
-	
-	
-	
-	public Integer getPageToAdd(Concept concept) {
-		Integer formId = null;
-		
-		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(ConceptPromptPage.class);
-		
-		criteria.add(Restrictions.eq("conceptId", concept.getConceptId()));
-		criteria.add(Restrictions.isNotNull("formId"));
-		criteria.setMaxResults(1);
-		
-		if(criteria.uniqueResult() != null) {
-			formId = ( (ConceptPromptPage) criteria.uniqueResult()).getFormId();
-		}
-		
-		return formId;
-	}
-
-
-	/**
-     * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getOpenSession(org.openmrs.Patient)
-     */
-        public SurveySession getOpenSurveySession(Patient patient, String surveyType) {
-
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveySession.class);
-    	
-    	criteria.add(Restrictions.eq("patientId", patient.getPatientId()));
-    	criteria.add(Restrictions.eq("surveyType", surveyType));
-    	criteria.add(Restrictions.eq("voided", Boolean.FALSE));
-    	criteria.add(Restrictions.isNull("endTime"));
-    	criteria.setMaxResults(1);
-    	
-	    return (SurveySession) criteria.uniqueResult();
-    }
-    
-    
-    /**
-     * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartners(org.openmrs.Patient)
-     */
-    public List<SurveyPartner> getSurveyPartners(Patient patient, String partnerType) {
-    	Criteria criteria = sessionFactory.getCurrentSession().createCriteria(SurveyPartner.class);
-    	
-    	criteria.add(Restrictions.eq("patientId", patient.getPatientId()));
-    	criteria.add(Restrictions.eq("partnerType", partnerType));
-    	criteria.add(Restrictions.eq("voided", Boolean.FALSE));
-    	criteria.addOrder(Order.desc("dateChanged"));
-    	criteria.addOrder(Order.desc("nbrTimeSelected"));
-
-    	return criteria.list();
-    }
-    
-    
-    
     /**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#getSurveyPartner(org.openmrs.Patient, java.lang.String, java.lang.String)
      */
@@ -170,17 +89,7 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
 
     	return (SurveyPartner) criteria.uniqueResult();
     }
-    
-    
-
-	/**
-     * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#cupSurveyPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
-     */
-    public void cupSurveyPartner(SurveyPartner surveyPartner) {
-	    sessionFactory.getCurrentSession().saveOrUpdate(surveyPartner);
-    }
-
-
+   
 	/**
      * @see org.openmrs.module.pearlgrlz.db.PearlgrlzDAO#cupSurveySession(org.openmrs.module.pearlgrlz.SurveySession)
      */
@@ -290,6 +199,15 @@ public class HibernatePearlgrlzDAO implements PearlgrlzDAO {
     	
 	    return patientATD;
     }
-    
+	public void addGpsData(GpsData gpsData)
+	{
+		try
+		{
+			this.sessionFactory.getCurrentSession().save(gpsData);
+		} catch (Exception e)
+		{
+			this.log.error(Util.getStackTrace(e));
+		}
+	}
     
 }

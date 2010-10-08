@@ -82,14 +82,12 @@
 	</dwr>
 	-->
 	
-	<!-- Servlets -->
-	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> 
+		<!-- Servlets -->
+	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->
 	<servlet>
-		<servlet-name>formDownload</servlet-name>
-		<servlet-class>@MODULE_PACKAGE@.web.FormDownloadServlet</servlet-class>
+		<servlet-name>updateGPSCoordinates</servlet-name>
+		<servlet-class>@MODULE_PACKAGE@.web.UpdateGPSCoordinatesServlet</servlet-class>
 	</servlet>
-	-->
-	<!-- /Servlets -->
 	
 	
 	<!-- Internationalization -->
@@ -112,7 +110,7 @@
 		SurveySession.hbm.xml
 		SurveyPartner.hbm.xml
 		SurveyRecord.hbm.xml
-		ConceptPromptPage.hbm.xml
+		gps_data.hbm.xml
 	</mappingFiles>
 	
 </module>

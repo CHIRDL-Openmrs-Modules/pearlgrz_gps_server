@@ -76,4 +76,23 @@
 		</sql>
 		
 	</diff>
+		<diff>
+		<version>1.0.2</version>
+		<author>Tammy Dugan</author>
+		<date>Oct 6th 2010</date>
+		<description>
+			Add table for gps data.
+		</description>
+		<sql>
+	CREATE TABLE `pearlgrlz_gps_data` (
+  `gps_data_id` int(11) NOT NULL AUTO_INCREMENT,
+  `longitude` double NOT NULL,
+  `latitude` double NOT NULL,
+  `phone_name` varchar(40) NOT NULL,
+  `time` datetime NOT NULL,
+  PRIMARY KEY (`gps_data_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+	</diff>
+	
 </sqldiff>

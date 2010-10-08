@@ -24,11 +24,6 @@
 			<attribute name="javadoc_location" value="file:/C:/Documents and Settings/jwang/workspace/chirdlutil/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib-common/atd-1.56.9.jar" sourcepath="/atd/src">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Documents and Settings/jwang/workspace/atd/doc/javadoc/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib-common/dss-2.27.11.jar" sourcepath="/dss/src">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Documents and Settings/jwang/workspace/dss/doc/javadoc/"/>
@@ -43,5 +38,6 @@
 	<classpathentry kind="lib" path="/chica"/>
 	<classpathentry kind="lib" path="/rgccd"/>
 	<classpathentry kind="lib" path="/sockethl7listener"/>
+	<classpathentry kind="lib" path="lib-common/atd-1.58.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>

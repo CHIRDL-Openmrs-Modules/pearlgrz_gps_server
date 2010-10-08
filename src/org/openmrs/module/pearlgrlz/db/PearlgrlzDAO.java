@@ -25,6 +25,7 @@ import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.pearlgrlz.SurveyPartner;
 import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
+import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 
 /**
  *
@@ -33,25 +34,9 @@ public interface PearlgrlzDAO {
 
 	public SurveyRecord getLatestSurveyRecord(Patient patient);
 	
-//	public List<SurveyRecord> getPrevSurveyRecords(Integer patientId); 	// Used to purge the records ?
-	
-	public void cupSurveyRecord(SurveyRecord record);
-	
 	public void cupSurveySession(SurveySession surveySession);
-	
-	public void cupSurveyPartner(SurveyPartner surveyPartner);
-	
-	public String getConceptPormpt(Concept concept);
-	
-	public Integer getPageToAdd(Concept concept);
-	
-	public String getConceptPormptSP(Concept concept);
-	
-	public SurveySession getOpenSurveySession(Patient patient, String surveyType);
-	
+			
 	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
-
-	public List<SurveyPartner> getSurveyPartners(Patient patient, String partnerType);
 
 	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType);
 	
@@ -62,4 +47,6 @@ public interface PearlgrlzDAO {
 	public void voidPartner(SurveyPartner partner);
 	
 	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
+
+	public void addGpsData(GpsData gpsData);
 }

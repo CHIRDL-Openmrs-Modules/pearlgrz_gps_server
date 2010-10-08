@@ -15,7 +15,6 @@ package org.openmrs.module.pearlgrlz.web.controller;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,7 @@ import org.openmrs.LocationTag;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.FormService;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -110,15 +110,17 @@ public class PearlgrlzFormController extends SimpleFormController {
 			User provider = userService.getUser(Integer.parseInt(providerIdString));
 			Integer LOCATION_TAG_ID = Integer.parseInt(locationTagIdStr);
 			Integer LOCATION_ID = Integer.parseInt(locationIdStr);
+			LocationService locationService = Context.getLocationService();
+			Location location = locationService.getLocation(LOCATION_ID);
 			
-			Integer NUM_QUESTIONS = 10; //needs to be a form attribute value
+			Integer NUM_QUESTIONS = 5; //needs to be a form attribute value
 			String tmpStr = request.getParameter("formNumberQuestions");
 			if (tmpStr != null) {
 				try {
 					NUM_QUESTIONS = Integer.parseInt(tmpStr);
 				}
 				catch (Exception e) {
-					;
+					
 				}
 			}
 			
@@ -159,8 +161,10 @@ public class PearlgrlzFormController extends SimpleFormController {
 				
 				OutputStream output = new FileOutputStream(currFilename);
 				PearlgrlzService pearlgrlzService = Context.getService(PearlgrlzService.class);
+				Integer encounterId = pearlgrlzService.getEncounter(patient,provider,location).getEncounterId();
 				pearlgrlzService
-				        .createSurveyXML(patient, patientState, output, LOCATION_ID, formId, NUM_QUESTIONS, provider);
+				        .createSurveyXML(patient, LOCATION_ID, formId, NUM_QUESTIONS, 
+				        	provider, LOCATION_TAG_ID,formInstance,encounterId);
 				output.close();
 				patientState.setEndTime(new java.util.Date());
 				atdService.updatePatientState(patientState);
@@ -174,7 +178,7 @@ public class PearlgrlzFormController extends SimpleFormController {
 				map.put("sessionId", sessionId);
 				map.put("locationId", request.getParameter("locationDropDown"));
 				map.put("locationTagId", request.getParameter("locationTagDropDown"));
-				map.put("encounterId", pearlgrlzService.getEncounter(patient).getEncounterId());
+				map.put("encounterId", encounterId);
 				map.put("formName", formName);
 				map.put("formNumberQuestions", NUM_QUESTIONS);
 				
@@ -186,7 +190,6 @@ public class PearlgrlzFormController extends SimpleFormController {
 		}
 		
 		return new ModelAndView(new RedirectView("pearlgrlzForm.form"), map);
-//		return new ModelAndView(new RedirectView(getSuccessView()));
 	}
 	
 	/**
@@ -199,13 +202,9 @@ public class PearlgrlzFormController extends SimpleFormController {
 	@Override
 	protected Collection<Patient> formBackingObject(HttpServletRequest request) throws Exception {
 		
-		// get all surveyParticipants that have an identifier "1234"
-		// see http://resources.openmrs.org/doc/index.html?org/openmrs/api/PatientService.html for
-		// a list of all PatientService methods
-		Collection<Patient> surveyParticipants = Context.getPatientService().findPatients("survey", false);
-//		Collection<Patient> surveyParticipants = Context.getPatientService().getPatients("survey");
-		
-//		Collection<User> surveyProviders = Context.getUserService().getAllUsers();
+		// get all patients as possible survey participants
+		Collection<Patient> surveyParticipants = Context.getPatientService().getAllPatients();
+
 		
 		// this object will be made available to the jsp page under the variable name
 		// that is defined in the /metadata/moduleApplicationContext.xml file 
