@@ -44,7 +44,7 @@ endif
 
 If (mode = CONSUME) then
 
-If  NOT (Box1 = NULL) then
+If NOT (Box1 = NULL) then
  CALL storeObsMultipleAnswers With "New general partner", "Box1";
 Else
  CALL storeObs With "New general partner", "SKIPPED";
@@ -57,7 +57,7 @@ endif
 Action:
 write ("Add new general partner interacted with (did not have sex) since last survey.");
 write ("translate@Spanish");
-write ("dropdown_entry@input_type");
+write ("text_entry@input_type");
 ;;
 
 Age_Min: 14 years;;

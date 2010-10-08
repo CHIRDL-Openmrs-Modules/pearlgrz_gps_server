@@ -35,7 +35,7 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 			<c:when test="${Question1_input_type == 'number_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_1" size="3"/></td>
 			</c:when>
-			<c:when test="${Question1_input_type == 'dropdown_entry'}">
+			<c:when test="${Question1_input_type == 'text_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_1" size="10"/></td>
 			</c:when>
 			<c:otherwise>
@@ -50,7 +50,7 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 			<c:when test="${Question2_input_type == 'number_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_2" size="3"/></td>
 			</c:when>
-			<c:when test="${Question2_input_type == 'dropdown_entry'}">
+			<c:when test="${Question2_input_type == 'text_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_2" size="10"/></td>
 			</c:when>
 			<c:otherwise>
@@ -65,7 +65,7 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 			<c:when test="${Question3_input_type == 'number_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_3" size="3"/></td>
 			</c:when>
-			<c:when test="${Question3_input_type == 'dropdown_entry'}">
+			<c:when test="${Question3_input_type == 'text_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_3" size="10"/></td>
 			</c:when>
 			<c:otherwise>
@@ -80,7 +80,7 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 			<c:when test="${Question4_input_type == 'number_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_4" size="3"/></td>
 			</c:when>
-			<c:when test="${Question4_input_type == 'dropdown_entry'}">
+			<c:when test="${Question4_input_type == 'text_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_4" size="10"/></td>
 			</c:when>
 			<c:otherwise>
@@ -95,7 +95,7 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 			<c:when test="${Question5_input_type == 'number_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_5" size="3"/></td>
 			</c:when>
-			<c:when test="${Question5_input_type == 'dropdown_entry'}">
+			<c:when test="${Question5_input_type == 'text_entry'}">
 				<td colspan=2><input type="text" name="QuestionEntry_5" size="10"/></td>
 			</c:when>
 			<c:otherwise>

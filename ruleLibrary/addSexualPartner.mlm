@@ -1,6 +1,6 @@
 Maintenance:
 	Title:		sexual partner related Question;;
-	Filename:	addSexualPartner1.mlm;;
+	Filename:	addSexualPartner.mlm;;
 	Version:	1.0;;
 	Institution:	Indiana University School of Medicine;;
 	Author:		Jun Wang;;
@@ -21,14 +21,12 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {input1value from Parameters};
+Box1:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
  interactedWithSexualPartners := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
  newSexualPartners := read Last {New sexual partners to add} Where it Occurred Within Past 1 Days;
- sexualPartner1 := read Exist {New sexual partner1} Where it Occurred Within Past 1 Days;
- sexualPartner1Input := read Last {New sexual partner1} Where it Occurred Within Past 1 Days;
+ sexualPartnerInput := read Last {New sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -38,18 +36,18 @@ Priority:		258;;
 Logic:
 If (mode = PRODUCE) then
 
-If (sexualPartner1Input = "SKIPPED" ) then conclude False;
-If (interactedWithSexualPartners = Yes) AND (newSexualPartners = Yes) AND (sexualPartner1 = False)  then conclude True; 
+If NOT (sexualPartnerInput = NULL) then conclude False;
+If (interactedWithSexualPartners = Yes) AND (newSexualPartners = Yes) then conclude True; 
 conclude false;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
- CALL storeObs With "New sexual partner1", "Box2";
+If NOT (Box1=true) then
+ CALL storeObsMultipleAnswers With "New sexual partner", "Box1";
 Else
- CALL storeObs With "New sexual partner1", "SKIPPED";
+ CALL storeObs With "New sexual partner", "SKIPPED";
 endif;
 
 
@@ -57,7 +55,9 @@ endif
 ;;
 
 Action:
-write ("Add new sexual partner you had sex with since last survey?");
+write ("Add new sexual partner you had sex with since last survey.");
+write ("translate@Spanish");
+write ("text_entry@input_type");
 ;;
 
 Age_Min: 14 years;;
