@@ -26,8 +26,8 @@ Box1:=read {input1value from Parameters};
 If (mode = PRODUCE) then
  sexPartner1ReceivedOralSex := read Last {Sexual-partner1 received oral sex from patient} Where it Occurred Within Past 1 Days;
  frequency := read Exist {Number of times sexual-partner1 received oral sex from patient} Where it Occurred Within Past 1 Days;
- hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
- sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+ hasSexualPartner1:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+ sexualPartner1:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -55,7 +55,7 @@ endif
 Action:
 write ("How many times did you give oral sex to <b> || sexualPartner1_value || </b> since last scheduled prompt?");
 write ("translate@Spanish");
-write ("number_entry@input_type");
+write ("number_entry@input_type_1");
 ;;
 
 Age_Min: 14 years;;

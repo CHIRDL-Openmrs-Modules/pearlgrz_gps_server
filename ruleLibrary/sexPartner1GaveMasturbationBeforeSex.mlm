@@ -27,8 +27,8 @@ Box2:=read {box2 from Parameters};
 If (mode = PRODUCE) then
 
 sexPartner1GaveMasturbationBeforeSex := read Exist {Sexual-partner1 gave masturbation to patient before sex} Where it Occurred Within Past 1 Days;
-hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
-sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+hasSexualPartner1:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+sexualPartner1:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 
 endif
 ;;

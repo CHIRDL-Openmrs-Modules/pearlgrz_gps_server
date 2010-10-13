@@ -26,8 +26,8 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 chattedTalkedOnlineGenPartner1 := read Exist {Chatted or talked to general-partner1 online} Where it Occurred Within Past 1 Days;
-hasGeneralPartner1:=read Exist {General partner1} Where it Occurred Within Past 1 Days;
-generalPartner1:=read Last {General partner1} Where it Occurred Within Past 1 Days;
+hasGeneralPartner1:=read Exist {General partner} Where it Occurred Within Past 1 Days;
+generalPartner1:=read Last {General partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 

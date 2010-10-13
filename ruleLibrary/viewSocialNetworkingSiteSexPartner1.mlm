@@ -26,8 +26,8 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 viewSocialNetworkingSiteSexPartner1 := read Exist {View your social networking page with sexual-partner1} Where it Occurred Within Past 1 Days;
-hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
-sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+hasSexualPartner1:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+sexualPartner1:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 

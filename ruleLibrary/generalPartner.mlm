@@ -56,7 +56,7 @@ endif
 ;;
 
 Action:
-write ("Interact with someone <b>talked to or interested in</b> since last survey?");
+write ("Did you interact with someone (<b>talked to or interested in</b>) since last survey?");
 ;;
 
 Age_Min: 14 years;;

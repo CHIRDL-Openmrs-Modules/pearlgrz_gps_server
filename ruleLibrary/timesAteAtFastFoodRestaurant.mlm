@@ -53,7 +53,7 @@ endif
 Action:
 write ("Number of times eating at fast wood restaurant since last survey?");
 write ("translate@Spanish");
-write ("number_entry@input_type");
+write ("number_entry@input_type_1");
 ;;
 
 Age_Min: 14 years;;

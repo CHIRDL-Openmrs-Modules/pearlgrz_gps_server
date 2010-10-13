@@ -29,8 +29,8 @@ If (mode = PRODUCE) then
  sexualPartner1VaginalSex := read Last {Sexual-partner1 had vaginal sex with patient} Where it Occurred Within Past 1 Days;
  frequency := read Last {Number of times vaginal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
  existCondomUsedFirstTimeSexPartner1 := read Exist {Condom used for the First vaginal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
- hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
- sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+ hasSexualPartner1:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+ sexualPartner1:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 

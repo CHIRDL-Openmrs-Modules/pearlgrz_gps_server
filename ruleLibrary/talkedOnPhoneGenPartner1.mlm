@@ -25,9 +25,12 @@ Box1:=read {box1 from Parameters};
 Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
-talkedOnPhoneGenPartner1 := read Exist {Talked to general-partner1 on phone} Where it Occurred Within Past 1 Days;
-hasGeneralPartner1:=read Exist {General partner1} Where it Occurred Within Past 1 Days;
-generalPartner1:=read Last {General partner1} Where it Occurred Within Past 1 Days;
+talkedOnPhoneGenPartner := read Exist {Talked to general-partner on phone} Where it Occurred Within Past 1 Days;
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+
+If (mode = CONSUME) then
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -37,7 +40,7 @@ Priority:		271;;
 Logic:
 If (mode = PRODUCE) then
 
-If (talkedOnPhoneGenPartner1 = False) AND (hasGeneralPartner1  = True) then conclude True;
+If (talkedOnPhoneGenPartner = False) AND NOT (generalPartner  = NULL) then conclude True;
 conclude False;
 
 endif
@@ -45,10 +48,10 @@ endif
 If (mode = CONSUME) then
 
 If  (Box1=true) then
- CALL storeObs With "Talked to general-partner1 on phone", "Yes";
+ CALL storeGroupedObs With "generalPartner_object","Talked to general-partner on phone", "Yes";
 endif;
 If  (Box2=true) then
- CALL storeObs With "Talked to general-partner1 on phone", "No";
+ CALL storeGroupedObs With "generalPartner_object","Talked to general-partner on phone", "No";
 endif;
 
 
@@ -56,7 +59,7 @@ endif
 ;;
 
 Action:
-write ("Did you <b> talk to || generalPartner1_value || on phone </b> ?");
+write ("Did you <b> talk to || generalPartner_value || on phone </b> ?");
 ;;
 
 Age_Min: 14 years;;

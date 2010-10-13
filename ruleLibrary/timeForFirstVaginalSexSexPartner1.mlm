@@ -31,8 +31,8 @@ If (mode = PRODUCE) then
  frequency := read Last {Number of times vaginal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
  answered1 := read Exist {Starting-time for the First vaginal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
  answered2 := read Exist {Ending-time for the First vaginal sex with sexual-partner1} Where it Occurred Within Past 1 Days;
- hasSexualPartner1:=read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
- sexualPartner1:=read Last {Sexual partner1} Where it Occurred Within Past 1 Days;
+ hasSexualPartner1:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+ sexualPartner1:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 

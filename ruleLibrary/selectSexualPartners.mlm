@@ -21,18 +21,13 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box3:=read {input2 from Parameters};
-Box5:=read {input3 from Parameters};
-Box2:=read {input1value from Parameters};
-Box4:=read {input2value from Parameters};
-Box6:=read {input3value from Parameters};
+Box1:=read {input1value from Parameters}; /* dropdown list */
+Box2:=read {input2value from Parameters}; /* text entry */
 
 If (mode = PRODUCE) then
  interactedWithSexualPartners := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
- sexualPartner1 := read Exist {Sexual partner1} Where it Occurred Within Past 1 Days;
- sexualPartner2 := read Exist {Sexual partner2} Where it Occurred Within Past 1 Days;
- sexualPartner3 := read Exist {Sexual partner3} Where it Occurred Within Past 1 Days;
+ partnerList := read {sexual previous partner list};
+ sexualPartnerInput := read Last {Sexual partner} Where it Occurred Within Past 1 Days; /* see if this question answered */
 endif
 ;;
 
@@ -42,29 +37,41 @@ Priority:		267;;
 Logic:
 If (mode = PRODUCE) then
 
-If (interactedWithSexualPartners = Yes) AND (sexualPartner1 = False) AND (sexualPartner2 = False) AND (sexualPartner3 = False)  then conclude True;
+If NOT (sexualPartnerInput = NULL) then conclude False; /* don't show if partners already chosen */
+If (interactedWithSexualPartners = Yes) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
- CALL storeObs With "Sexual partner1", "Box2";
-endif;
-If  (Box3=true) then
- CALL storeObs With "Sexual partner2", "Box4";
-endif;
-If  (Box5=true) then
- CALL storeObs With "Sexual partner3", "Box6";
+/* If partners chosen from dropdown, store them under sexual partner. This is the active
+partner list for this survey session */
+If NOT (Box1 = NULL) then
+ CALL storeObsMultipleAnswers With "Sexual partner", "Box1";
 endif;
 
+/* If new partners entered in text box, store under previous partner list and 
+store them under sexual partner. This is the active partner list for this survey session */
+If NOT (Box2 = NULL) then
+ CALL storeObsMultipleAnswers With "sexual previous partner list", "Box2";
+ CALL storeObsMultipleAnswers With "Sexual partner", "Box2";
+endif;
+
+/* If there is no input, indicate that the question was skipped */
+If (Box1 = NULL) AND (Box2 = NULL) then
+  CALL storeObs With "Sexual partner", "SKIPPED";
+endif;
 
 endif
 ;;
 
 Action:
-write ("Select <b> upto Three sexual partners </b> had sex with or interested in having sex since last scheduled prompt?");
+write ("Select/Enter names of <b> up to Three sexual partners </b> had sex with or interested in having sex since last scheduled prompt:");
+write ("translate@Spanish");
+write ("dropdown_entry@input_type_1");
+write ("|| partnerList ||@input_list_1");
+write ("text_entry@input_type_2");
 ;;
 
 Age_Min: 14 years;;
