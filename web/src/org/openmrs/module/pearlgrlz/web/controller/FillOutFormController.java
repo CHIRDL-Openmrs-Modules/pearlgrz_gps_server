@@ -23,35 +23,26 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Location;
-import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.Person;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.api.ConceptService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
-import org.openmrs.api.ObsService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -72,6 +63,7 @@ import org.openmrs.module.chirdlutil.util.IOUtil;
 import org.openmrs.module.chirdlutil.util.XMLUtil;
 import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
 import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
+import org.openmrs.module.pearlgrlz.util.Util;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 public class FillOutFormController extends SimpleFormController {
@@ -401,7 +393,22 @@ public class FillOutFormController extends SimpleFormController {
 			if (fieldType == null || !fieldType.equals(translator.getFieldType("Export Field"))) {
 				Field lookupField = fieldMap.get(currField.getName());
 				if (lookupField != null) {
-					map.put(currField.getName(), lookupField.getValue());
+					//if this is an input list parse it into a String List
+					if(currField.getName().contains("_input_list")){
+						List<String> inputList = new ArrayList<String>();
+						if (lookupField.getValue() != null) {
+							StringTokenizer tokenizer = new StringTokenizer(lookupField.getValue(), ",");
+							
+							while (tokenizer.hasMoreElements()) {
+								String value = tokenizer.nextToken();
+								inputList.add(value);
+							}
+							map.put(currField.getName(), inputList);
+						}
+
+					}else{
+						map.put(currField.getName(), lookupField.getValue());
+					}
 				}
 			}
 		}
@@ -426,25 +433,17 @@ public class FillOutFormController extends SimpleFormController {
 	                             TeleformTranslator translator, 
 	                             InputStream inputMergeFile, HttpServletRequest request,
 	                             Integer patientId,Integer sessionId) {
-		boolean drankAlcoholFlg = false;
 
 		try {
 			//pull all the input fields from the database for the form
 			FormService formService = Context.getFormService();
 			HashSet<String> inputFields = new HashSet<String>();
 			List<org.openmrs.Field> fields = formService.getAllFields();
-			Map<String, String> mFormFieldConceptAnswerField = new HashMap<String, String>();
 			
 			for (org.openmrs.Field currField : fields) {
 				FieldType fieldType = currField.getFieldType();
 				if (fieldType != null && fieldType.equals(translator.getFieldType("Export Field"))) {
 					inputFields.add(currField.getName());
-					
-					if(currField.getName().contains("QuestionEntry")) {
-						String[] tokens = currField.getName().split("_"); // The name can be QuestionEntry_1 or QuestionEntry_1_2
-						String formFieldNm = currField.getName().substring(0, currField.getName().indexOf("Entry")) + tokens[1];
-						mFormFieldConceptAnswerField.put(formFieldNm, currField.getName());
-					}
 				}
 			}
 			
@@ -490,15 +489,7 @@ public class FillOutFormController extends SimpleFormController {
 			map.put("contSurvey", "contSurvey");
 			map.put("nonInit", "nonInit");
 			map.put("submitAnswers", "");
-						
-			if(drankAlcoholFlg) {
-				map.put("formName", "pearl_alcohol");
-				map.put("formNumberQuestions", "5");
-				drankAlcoholFlg = false;
-			} else {
-				map.put("formName", "pearl_general_cont");
-			}
-			
+					
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block

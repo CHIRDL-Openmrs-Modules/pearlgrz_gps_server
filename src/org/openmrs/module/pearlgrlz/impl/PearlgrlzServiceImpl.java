@@ -338,7 +338,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 			// make sure storeObs gets loaded before running consume rules       
 			DssService dssService = Context.getService(DssService.class); 
 			ATDService atdService = Context.getService(ATDService.class);  
-			dssService.loadRule("storeObs",false);  
+			dssService.loadRule("storeObs",false); 
+			dssService.loadRule("storeObsMultipleAnswers",false);
+			dssService.loadRule("storeGroupedObs",false);
 			Patient patient = getPatientByUserId(Context.getAuthenticatedUser().getPersonId());
 			                                                                  
 			Encounter encounter =  getEncounter(patient,provider,location);
@@ -400,7 +402,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		HashMap<String, Object> baseParameters = new HashMap<String, Object>();
 		
 		try {
-			dssService.loadRule("storeObs", false);
+			dssService.loadRule("storeObs",false); 
+			dssService.loadRule("storeObsMultipleAnswers",false);
+			dssService.loadRule("storeGroupedObs",false);
 		}
 		catch (Exception e) {
 			log.error("load rule failed", e);
