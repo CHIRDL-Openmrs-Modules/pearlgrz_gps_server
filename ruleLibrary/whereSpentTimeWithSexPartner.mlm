@@ -21,12 +21,10 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box2:=read {input1value from Parameters};
+Box1:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
 whereSpentTimeWithSexPartner := read Exist {Where spent time with sexual-partner} Where it Occurred Within Past 1 Days;
-
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
@@ -37,15 +35,15 @@ Priority:		309;;
 Logic:
 If (mode = PRODUCE) then
 
-If (whereSpentTimeWithSexPartner = False) AND NOT (sexualPartner  = NULL) then conclude True;
+If (whereSpentTimeWithSexPartner = False) AND NOT(sexualPartner  = NULL) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) then
- CALL storeObs With "Where spent time with sexual-partner", "Box2";
+If  NOT(Box1=NULL) then
+ CALL storeGroupedObs With "sexualPartner_object","Where spent time with sexual-partner", "Box1";
 endif;
 
 
@@ -54,6 +52,8 @@ endif
 
 Action:
 write ("Where did you <b> spend time with || sexualPartner_value || ? </b>");
+write ("translate@Spanish");
+write ("text_entry@input_type_1");
 ;;
 
 Age_Min: 14 years;;
