@@ -26,9 +26,9 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 chattedTalkedOnlineSexPartner := read Exist {Chatted or talked to sexual-partner online} Where it Occurred Within Past 1 Days;
-
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
+
 If (mode = CONSUME) then
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
@@ -48,10 +48,10 @@ endif
 If (mode = CONSUME) then
 
 If  (Box1=true) then
- CALL storeGroupedObs With "sexualPartner_object","Chatted or talked to sexual-partner online", "Yes";
+ CALL storeGroupedObs With "sexualPartner_object","Chatted or talked to sexual-partner online","Yes";
 endif;
 If  (Box2=true) then
- CALL storeGroupedObs With "sexualPartner_object","Chatted or talked to sexual-partner online", "No";
+ CALL storeGroupedObs With "sexualPartner_object","Chatted or talked to sexual-partner online","No";
 endif;
 
 

@@ -42,7 +42,7 @@ Priority:		389;;
 Logic:
 If (mode = PRODUCE) then
 
-If (hasSeuxalPartner = True) AND (wentToPartyAfterSexSexPartner = False) then conclude True;
+If NOT (sexualPartner  = NULL) AND (wentToPartyAfterSexSexPartner = False) then conclude True;
 conclude False;
 
 endif

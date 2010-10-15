@@ -27,6 +27,10 @@ If (mode = PRODUCE) then
 whereSpentTimeWithSexPartner := read Exist {Where spent time with sexual-partner} Where it Occurred Within Past 1 Days;
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
+
+If (mode = CONSUME) then
+sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+endif
 ;;
 
 Priority:		309;;
