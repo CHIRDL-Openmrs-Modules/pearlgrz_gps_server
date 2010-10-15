@@ -36,7 +36,7 @@ Priority:		64;;
 Logic:
 If (mode = PRODUCE) then
 
-If (textedSomeone = Yes) then conclude False; 
+If (textedSomeone = True) then conclude False; 
 conclude True;
 
 endif

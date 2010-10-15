@@ -35,7 +35,7 @@ Priority:		73;;
 Logic:
 If (mode = PRODUCE) then
 
-If (wentToMovie = Yes) then conclude False;
+If (wentToMovie = True) then conclude False;
 conclude True;
 
 endif

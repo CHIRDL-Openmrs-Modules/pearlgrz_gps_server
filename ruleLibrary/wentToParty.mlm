@@ -36,7 +36,7 @@ Priority:		69;;
 Logic:
 If (mode = PRODUCE) then
 
-If (wentToParty = Yes) then conclude False;
+If (wentToParty = True) then conclude False;
 conclude True;
 
 endif

@@ -21,14 +21,12 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box3:=read {input2 from Parameters};
-Box2:=read {input1value from Parameters};
-Box4:=read {input2value from Parameters};
+Box1:=read {input1value from Parameters};
+Box2:=read {input2value from Parameters};
 
 If (mode = PRODUCE) then
  exercised := read Last {Exercised for at least 30 minutes} Where it Occurred Within Past 1 Days;
- frequency := read Last {Number of times exercising at least 30 minutes}Where it Occurred Within Past 1 Days;
+ frequency := read Exist {Number of times exercising at least 30 minutes}Where it Occurred Within Past 1 Days;
  answered1 := read Exist {Starting-time for the First time exercising at least 30 minutes}Where it Occurred Within Past 1 Days;
  answered2 := read Exist {Ending-time for the First time exercising at least 30 minutes}Where it Occurred Within Past 1 Days;
 endif
@@ -40,23 +38,17 @@ Priority:		155;;
 Logic:
 If (mode = PRODUCE) then
 
- If (exercised = Yes) AND (frequency = "One time") AND (answered1 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Two times") AND (answered1 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "One time") AND (answered2 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Two times") AND (answered2 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
- If (exercised = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
+If (exercised = Yes) AND (frequency = True) AND (answered1 = False) then conclude True;
+If (exercised = Yes) AND (frequency = True) AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) AND (Box3=true) then
- CALL storeObs With "Starting-time for the First time exercising at least 30 minutes", "Box2";
- CALL storeObs With "Ending-time for the First time exercising at least 30 minutes", "Box4";
+If  NOT(Box1=NULL) AND NOT(Box2=NULL) then
+ CALL storeObs With "Starting-time for the First time exercising at least 30 minutes", "Box1";
+ CALL storeObs With "Ending-time for the First time exercising at least 30 minutes", "Box2";
 endif;
 
 
@@ -65,6 +57,8 @@ endif
 
 Action:
 write ("When was the First time did you exercise at least 30 minutes since last survey?");
+write ("translate@Spanish");
+write ("date_entry@input_type_1");
 ;;
 
 Age_Min: 14 years;;

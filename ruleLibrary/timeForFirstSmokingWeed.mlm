@@ -21,14 +21,12 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {box1 from Parameters};
-Box3:=read {input2 from Parameters};
-Box2:=read {input1value from Parameters};
-Box4:=read {input2value from Parameters};
+Box1:=read {input1value from Parameters};
+Box2:=read {input2value from Parameters};
 
 If (mode = PRODUCE) then
  smokedWeed := read Last {Smoked weed} Where it Occurred Within Past 1 Days;
- frequency := read Last {Number of times smoking weed since last survey} Where it Occurred Within Past 1 Days;
+ frequency := read Exist {Number of times smoking weed since last survey} Where it Occurred Within Past 1 Days;
  answered1 := read Exist {Starting-time for the First smoking weed since last survey} Where it Occurred Within Past 1 Days;
  answered2 := read Exist {Ending-time for the First smoking weed since last survey} Where it Occurred Within Past 1 Days;
 endif
@@ -40,23 +38,17 @@ Priority:		139;;
 Logic:
 If (mode = PRODUCE) then
 
- If (smokedWeed = Yes) AND (frequency = "One time") AND (answered1 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Two times") AND (answered1 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Three times") AND (answered1 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Four or more times") AND (answered1 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "One time") AND (answered2 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Two times") AND (answered2 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Three times") AND (answered2 = False) then conclude True;
- If (smokedWeed = Yes) AND (frequency = "Four or more times") AND (answered2 = False) then conclude True;
+If (smokedWeed = Yes) AND (frequency = True) AND (answered1 = False) then conclude True;
+If (smokedWeed = Yes) AND (frequency = True) AND (answered2 = False) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-If  (Box1=true) AND (Box3=true) then
- CALL storeObs With "Starting-time for the First smoking weed since last survey", "Box2";
- CALL storeObs With "Ending-time for the First smoking weed since last survey", "Box4";
+If  NOT(Box1=NULL) AND NOT(Box2=NULL) then
+ CALL storeObs With "Starting-time for the First smoking weed since last survey", "Box1";
+ CALL storeObs With "Ending-time for the First smoking weed since last survey", "Box2";
 endif;
 
 
@@ -65,6 +57,8 @@ endif
 
 Action:
 write ("When was the First smoking weed since last survey?");
+write ("translate@Spanish");
+write ("date_entry@input_type_1");
 ;;
 
 Age_Min: 14 years;;

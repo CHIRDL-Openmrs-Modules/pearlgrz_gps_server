@@ -34,7 +34,7 @@ Priority:		71;;
 Logic:
 If (mode = PRODUCE) then
 
-If (gotOnSocialNetwork = Yes) then conclude False; 
+If (gotOnSocialNetwork = True) then conclude False; 
 conclude True;
 
 endif

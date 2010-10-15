@@ -37,7 +37,7 @@ Priority:		533;;
 Logic:
 If (mode = PRODUCE) then
 
-If (hasSexualPartner = Yes) AND (sexPartnerReceivedOralSex = Yes) AND (frequency = False)  then conclude True; 
+If (hasSexualPartner = True) AND (sexPartnerReceivedOralSex = Yes) AND (frequency = False)  then conclude True; 
 conclude False;
 
 endif

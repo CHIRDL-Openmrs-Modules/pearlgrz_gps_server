@@ -36,7 +36,7 @@ Priority:		68;;
 Logic:
 If (mode = PRODUCE) then
 
-If (gotIntoFight = Yes) then conclude False;
+If (gotIntoFight = True) then conclude False;
 conclude True;
 
 endif

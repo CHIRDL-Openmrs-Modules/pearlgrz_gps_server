@@ -25,7 +25,7 @@ Box1:=read {box1 from Parameters};
 Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
-skippedSchool := read Exist {Skipped school} Where it Occurred Within Past 1 Days; 
+skippedSchool := read Exist {Skipped school} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -35,7 +35,7 @@ Priority:		51;;
 Logic:
 If (mode = PRODUCE) then
 
-If (skippedSchool = True) then conclude False; 
+If (skippedSchool = True) then conclude False;
 conclude True;
 
 endif

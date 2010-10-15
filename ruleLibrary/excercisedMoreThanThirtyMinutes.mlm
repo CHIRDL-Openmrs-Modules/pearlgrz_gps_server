@@ -36,7 +36,7 @@ Priority:		67;;
 Logic:
 If (mode = PRODUCE) then
 
-If (excercisedMoreThanThirtyMinutes = Yes) then conclude False;
+If (excercisedMoreThanThirtyMinutes = True) then conclude False;
 conclude True;
 
 endif

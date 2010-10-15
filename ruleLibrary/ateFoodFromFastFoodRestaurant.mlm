@@ -24,9 +24,8 @@ mode:=read {mode from Parameters};
 Box1:=read {box1 from Parameters};
 Box2:=read {box2 from Parameters};
 
-
 If (mode = PRODUCE) then
- ateFoodFromFastFoodRestaurant := read Exist {Ate food at a fast food restaurant};
+ ateFoodFromFastFoodRestaurant := read Exist {Ate food at a fast food restaurant} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
@@ -36,7 +35,7 @@ Priority:		66;;
 Logic:
 If (mode = PRODUCE) then
 
-If (ateFoodFromFastFoodRestaurant = Yes) then conclude False;
+If (ateFoodFromFastFoodRestaurant = True) then conclude False;
 conclude True;
 
 endif
