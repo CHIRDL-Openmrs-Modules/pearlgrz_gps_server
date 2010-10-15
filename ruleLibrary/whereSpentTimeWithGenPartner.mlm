@@ -1,0 +1,63 @@
+Maintenance:
+	Title:		Where spent time with partner Question;;
+	Filename:	whereSpentTimeWithGenPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleSelect ,,locationOptions;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {input1value from Parameters};
+
+If (mode = PRODUCE) then
+whereSpentTimeWithGenPartner := read Exist {Where spent time with general-partner} Where it Occurred Within Past 1 Days;
+hasGeneralPartner:=read Exist {General partner} Where it Occurred Within Past 1 Days;
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		279;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (whereSpentTimeWithGenPartner = False) AND (hasGeneralPartner  = True) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeObs With "Where spent time with general-partner", "Box2";
+endif;
+
+
+
+endif
+;;
+
+Action:
+write ("Where did you <b> spend time with || generalPartner_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

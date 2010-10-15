@@ -1,0 +1,70 @@
+Maintenance:
+	Title:		partner after sex Question;;
+	Filename:	gotInFightAfterSexSexPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-26T13:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify partner after sex related problems. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
+
+If (mode = PRODUCE) then
+
+gotInFightAfterSexSexPartner := read Exist {Got in fight after sex with sexual-partner} Where it Occurred Within Past 1 Days;
+
+sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+
+endif
+If (mode = CONSUME) then
+sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		404;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If NOT (sexualPartner  = NULL) AND (gotInFightAfterSexSexPartner = False) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeGroupedObs With "sexualPartner_object","Got in fight after sex with sexual-partner","Yes";
+endif;
+If  (Box2=true) then
+ CALL storeGroupedObs With "sexualPartner_object","Got in fight after sex with sexual-partner","No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Got in fight after sex with <b> || sexualPartner_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

@@ -1,0 +1,69 @@
+Maintenance:
+	Title:		View your social networking page with partner Question;;
+	Filename:	viewSocialNetworkingSiteGenPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
+
+If (mode = PRODUCE) then
+viewSocialNetworkingSiteGenPartner := read Exist {View your social networking page with general-partner} Where it Occurred Within Past 1 Days;
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+
+If (mode = CONSUME) then
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+
+;;
+
+Priority:		276;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (viewSocialNetworkingSiteGenPartner = False) AND NOT (generalPartner  = NULL) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeGroupedObs With "generalPartner_object","View your social networking page with general-partner", "Yes";
+endif;
+If  (Box2=true) then
+ CALL storeGroupedObs With "generalPartner_object","View your social networking page with general-partner", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> view your social networking page (like MySpace, Facebook, other) with || generalPartner_value || ? </b>");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

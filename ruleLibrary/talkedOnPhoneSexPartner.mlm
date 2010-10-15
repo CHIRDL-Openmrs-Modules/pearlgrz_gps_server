@@ -1,0 +1,67 @@
+Maintenance:
+	Title:		Talked to on phone with partner Question;;
+	Filename:	talkedOnPhoneSexPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-21T16:47:25-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify sexual partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
+
+If (mode = PRODUCE) then
+talkedOnPhoneSexPartner := read Exist {Talked to sexual-partner on phone} Where it Occurred Within Past 1 Days;
+sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+endif
+If (mode = CONSUME) then
+sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		301;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (talkedOnPhoneSexPartner = False)  AND NOT (sexualPartner  = NULL) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeGroupedObs With "sexualPartner_object","Talked to sexual-partner on phone", "Yes";
+endif;
+If  (Box2=true) then
+ CALL storeGroupedObs With "sexualPartner_object","Talked to sexual-partner on phone", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> talk to || sexualPartner_value || on phone </b> ?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:

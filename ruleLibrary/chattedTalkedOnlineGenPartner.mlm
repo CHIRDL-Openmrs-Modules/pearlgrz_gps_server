@@ -1,0 +1,68 @@
+Maintenance:
+	Title:		Chatted or talked to online with partner Question;;
+	Filename:	chattedTalkedOnlineGenPartner.mlm;;
+	Version:	1.0;;
+	Institution:	Indiana University School of Medicine;;
+	Author:		Jun Wang;;
+	Specialist:	Software Engineer;;
+	Date:		2010-03-25T18:37:45-0500;;
+	Validation:	research;;
+
+Library:
+	Purpose:	Identify general partner related activity. ,,singleChoice;;
+	Explanation:	;;
+	Keywords:	;;
+	Citations:	;;
+	Links:		;;
+
+Knowledge:
+	Type:		data_driven;;
+
+Data:
+
+mode:=read {mode from Parameters};
+Box1:=read {box1 from Parameters};
+Box2:=read {box2 from Parameters};
+
+If (mode = PRODUCE) then
+chattedTalkedOnlineGenPartner := read Exist {Chatted or talked to general-partner online} Where it Occurred Within Past 1 Days;
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+
+If (mode = CONSUME) then
+generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+endif
+;;
+
+Priority:		275;;
+	Evoke:		;;
+
+Logic:
+If (mode = PRODUCE) then
+
+If (chattedTalkedOnlineGenPartner = False) AND NOT (generalPartner  = NULL) then conclude True;
+conclude False;
+
+endif
+
+If (mode = CONSUME) then
+
+If  (Box1=true) then
+ CALL storeGroupedObs With "generalPartner_object","Chatted or talked to general-partner online", "Yes";
+endif;
+If  (Box2=true) then
+ CALL storeGroupedObs With "generalPartner_object","Chatted or talked to general-partner online", "No";
+endif;
+
+
+endif
+;;
+
+Action:
+write ("Did you <b> chat or talk to || generalPartner_value || online </b> ?");
+;;
+
+Age_Min: 14 years;;
+Age_Max: 16 years;;
+
+end:
