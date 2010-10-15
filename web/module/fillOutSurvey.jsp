@@ -14,232 +14,343 @@ function selfSubmit(){location.href=document.pearlgrlzSelfSubmitForm.submit()};
 		<p><h2>Thank you very much for your time and effort.</h2></p>
 	</c:when>
 	<c:otherwise>
-		<form name="input" action="fillOutSurvey.form" method="get">
 			<table style="padding: 10px" width="100%">
 					<tr>
-						<td style="vertical-align: middle; text-align: center;">&nbsp;</td>
 						<td style="vertical-align: middle; text-align: center;"><b style="font-size: 22px">Pearl Grlz Survey Form</b></td>
-						<td style="text-align: left">Name:  ${PatientName}</td>
-						<td style="text-align: left">Date: ${CurrentDate}</td>
 					</tr>
 			</table>
-		
+		<form name="input" action="fillOutSurvey.form" method="get">
 		<table>
+			<c:if test="${Question1 != null}">
 			<tr>
+				<td>${Question1}
 			<c:choose>
 			<c:when test="${Question1_input_type_1 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_1" size="3"/></td>
+				<input type="text" name="QuestionEntry_1" size="3"/>
 			</c:when>
 			<c:when test="${Question1_input_type_1 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_1" size="10"/></td>
+				<input type="text" name="QuestionEntry_1" size="10"/>
 			</c:when>
 			<c:when test="${Question1_input_type_1 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_1">
-				<option></option>
+				<input type="text" name="QuestionEntry_1" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_1.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<c:forEach items="${Question1_input_list_1}" var="previousPartner">
-					<option>${previousPartner}</option>
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			<c:otherwise>
-				<td><input type="radio" name="QuestionEntry_1" value="Y" /><b>Y</b></td>
-				<td><input type="radio" name="QuestionEntry_1" value="N" /><b>N</b></td>
+				<input type="radio" name="QuestionEntry_1" value="Y" /><b>Y</b>
+				<input type="radio" name="QuestionEntry_1" value="N" /><b>N</b>
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
 			<c:when test="${Question1_input_type_2 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_1_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_1_2" size="3"/>
 			</c:when>
 			<c:when test="${Question1_input_type_2 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_1_2" size="10"/></td>
+				<input type="text" name="QuestionEntry_1_2" size="10"/>
 			</c:when>
 			<c:when test="${Question1_input_type_2 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_1_2">
-				<option></option>
+				<input type="text" name="QuestionEntry_1_2" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_1.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<c:forEach items="${Question1_input_list_2}" var="previousPartner">
-					<option>${previousPartner}</option>
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			</c:choose>
-				<td>${Question1}</td>
+			</td>
 			</tr>	
+			</c:if>
+			<c:if test="${Question2 != null}">
 			<tr>
+			<td>${Question2}
 			<c:choose>
 			<c:when test="${Question2_input_type_1 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_2" size="3"/>
 			</c:when>
 			<c:when test="${Question2_input_type_1 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_2" size="10"/></td>
+				<input type="text" name="QuestionEntry_2" size="10"/>
 			</c:when>
 			<c:when test="${Question2_input_type_1 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_2">
-				<option></option>
+				<input type="text" name="QuestionEntry_2" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_2.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<c:forEach items="${Question2_input_list_1}" var="previousPartner">
-					<option>${previousPartner}</option>
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			<c:otherwise>
-				<td><input type="radio" name="QuestionEntry_2" value="Y" /><b>Y</b></td>
-				<td><input type="radio" name="QuestionEntry_2" value="N" /><b>N</b></td>
+				<input type="radio" name="QuestionEntry_2" value="Y" /><b>Y</b>
+				<input type="radio" name="QuestionEntry_2" value="N" /><b>N</b>
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
 			<c:when test="${Question2_input_type_2 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_2_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_2_2" size="3"/>
 			</c:when>
 			<c:when test="${Question2_input_type_2 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_2_2" size="10"/></td>
+			<input type="text" name="QuestionEntry_2_2" size="10"/>
 			</c:when>
 			<c:when test="${Question2_input_type_2 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_2_2">
-				<option></option>
+				<input type="text" name="QuestionEntry_2" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_2.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<c:forEach items="${Question2_input_list_2}" var="previousPartner">
-					<option>${previousPartner}</option>
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			</c:choose>
-				<td>${Question2}</td>
+				</td>
 			</tr>	
+			</c:if>
+			<c:if test="${Question3 != null}">
 			<tr>
+			<td>${Question3}
 			<c:choose>
 			<c:when test="${Question3_input_type_1 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_3" size="3"/></td>
+				<input type="text" name="QuestionEntry_3" size="3"/>
 			</c:when>
 			<c:when test="${Question3_input_type_1 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_3" size="10"/></td>
+				<input type="text" name="QuestionEntry_3" size="10"/>
 			</c:when>
 			<c:when test="${Question3_input_type_1 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_3">
-				<option></option>
-				<c:forEach items="${Question1_input_list_1}" var="previousPartner">
-					<option>${previousPartner}</option>
+				<input type="text" name="QuestionEntry_3" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_3.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+				<c:forEach items="${Question3_input_list_1}" var="previousPartner">
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			<c:otherwise>
-				<td><input type="radio" name="QuestionEntry_3" value="Y" /><b>Y</b></td>
-				<td><input type="radio" name="QuestionEntry_3" value="N" /><b>N</b></td>
+				<input type="radio" name="QuestionEntry_3" value="Y" /><b>Y</b>
+				<input type="radio" name="QuestionEntry_3" value="N" /><b>N</b>
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
 			<c:when test="${Question3_input_type_2 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_3_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_3_2" size="3"/>
 			</c:when>
 			<c:when test="${Question3_input_type_2 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_3_2" size="10"/></td>
+				<input type="text" name="QuestionEntry_3_2" size="10"/>
 			</c:when>
 			<c:when test="${Question3_input_type_2 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_3_2">
-				<option></option>
-				<c:forEach items="${Question1_input_list_2}" var="previousPartner">
-					<option>${previousPartner}</option>
+				<input type="text" name="QuestionEntry_3" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_3.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+				<c:forEach items="${Question3_input_list_2}" var="previousPartner">
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			</c:choose>
-				<td>${Question3}</td>
+				</td>
 			</tr>	
+			</c:if>
+			<c:if test="${Question4 != null}">
 			<tr>
+			<td>${Question4}
 			<c:choose>
 			<c:when test="${Question4_input_type_1 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_4" size="3"/></td>
+				<input type="text" name="QuestionEntry_4" size="3"/>
 			</c:when>
 			<c:when test="${Question4_input_type_1 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_4" size="10"/></td>
+				<input type="text" name="QuestionEntry_4" size="10"/>
 			</c:when>
 			<c:when test="${Question4_input_type_1 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_4">
-				<option></option>
-				<c:forEach items="${Question1_input_list_1}" var="previousPartner">
-					<option>${previousPartner}</option>
+				<input type="text" name="QuestionEntry_4" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_4.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+				<c:forEach items="${Question4_input_list_1}" var="previousPartner">
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			<c:otherwise>
-				<td><input type="radio" name="QuestionEntry_4" value="Y" /><b>Y</b></td>
-				<td><input type="radio" name="QuestionEntry_4" value="N" /><b>N</b></td>
+				<input type="radio" name="QuestionEntry_4" value="Y" /><b>Y</b>
+				<input type="radio" name="QuestionEntry_4" value="N" /><b>N</b>
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
 			<c:when test="${Question4_input_type_2 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_4_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_4_2" size="3"/>
 			</c:when>
 			<c:when test="${Question4_input_type_2 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_4_2" size="10"/></td>
+				<input type="text" name="QuestionEntry_4_2" size="10"/>
 			</c:when>
 			<c:when test="${Question4_input_type_2 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_4_2">
-				<option></option>
+				<input type="text" name="QuestionEntry_4" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_4.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
 				<c:forEach items="${Question4_input_list_2}" var="previousPartner">
-					<option>${previousPartner}</option>
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			</c:choose>
-				<td>${Question4}</td>
-			</tr>	
+				</td>
+			</tr>
+			</c:if>
+			<c:if test="${Question5 != null}">	
 			<tr>
+				<td>${Question5}
 			<c:choose>
 			<c:when test="${Question5_input_type_1 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_5" size="3"/></td>
+				<input type="text" name="QuestionEntry_5" size="3"/>
 			</c:when>
 			<c:when test="${Question5_input_type_1 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_5" size="10"/></td>
+				<input type="text" name="QuestionEntry_5" size="10"/>
 			</c:when>
 			<c:when test="${Question5_input_type_1 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_5">
-				<option></option>
-				<c:forEach items="${Question1_input_list_1}" var="previousPartner">
-					<option>${previousPartner}</option>
+				<input type="text" name="QuestionEntry_5" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_5.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+				<c:forEach items="${Question5_input_list_1}" var="previousPartner">
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			<c:otherwise>
-				<td><input type="radio" name="QuestionEntry_5" value="Y" /><b>Y</b></td>
-				<td><input type="radio" name="QuestionEntry_5" value="N" /><b>N</b></td>
+				<input type="radio" name="QuestionEntry_5" value="Y" /><b>Y</b>
+				<input type="radio" name="QuestionEntry_5" value="N" /><b>N</b>
 			</c:otherwise>
 			</c:choose>
 			<c:choose>
 			<c:when test="${Question5_input_type_2 == 'number_entry'}">
-				<td><input type="text" name="QuestionEntry_5_2" size="3"/></td>
+				<input type="text" name="QuestionEntry_5_2" size="3"/>
 			</c:when>
 			<c:when test="${Question5_input_type_2 == 'text_entry'}">
-				<td><input type="text" name="QuestionEntry_5_2" size="10"/></td>
+				<input type="text" name="QuestionEntry_5_2" size="10"/>
 			</c:when>
 			<c:when test="${Question5_input_type_2 == 'dropdown_entry'}">
+				<table cellpadding="0" cellspacing="0">
+				<tr>
 				<td>
-				<select name="QuestionEntry_5_2">
-				<option></option>
-				<c:forEach items="${Question1_input_list_2}" var="previousPartner">
-					<option>${previousPartner}</option>
+				<input type="text" name="QuestionEntry_5" value=""  size="10" >
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<select name="s" size="1"
+onchange="document.input.QuestionEntry_5.value = document.input.s.options[document.input.s.selectedIndex].value;document.input.s.value=''">
+				<option value="" selected="selected">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</option>
+				<c:forEach items="${Question5_input_list_2}" var="previousPartner">
+					<option  value="${previousPartner}">${previousPartner}</option>
 				</c:forEach>
 				</select>
 				</td>
+				</tr>
+			</table>
 			</c:when>
 			</c:choose>
-				<td>${Question5}</td>
+			</td>
 			</tr>	
+			</c:if>
 		</table>
 		
 		<p>

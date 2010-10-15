@@ -67,11 +67,10 @@ endif
 ;;
 
 Action:
-write ("Select/Enter names of <b> up to Three sexual partners </b> had sex with or interested in having sex since last scheduled prompt:");
+write ("Select/Enter the name of <b> a sexual partner </b> had sex with or interested in having sex since last scheduled prompt:");
 write ("translate@Spanish");
 write ("dropdown_entry@input_type_1");
 write ("|| partnerList ||@input_list_1");
-write ("text_entry@input_type_2");
 ;;
 
 Age_Min: 14 years;;
