@@ -6,7 +6,7 @@
 	<!-- PearlGrlz Module Properties -->
 	<id>pearlgrlz</id>
 	<name>Pearl Grlz</name>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<package>org.openmrs.module.@MODULE_ID@</package>
 	<author>Children's Health Services Research</author>
 	<description>

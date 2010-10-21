@@ -47,10 +47,11 @@ public class AdminList extends AdministrationSectionExt {
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		map.put("module/pearlgrlz/pearlgrlzsurvey.form", "Yet Another Prototype");
+	/*	map.put("module/pearlgrlz/pearlgrlzsurvey.form", "Yet Another Prototype");
 		map.put("module/pearlgrlz/surveyPearlgrlzPage1.form", "Another Prototype");
 		map.put("module/pearlgrlz/pearlgrlzForm.form", "Welcome to Pearl Grlz Survey");
-		map.put("module/pearlgrlz/startSurvey.form", "Start Survey");
+	*/
+		map.put("module/pearlgrlz/fillOutSurvey.form", "Pearl Grlz Survey");
 		
 		
 		

@@ -65,6 +65,8 @@ import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
 import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
 import org.openmrs.module.pearlgrlz.util.Util;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.openmrs.api.APIAuthenticationException;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 public class FillOutFormController extends SimpleFormController {
 	
@@ -92,11 +94,21 @@ public class FillOutFormController extends SimpleFormController {
 		Integer numQuestions = 5; //TODO needs to be a form attribute value
 		String idString = request.getParameter("formInstance");
 		String encounterIdString = request.getParameter("encounterId");
-		String patientIdString = request.getParameter("patientId");
+		//String patientIdString = request.getParameter("patientId");
+		String patientIdString = "9";
 		String sessionIdString = request.getParameter("sessionId");
-		String providerIdString = request.getParameter("providerId");
+		//String providerIdString = request.getParameter("providerId");
+		
+		String providerIdString = "5"; // For now
+		
 		
 		Integer encounterId = null;
+		User user = Context.getUserContext().getAuthenticatedUser();
+		if(user == null)
+		{
+			return map;
+		}
+		try{
 		if(encounterIdString != null){
 			try {
 	            encounterId = Integer.parseInt(encounterIdString);
@@ -225,6 +237,12 @@ public class FillOutFormController extends SimpleFormController {
 
 		map.put("formInstance", formInstance.getLocationId() + "_" + locationTagId + "_" + formInstance.getFormId() + "_"
 	        + formInstance.getFormInstanceId());
+	
+		}catch(UnexpectedRollbackException ex){
+			//ignore this exception since it happens with an APIAuthenticationException
+		}catch(APIAuthenticationException ex2){
+			//ignore this exception. It happens during the redirect to the login page
+		}	
 		return map;
 	}
 	
