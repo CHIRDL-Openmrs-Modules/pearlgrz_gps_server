@@ -27,6 +27,8 @@ Box2:=read {box2 from Parameters};
 If (mode = PRODUCE) then
 spentTimeOutsideSchoolGenPartner := read Exist {Spent time outside school with general-partner} Where it Occurred Within Past 1 Days;
 generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+generalPartnerExists := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
+enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
 endif
 
 If (mode = CONSUME) then
@@ -41,7 +43,7 @@ Priority:		274;;
 Logic:
 If (mode = PRODUCE) then
 
-If (spentTimeOutsideSchoolGenPartner = False) AND NOT (generalPartner  = NULL) then conclude True;
+If (spentTimeOutsideSchoolGenPartner = False) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No)  then conclude True;
 conclude False;
 
 endif

@@ -6,7 +6,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
-import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
@@ -17,9 +16,10 @@ import org.openmrs.logic.Rule;
 import org.openmrs.logic.result.Result;
 import org.openmrs.logic.result.Result.Datatype;
 import org.openmrs.logic.rule.RuleParameterInfo;
+import org.openmrs.module.atd.hibernateBeans.FormInstance;
 import org.openmrs.module.pearlgrlz.util.Util;
 
-public class storeGroupedObs implements Rule
+public class checkNullInput implements Rule
 {
 	private Log log = LogFactory.getLog(this.getClass());
 	private LogicService logicService = Context.getLogicService();
@@ -68,26 +68,19 @@ public class storeGroupedObs implements Rule
 	public Result eval(LogicContext context, Patient patient,
 			Map<String, Object> parameters) throws LogicException
 	{
+		Result value = null;
+
 		if (parameters != null)
 		{
-			Result obsToGroupWith = (Result) parameters.get("param1");
-			
-			String conceptName = (String) parameters.get("param2");
+			value = (Result) parameters.get("param1");
 
-			if (conceptName == null)
+			if (value == null||value.toString()==null||value.toString().equals(""))
 			{
 				return Result.emptyResult();
 			}
-			Integer encounterId = (Integer) parameters.get("encounterId");
-			String value = (String) parameters.get("param3");
-			ConceptService conceptService = Context.getConceptService();
-
-			Concept currConcept = conceptService.getConceptByName(conceptName);
-
-			Util.saveAndGroupObs((Obs)obsToGroupWith.toObject(),patient, currConcept, encounterId, value);
+			return value;
 		}
-		
-	
+
 		return Result.emptyResult();
 	}
 }

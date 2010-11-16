@@ -1,9 +1,9 @@
 Maintenance:
 	Title:		sexual partner Question;;
-	Filename:	sexualPartner.mlm;;
+	Filename:	additionalSexualPartner.mlm;;
 	Version:	1.0;;
 	Institution:	Indiana University School of Medicine;;
-	Author:		Jun Wang;;
+	Author:		Tammy Dugan;;
 	Specialist:	Software Engineer;;
 	Date:		2010-03-18T16:12:57-0500;;
 	Validation:	research;;
@@ -26,18 +26,24 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 
-sexualPartner := read Exist {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+sexualPartner := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+sexualPartnerList := read {Sexual partner} Where it Occurred Within Past 1 Days;
+enterNewSexualPartner := read Last {EnterNewSexualPartner};
 
 endif
 ;;
 
-Priority:		281;;
+Priority:		535;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-If (sexualPartner = True) then conclude False;
+If (sexualPartner = 'No') OR (enterNewSexualPartner = Yes) OR (sexualPartnerList = NULL) then conclude False;
+
+
+If NOT (sexualPartnerList = NULL) then || Text_1 || = " other than ";
+
 conclude True;
 
 endif
@@ -57,7 +63,8 @@ endif
 ;;
 
 Action:
-write ("Did you interact with someone you <b>had sex or are interested in having sex</b> since last survey?");
+write ("Did you interact with someone || Text_1 || || sexualPartnerList_value || that you <b>had sex or are interested in having sex</b> since last survey?");
+
 ;;
 
 Age_Min: 14 years;;

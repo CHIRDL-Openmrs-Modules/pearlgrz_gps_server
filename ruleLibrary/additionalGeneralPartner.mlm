@@ -1,9 +1,9 @@
 Maintenance:
 	Title:		general partner Question;;
-	Filename:	generalPartner.mlm;;
+	Filename:	additionalGeneralPartner.mlm;;
 	Version:	1.0;;
 	Institution:	Indiana University School of Medicine;;
-	Author:		Jun Wang;;
+	Author:		Tammy Dugan;;
 	Specialist:	Software Engineer;;
 	Date:		2010-03-18T16:12:57-0500;;
 	Validation:	research;;
@@ -26,18 +26,24 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 
-generalPartner := read Exist {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
+generalPartner := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
+generalPartnerList := read {General partner} Where it Occurred Within Past 1 Days;
+enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
 
 endif
 ;;
 
-Priority:		251;;
+Priority:		280;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
 
-If (generalPartner = True) then conclude False;
+If (generalPartner = 'No') OR (enterNewGeneralPartner = Yes) OR (generalPartnerList = NULL) then conclude False;
+
+
+If NOT (generalPartnerList = NULL) then || Text_1 || = " other than ";
+
 conclude True;
 
 endif
@@ -57,7 +63,7 @@ endif
 ;;
 
 Action:
-write ("Did you interact with someone (<b>talked to or interested in</b>) since last survey?");
+write ("Did you interact with someone || Text_1 || || generalPartnerList_value || (<b>talked to or interested in</b>) since last survey?");
 ;;
 
 Age_Min: 14 years;;

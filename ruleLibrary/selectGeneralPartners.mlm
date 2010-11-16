@@ -21,13 +21,11 @@ Knowledge:
 Data:
 
 mode:=read {mode from Parameters};
-Box1:=read {input1value from Parameters}; /* dropdown list */
-Box2:=read {input2value from Parameters}; /* text entry */
+Box1:=read {input1value from Parameters}; 
 
 If (mode = PRODUCE) then
- interactedWithGeneralPartners := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
+ enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
  partnerList := read {general previous partner list};
- generalPartnerInput := read Last {General partner} Where it Occurred Within Past 1 Days; /* see if this question answered */
 endif
 ;;
 
@@ -37,30 +35,20 @@ Priority:		268;;
 Logic:
 If (mode = PRODUCE) then
 
-If NOT (generalPartnerInput = NULL) then conclude False; /* don't show if partners already chosen */
-If (interactedWithGeneralPartners = Yes) then conclude True;
+If (enterNewGeneralPartner = Yes) then conclude True;
 conclude False;
 
 endif
 
 If (mode = CONSUME) then
 
-/* If partners chosen from dropdown, store them under general partner. This is the active
-partner list for this survey session */
-If NOT (Box1 = NULL) then
+input := CALL checkNullInput With "Box1_object";
+
+/** add a java rule that only saves previous partner if it is unique**/
+If NOT (input = NULL) then
  CALL storeObsMultipleAnswers With "General partner", "Box1";
-endif;
-
-/* If new partners entered in text box, store under previous partner list and 
-store them under general partner. This is the active partner list for this survey session */
-If NOT (Box2 = NULL) then
- CALL storeObsMultipleAnswers With "general previous partner list", "Box2";
- CALL storeObsMultipleAnswers With "General partner", "Box2";
-endif;
-
-/* If there is no input, indicate that the question was skipped */
-If (Box1 = NULL) AND (Box2 = NULL) then
-  CALL storeObs With "General partner", "SKIPPED";
+ CALL storeObsMultipleAnswers With "general previous partner list", "Box1";
+ CALL storeObs With "EnterNewGeneralPartner","No";
 endif;
 
 endif

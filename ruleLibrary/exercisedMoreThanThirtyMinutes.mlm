@@ -1,6 +1,6 @@
 Maintenance:
-	Title:		excercise related Question;;
-	Filename:	excercisedMoreThanThirtyMinutes.mlm;;
+	Title:		exercise related Question;;
+	Filename:	exercisedMoreThanThirtyMinutes.mlm;;
 	Version:	1.0;;
 	Institution:	Indiana University School of Medicine;;
 	Author:		Jun Wang;;
@@ -26,7 +26,7 @@ Box2:=read {box2 from Parameters};
 
 
 If (mode = PRODUCE) then
- excercisedMoreThanThirtyMinutes := read Exist {Exercised for at least 30 minutes}; 
+ exercisedMoreThanThirtyMinutes := read Exist {Exercised for at least 30 minutes}; 
 endif
 ;;
 
@@ -36,7 +36,7 @@ Priority:		67;;
 Logic:
 If (mode = PRODUCE) then
 
-If (excercisedMoreThanThirtyMinutes = True) then conclude False;
+If (exercisedMoreThanThirtyMinutes = True) then conclude False;
 conclude True;
 
 endif

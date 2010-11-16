@@ -26,7 +26,8 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 textedSexPartner := read Exist {Texted sexual-partner on phone} Where it Occurred Within Past 1 Days;
-
+sexualPartnerExists := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+enterNewSexualPartner := read Last {EnterNewSexualPartner};
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 If (mode = CONSUME) then
@@ -40,7 +41,7 @@ Priority:		302;;
 Logic:
 If (mode = PRODUCE) then
 
-If (textedSexPartner = False) AND NOT (sexualPartner  = NULL) then conclude True;
+If (textedSexPartner = False)  AND (sexualPartnerExists = 'Yes') AND (enterNewSexualPartner = No) then conclude True;
 conclude False;
 
 endif

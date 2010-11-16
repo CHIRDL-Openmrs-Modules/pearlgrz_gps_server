@@ -26,6 +26,8 @@ Box1:=read {input1value from Parameters};
 If (mode = PRODUCE) then
 whereSpentTimeWithSexPartner := read Exist {Where spent time with sexual-partner} Where it Occurred Within Past 1 Days;
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+sexualPartnerExists := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+enterNewSexualPartner := read Last {EnterNewSexualPartner};
 endif
 
 If (mode = CONSUME) then
@@ -39,7 +41,7 @@ Priority:		309;;
 Logic:
 If (mode = PRODUCE) then
 
-If (whereSpentTimeWithSexPartner = False) AND NOT(sexualPartner  = NULL) then conclude True;
+If (whereSpentTimeWithSexPartner = False) AND (sexualPartnerExists = 'Yes') AND (enterNewSexualPartner = No)  then conclude True;
 conclude False;
 
 endif
