@@ -45,7 +45,7 @@ endif
 If (mode = CONSUME) then
 
 If NOT (Box1 = NULL) then
- CALL storeObs With "Number of times sexual-partner received oral sex by patient", "Box1";
+ CALL storeGroupedObs With "sexualPartner_object","Number of times sexual-partner received oral sex by patient", "Box1";
 endif;
 
 
