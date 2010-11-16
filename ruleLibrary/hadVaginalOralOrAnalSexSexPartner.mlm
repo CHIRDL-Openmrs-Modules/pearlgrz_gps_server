@@ -35,7 +35,7 @@ sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
 
-Priority:		1000;;
+Priority:		307;;
 	Evoke:		;;
 
 Logic:
