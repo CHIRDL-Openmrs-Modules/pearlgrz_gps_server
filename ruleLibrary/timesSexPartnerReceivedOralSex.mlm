@@ -24,9 +24,14 @@ mode:=read {mode from Parameters};
 Box1:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
- sexPartnerReceivedOralSex := read Last {Sexual-partner received oral sex by patient} Where it Occurred Within Past 1 Days;
- frequency := read Exist {Number of times sexual-partner received oral sex by patient} Where it Occurred Within Past 1 Days;
- hasSexualPartner:=read Exist {Sexual partner} Where it Occurred Within Past 1 Days;
+ sexPartnerReceivedOralSexUnfiltered := read {Sexual-partner received oral sex by patient} Where it Occurred Within Past 1 Days;
+ frequencyUnfiltered := read {Number of times sexual-partner received oral sex by patient} Where it Occurred Within Past 1 Days;
+ sexualPartnerExists := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+ enterNewSexualPartner := read Last {EnterNewSexualPartner};
+ sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
+endif
+
+If (mode = CONSUME) then
  sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
 endif
 ;;
@@ -37,14 +42,18 @@ Priority:		533;;
 Logic:
 If (mode = PRODUCE) then
 
-If (hasSexualPartner = True) AND (sexPartnerReceivedOralSex = Yes) AND (frequency = False)  then conclude True; 
-conclude False;
+sexPartnerReceivedOralSex:= call filterObsByParent With "sexPartnerReceivedOralSexUnfiltered_object","sexualPartner_object";
+frequency:= call filterObsByParent With "frequencyUnfiltered_object","sexualPartner_object";
+
+If NOT (sexPartnerReceivedOralSex = NULL)  AND (sexualPartnerExists = 'Yes') AND (enterNewSexualPartner = No) AND (frequency = NULL) then conclude True;
 
 endif
 
 If (mode = CONSUME) then
 
-If NOT (Box1 = NULL) then
+input := CALL checkNullInput With "Box1_object";
+
+If NOT (input = NULL) then
  CALL storeGroupedObs With "sexualPartner_object","Number of times sexual-partner received oral sex by patient", "Box1";
 endif;
 

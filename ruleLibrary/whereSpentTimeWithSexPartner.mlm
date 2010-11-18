@@ -48,7 +48,9 @@ endif
 
 If (mode = CONSUME) then
 
-If  NOT(Box1=NULL) then
+input := CALL checkNullInput With "Box1_object";
+
+If NOT (input = NULL) then
  CALL storeGroupedObs With "sexualPartner_object","Where spent time with sexual-partner", "Box1";
 endif;
 
