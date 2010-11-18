@@ -25,7 +25,7 @@ Box1:=read {box1 from Parameters};
 Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
-viewSocialNetworkingSiteGenPartner := read Exist {View your social networking page with general-partner} Where it Occurred Within Past 1 Days;
+viewSocialNetworkingSiteGenPartnerUnfiltered := read {View your social networking page with general-partner} Where it Occurred Within Past 1 Days;
 generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
 generalPartnerExists:= read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
 enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
@@ -42,8 +42,8 @@ Priority:		276;;
 
 Logic:
 If (mode = PRODUCE) then
-
-If (viewSocialNetworkingSiteGenPartner = False) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No)  then conclude True;
+viewSocialNetworkingSiteGenPartner := call filterObsByParent With "viewSocialNetworkingSiteGenPartnerUnfiltered_object","generalPartner_object";
+If (viewSocialNetworkingSiteGenPartner = NULL) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No)  then conclude True;
 conclude False;
 
 endif

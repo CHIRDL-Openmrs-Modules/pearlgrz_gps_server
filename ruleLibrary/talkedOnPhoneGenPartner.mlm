@@ -25,7 +25,7 @@ Box1:=read {box1 from Parameters};
 Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
-talkedOnPhoneGenPartner := read Exist {Talked to general-partner on phone} Where it Occurred Within Past 1 Days;
+talkedOnPhoneGenPartnerUnfiltered := read {Talked to general-partner on phone} Where it Occurred Within Past 1 Days;
 generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
 generalPartnerExists := read Last {Interacted with someone that subject is interested in since last scheduled prompt} Where it Occurred Within Past 1 Days;
 enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
@@ -42,7 +42,8 @@ Priority:		271;;
 Logic:
 If (mode = PRODUCE) then
 
-If (talkedOnPhoneGenPartner = False) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No)  then conclude True;
+talkedOnPhoneGenPartner := call filterObsByParent With "talkedOnPhoneGenPartnerUnfiltered_object","generalPartner_object";
+If (talkedOnPhoneGenPartner = NULL) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No)  then conclude True;
 conclude False;
 
 endif

@@ -26,7 +26,7 @@ Box2:=read {box2 from Parameters};
 
 If (mode = PRODUCE) then
 
-wentToPartyBeforeSexSexPartner := read Exist {Went to a party before sex with sexual-partner} Where it Occurred Within Past 1 Days;
+wentToPartyBeforeSexSexPartnerUnfiltered := read {Went to a party before sex with sexual-partner} Where it Occurred Within Past 1 Days;
 sexualPartnerExists := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
 enterNewSexualPartner := read Last {EnterNewSexualPartner};
 sexualPartner:=read Last {Sexual partner} Where it Occurred Within Past 1 Days;
@@ -42,8 +42,8 @@ Priority:		359;;
 
 Logic:
 If (mode = PRODUCE) then
-
-If (wentToPartyBeforeSexSexPartner = False)  AND (sexualPartnerExists = 'Yes') AND (enterNewSexualPartner = No) then conclude True;
+wentToPartyBeforeSexSexPartner := call filterObsByParent With "wentToPartyBeforeSexSexPartnerUnfiltered_object","sexualPartner_object";
+If (wentToPartyBeforeSexSexPartner = NULL)  AND (sexualPartnerExists = 'Yes') AND (enterNewSexualPartner = No) then conclude True;
 conclude False;
 
 endif
