@@ -26,10 +26,11 @@ import org.openmrs.module.pearlgrlz.SurveyPartner;
 import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
-
+import org.springframework.transaction.annotation.Transactional;
 /**
  *
  */
+@Transactional
 public interface PearlgrlzDAO {
 
 	public SurveyRecord getLatestSurveyRecord(Patient patient);

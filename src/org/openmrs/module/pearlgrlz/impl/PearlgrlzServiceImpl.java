@@ -33,6 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -77,7 +78,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  *
  */
-@Transactional
+//@Transactional
 public class PearlgrlzServiceImpl implements PearlgrlzService {
 	
 	private Log log = LogFactory.getLog(this.getClass());
@@ -270,7 +271,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	                     TeleformTranslator translator, InputStream inputMergeFile, 
 	                     HttpServletRequest request, User provider) {
 		
-		LocationService locationService = Context.getLocationService();
+	/*	LocationService locationService = Context.getLocationService();
 		Location location = locationService.getLocation(locationId);
 		if(translator == null ) 
     		translator = new TeleformTranslator();
@@ -351,6 +352,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		} catch(Exception e) {
 			log.error("Failed to save the result for this form",  e);
 		}
+	*/
 	}
 
 		
@@ -423,15 +425,23 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	 * @return
 	 */
 	private Encounter createEncounter(Patient patient, User provider,Location location) {
+				Encounter encounter = new Encounter();
+		
+		try{
 		EncounterService encounterService = Context.getEncounterService();
-		Encounter encounter = new Encounter();
+		EncounterType encType = encounterService.getEncounterType("HL7Message");
 		encounter.setPatient(patient);
 		encounter.setProvider(provider);
 		encounter.setLocation(location);
 		encounter.setEncounterDatetime(new java.util.Date());
 		encounter.setCreator(Context.getAuthenticatedUser());
 		encounter.setDateCreated(new java.util.Date());
+		encounter.setEncounterType(encType);
 		encounterService.saveEncounter(encounter);
+		System.out.println("encounter id: "+ encounter.getEncounterId());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 		return encounter;
 	}
