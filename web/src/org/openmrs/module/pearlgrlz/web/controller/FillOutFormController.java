@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -38,11 +39,14 @@ import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.Location;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
+import org.openmrs.api.ObsService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
@@ -56,6 +60,7 @@ import org.openmrs.module.atd.hibernateBeans.PatientState;
 import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.atd.hibernateBeans.State;
 import org.openmrs.module.atd.service.ATDService;
+import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.atd.xmlBeans.Field;
 import org.openmrs.module.atd.xmlBeans.Record;
 import org.openmrs.module.atd.xmlBeans.Records;
@@ -90,16 +95,17 @@ public class FillOutFormController extends SimpleFormController {
 	protected Map referenceData(HttpServletRequest request) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer locationTagId = 1; //TODO needs to be configurable
-		Integer locationId = 1; //TODO needs to be configurable
+		Integer locationId = 3; //TODO needs to be configurable
 		Integer numQuestions = 5; //TODO needs to be a form attribute value
 		String idString = request.getParameter("formInstance");
 		String encounterIdString = request.getParameter("encounterId");
 		//String patientIdString = request.getParameter("patientId");
-		String patientIdString = "9";
+		String patientIdString = null;
 		String sessionIdString = request.getParameter("sessionId");
 		//String providerIdString = request.getParameter("providerId");
 		
 		String providerIdString = "5"; // For now
+		
 		
 		
 		Integer encounterId = null;
@@ -124,6 +130,11 @@ public class FillOutFormController extends SimpleFormController {
             catch (Exception e) {
             }
 		}
+		else {
+			// get authenticated patient user
+			patientId = user.getPerson().getPersonId();
+		}
+		
 		Integer sessionId = null;
 		if(sessionIdString != null){
 			try {
@@ -142,10 +153,10 @@ public class FillOutFormController extends SimpleFormController {
             }
 		}
 		
-		Integer chosenFormId = null;
+		Integer chosenFormId = 38;
 		Integer chosenFormInstanceId = null;
-		Integer chosenLocationId = null;
-		Integer chosenLocationTagId = null;
+		Integer chosenLocationId = 3;
+		Integer chosenLocationTagId = 1;
 		
 		//parse out the location_id,form_id,location_tag_id, and form_instance_id
 		//from the selected form
@@ -211,6 +222,7 @@ public class FillOutFormController extends SimpleFormController {
 		map.put("providerId", providerIdString);
 		map.put("encounterId", encounterId);
 		map.put("sessionId", sessionId);
+		map.put("locationId", locationId);
 		
 		formInstance = generatePage(patientId,providerId,locationTagId,locationId,numQuestions,map);
 
@@ -291,6 +303,7 @@ public class FillOutFormController extends SimpleFormController {
 			Encounter encounter = pearlgrlzService.getEncounter(patient, provider, location);
 			session.setEncounterId(encounter.getEncounterId());
 			atdService.updateSession(session);
+			map.put("sessionId",sessionId);
 			pearlgrlzService.createSurveyXML(patient,locationId, formId, 
 				numQuestions, provider,locationTagId,formInstance,encounter.getEncounterId());
 			output.close();  
@@ -299,7 +312,7 @@ public class FillOutFormController extends SimpleFormController {
 			initialState = atdService.getStateByName("wait_to_submit_survey");
 			
 			patientState = atdService.addPatientState(patient, initialState, sessionId, locationTagId, locationId);
-			map.put("sessionId",sessionId);
+			
 		}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -406,6 +419,7 @@ public class FillOutFormController extends SimpleFormController {
 		List<org.openmrs.Field> fields = formService.getAllFields();
 		
 		//store the values of fields in the jsp map
+		try{
 		for (org.openmrs.Field currField : fields) {
 			FieldType fieldType = currField.getFieldType();
 			if (fieldType == null || !fieldType.equals(translator.getFieldType("Export Field"))) {
@@ -430,6 +444,9 @@ public class FillOutFormController extends SimpleFormController {
 				}
 			}
 		}
+	}catch (Exception e){
+		e.printStackTrace();
+	}
 	}
 	
 	

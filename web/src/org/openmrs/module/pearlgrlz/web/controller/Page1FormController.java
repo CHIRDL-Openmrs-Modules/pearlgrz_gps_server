@@ -75,7 +75,7 @@ public class Page1FormController extends SimpleFormController {
 	@Override
 	protected Map<String, Object> referenceData(HttpServletRequest request, Object obj, Errors err) throws Exception {
 		Map<String, Object>  modelMap = new HashMap<String, Object> ();
-		PearlgrlzService pearlgrlzSvc = Context.getService(PearlgrlzService.class);
+	/*	PearlgrlzService pearlgrlzSvc = Context.getService(PearlgrlzService.class);
 		ATDService atdService = Context.getService(ATDService.class);
 		PatientService patientService = Context.getPatientService();
 		State atdState = atdService.getStateByName(SURVEY_STATE_NAME);
@@ -221,7 +221,9 @@ public class Page1FormController extends SimpleFormController {
 		
 		preRender(modelMap, formId, formInstance.getFormInstanceId(), 
 											locationId, translator, input);
+											*/
 		return modelMap;
+		
 	}
 	
 	/**
