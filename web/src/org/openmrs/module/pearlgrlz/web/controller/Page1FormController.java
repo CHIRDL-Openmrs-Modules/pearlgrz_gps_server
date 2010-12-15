@@ -121,8 +121,8 @@ public class Page1FormController extends SimpleFormController {
 		}
 
 		Patient patient = patientService.getPatient(Context.getAuthenticatedUser().getPersonId());
-		if(patient == null)	
-			pearlgrlzSvc.getPatientByUserId(Context.getAuthenticatedUser().getPersonId());
+		//if(patient == null)	
+			//pearlgrlzSvc.getPatientByUserId(Context.getAuthenticatedUser().getPersonId());
 
 		
 		
@@ -146,7 +146,7 @@ public class Page1FormController extends SimpleFormController {
 				throw new Exception(msg);
 			}
 		} else {
-			numberOfQuestions = pearlgrlzSvc.getNumberQuestions(formId,locationTagId,locationId);
+			//numberOfQuestions = pearlgrlzSvc.getNumberQuestions(formId,locationTagId,locationId);
 			formInstance = Context.getService(ATDService.class).addFormInstance(formId, locationId);
 			modelMap.put("formInstance", formInstance);
 		}
@@ -170,7 +170,7 @@ public class Page1FormController extends SimpleFormController {
 			patientState = atdService.addPatientState(patient, atdState, pearlgrlzSvc.getSession(patient,provider,location).getSessionId(), 
 				locationTagId, locationId);
 			
-			pearlgrlzSvc.saveForm(modelMap,  formId,  formInstanceId,  locationTagId,  locationId, translator,  input,  request,provider);
+			//pearlgrlzSvc.saveForm(modelMap,  formId,  formInstanceId,  locationTagId,  locationId, translator,  input,  request,provider);
 			
 			patientState.setFormInstance(formInstance);
 			patientState.setEndTime(new Date());
@@ -187,7 +187,7 @@ public class Page1FormController extends SimpleFormController {
 			modelMap.put("surveyType", nextPage);					
 			modelMap.put("submitAnswers", "");						
 		
-			numberOfQuestions = pearlgrlzSvc.getNumberQuestions(formId,locationTagId,locationId);
+			//numberOfQuestions = pearlgrlzSvc.getNumberQuestions(formId,locationTagId,locationId);
 			formInstance = Context.getService(ATDService.class).addFormInstance(formId, locationId);
 			modelMap.put("formInstance", formInstance);
 			currFilename = defaultMergeDirectory + formInstance.toString() + ".xml";
@@ -196,7 +196,7 @@ public class Page1FormController extends SimpleFormController {
 		} 
 
 		session = pearlgrlzSvc.getSession(patient,provider,location);
-		if(session == null && pearlgrlzSvc.isSurveyCompleted(patient)) {
+		if(session == null ) {//&& pearlgrlzSvc.isSurveyCompleted(patient)) {
 			modelMap.put("completeMessage", "You have already completed today's Survey.  Please come back tomorrow to take a new survey.");
 			modelMap.put("redirectto", "redirectto");
 			return modelMap;
@@ -346,7 +346,7 @@ public class Page1FormController extends SimpleFormController {
 			surveySession.setEndTime(new Date());
 			pearlGrlzService.cupSurveySession(surveySession);
 		}
-		pearlGrlzService.updateSurveyCompleted(patient, Boolean.TRUE);
+		//pearlGrlzService.updateSurveyCompleted(patient, Boolean.TRUE);
 	}
 	
     /**
@@ -429,10 +429,10 @@ public class Page1FormController extends SimpleFormController {
     			parametersMap.put(questionFldNm + "List", lAmpmOptions);
     		}
     		else if(parameters.get(1).equalsIgnoreCase("generalPartnerOptions") ) { 
-    			parametersMap.put(questionFldNm + "List",  pearlGrlzService.populatePartnerList(patient, PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE));
+    			//parametersMap.put(questionFldNm + "List",  pearlGrlzService.populatePartnerList(patient, PearlgrlzService.SURVEY_GENERAL_PARTNER_TYPE));
     		}
     		else if(parameters.get(1).equalsIgnoreCase("sexualPartnerOptions") ) { 
-    			parametersMap.put(questionFldNm + "List",  pearlGrlzService.populatePartnerList(patient, PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE));
+    			//parametersMap.put(questionFldNm + "List",  pearlGrlzService.populatePartnerList(patient, PearlgrlzService.SURVEY_SEXUAL_PARTNER_TYPE));
     		}
     	}
     }

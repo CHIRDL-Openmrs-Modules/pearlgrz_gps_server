@@ -22,8 +22,6 @@ import org.openmrs.module.atd.hibernateBeans.FormInstance;
 import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.hibernateBeans.PatientState;
 import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.pearlgrlz.SurveyPartner;
-import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,21 +31,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface PearlgrlzDAO {
 
-	public SurveyRecord getLatestSurveyRecord(Patient patient);
-	
 	public void cupSurveySession(SurveySession surveySession);
 			
 	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
-
-	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType);
-	
-	public List<SurveyPartner>  populatePartnerList(Patient patient, String partnerType);
-	
-	public void addPartner(SurveyPartner partner);
-
-	public void voidPartner(SurveyPartner partner);
-	
-	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
 
 	public void addGpsData(GpsData gpsData);
 }

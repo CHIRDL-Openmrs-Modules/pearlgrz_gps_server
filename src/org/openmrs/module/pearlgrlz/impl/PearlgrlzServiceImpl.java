@@ -66,8 +66,6 @@ import org.openmrs.module.dss.DssManager;
 import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
 import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
-import org.openmrs.module.pearlgrlz.SurveyPartner;
-import org.openmrs.module.pearlgrlz.SurveyRecord;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.db.PearlgrlzDAO;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
@@ -366,19 +364,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     	return Integer.parseInt(Util.getFormAttributeValue(formId, "numQuestions", locationTagId, locationId)); 		
     }
     
-    /**
-     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#populatePartnerList(org.openmrs.Patient)
-     */
-    public List<String> populatePartnerList(Patient patient, String partnerType) {
-    	List<String> partnerNms = new ArrayList<String>();
-    	List<SurveyPartner> list = dao.populatePartnerList(patient, partnerType);
-    	for(SurveyPartner ptr : list)  {
-    		partnerNms.add(ptr.getPartnerName());
-    	}
-    	return partnerNms;
-    }
-    
-    
 	/**
 	 * @param output
 	 * @param patient
@@ -460,37 +445,7 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 				
 		return patient;
 	}
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#addPartner(org.openmrs.module.pearlgrlz.SurveyPartner)
-	 */
-	public void addPartner(SurveyPartner partner) {
-		dao.addPartner(partner);
-	}
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getSurveyPartner(org.openmrs.Patient, java.lang.String, java.lang.String)
-	 */
-	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType) {
-		return dao.getSurveyPartner(patient, partnerName, partnerType);
-	}
-	
-	
-	
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#voidPartner(org.openmrs.module.pearlgrlz.SurveyPartner, java.lang.String)
-	 */
-	public void voidPartner(SurveyPartner partner) {
-		dao.voidPartner(partner);
-	}  
-    
-	public Patient getPatientByUserId(Integer userId) {
-		
-		return Context.getPatientService().getPatient(userId);	
-	}
-     
+	     
     public Encounter getEncounter(Patient patient, User provider, Location location) {
     	Session session = getSurveySession(patient, null, provider,location);		// this will setEncounter
     	Integer encounterId = session.getEncounterId();
@@ -500,28 +455,6 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
     
     public Session getSession(Patient patient, User provider, Location location) {
     	return getSurveySession(patient, null, provider, location);
-    }
-    
-	/**
-     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getPatientATD(org.openmrs.module.atd.hibernateBeans.FormInstance, org.openmrs.module.dss.hibernateBeans.Rule)
-     */
-    public PatientATD getPatientATD(FormInstance formInstance, Rule rule) {
-	    return dao.getPatientATD(formInstance, rule);
-    }
-
-    public void updateSurveyCompleted(Patient patient, Boolean isCompleted){
-		mSessionCompleted.put(patient, isCompleted);
-
-    }
-    
-	/**
-     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#isSurveyCompleted(org.openmrs.Patient)
-     */
-    public boolean isSurveyCompleted(Patient patient) {
-	    if(mSessionCompleted.get(patient) != null) 
-	    	return mSessionCompleted.get(patient).booleanValue();
-	    else
-	    	return false;
     }
 		
     public void addGpsData(GpsData gpsData){

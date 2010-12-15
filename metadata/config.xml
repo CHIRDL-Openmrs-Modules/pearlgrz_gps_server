@@ -108,8 +108,6 @@
 	
 	<mappingFiles>
 		SurveySession.hbm.xml
-		SurveyPartner.hbm.xml
-		SurveyRecord.hbm.xml
 		gps_data.hbm.xml
 	</mappingFiles>
 	

@@ -29,7 +29,6 @@ import org.openmrs.module.atd.hibernateBeans.FormInstance;
 import org.openmrs.module.atd.hibernateBeans.PatientATD;
 import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.pearlgrlz.SurveyPartner;
 import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 
@@ -55,14 +54,6 @@ public interface PearlgrlzService {
 	public void createSurveyXML(Patient patient, Integer locationId, Integer formId, 
                                 Integer numQuestions, User provider, Integer locationTagId,
                                 FormInstance formInstance,Integer encounterId);
-	
-	public void saveForm(Map map, Integer formId, Integer formInstanceId, Integer locationTagId, Integer locationId,
-	                     TeleformTranslator translator, InputStream inputMergeFile, 
-	                     HttpServletRequest request, User provider);
-	
-	public int getNumberQuestions(Integer formId,Integer locationTagId,Integer locationId);
-
-	 public Patient getPatientByUserId(Integer userId);
 	 	 
 	public Encounter getEncounter(Patient patient, User provider, Location location);
 	
@@ -73,23 +64,9 @@ public interface PearlgrlzService {
 	
 	public String calculateSurveyType();
 	
-	public List<String>  populatePartnerList(Patient patient, String partnerType);
-	
-	public SurveyPartner getSurveyPartner(Patient patient, String partnerName, String partnerType);
-
-	public PatientATD getPatientATD(FormInstance formInstance, Rule rule);
-	
-	public void addPartner(SurveyPartner partner);
-
-	public void voidPartner(SurveyPartner partner);
-
-	public boolean isSurveyCompleted(Patient patient);
-	
 	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
 
 	public void cupSurveySession(SurveySession surveySession);
-
-    public void updateSurveyCompleted(Patient patient, Boolean isCompleted);
 
     public void addGpsData(GpsData gpsData);
 }

@@ -57,21 +57,6 @@ public class Util
 		obsService.saveObs(parent, "added a member obs");
 	}
 	
-	public synchronized static boolean containsPossibleObs(Obs parent,Set<Obs> possibleObs){
-		
-		Set<Obs> obsGroup = parent.getGroupMembers();
-		
-		for(Obs groupObs:obsGroup){
-			for(Obs possGroupObs:possibleObs){
-				if(groupObs.getObsId().equals(possGroupObs.getObsId())){
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
 	public synchronized static Obs saveObs(Patient patient, Concept currConcept,
 			int encounterId, String value)
 	{

@@ -46,8 +46,8 @@ input := CALL checkNullInput With "Box1_object";
 
 /** add a java rule that only saves previous partner if it is unique**/
 If NOT (input = NULL) then
- CALL storeObsMultipleAnswers With "Sexual partner", "Box1";
- CALL storeObsMultipleAnswers With "sexual previous partner list", "Box1";
+ CALL storeObs With "Sexual partner", "Box1";
+ CALL storeObs With "sexual previous partner list", "Box1";
  CALL storeObs With "EnterNewSexualPartner","No";
 endif;
 
