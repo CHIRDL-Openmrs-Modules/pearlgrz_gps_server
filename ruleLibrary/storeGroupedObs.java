@@ -1,4 +1,4 @@
-package org.openmrs.module.chica.rule;
+package org.openmrs.module.pearlgrlz.rule;
 
 import java.util.Map;
 import java.util.Set;
