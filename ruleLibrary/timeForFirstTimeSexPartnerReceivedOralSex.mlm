@@ -36,7 +36,7 @@ If (mode = PRODUCE) then
 endif
 ;;
 
-Priority:		551;;
+Priority:		1000;;
 	Evoke:		;;
 
 Logic:

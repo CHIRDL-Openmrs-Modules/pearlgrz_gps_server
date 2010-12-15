@@ -25,19 +25,20 @@ Box1:=read {box1 from Parameters};
 Box2:=read {input1value from Parameters};
 
 If (mode = PRODUCE) then
-timeSpentWithGenPartner := read Exist {Time spent with general-partner} Where it Occurred Within Past 1 Days;
-hasGeneralPartner:=read Exist {General partner} Where it Occurred Within Past 1 Days;
+timeSpentWithGenPartnerUnfiltered := read {Time spent with general-partner} Where it Occurred Within Past 1 Days;
 generalPartner:=read Last {General partner} Where it Occurred Within Past 1 Days;
+generalPartnerExists := read Last {Interacted with someone that subject had sex or is interested in having sex with since last scheduled prompt} Where it Occurred Within Past 1 Days;
+enterNewGeneralPartner := read Last {EnterNewGeneralPartner};
 endif
 ;;
 
-Priority:		278;;
+Priority:		1000;;
 	Evoke:		;;
 
 Logic:
 If (mode = PRODUCE) then
-
-If (timeSpentWithGenPartner = False) AND (hasGeneralPartner  = True) then conclude True;
+timeSpentWithGenPartner := call filterObsByParent With "timeSpentWithGenPartnerUnfiltered_object","generalPartner_object";
+If (timeSpentWithGenPartner = NULL) AND (generalPartnerExists = 'Yes') AND (enterNewGeneralPartner = No) then conclude True;
 conclude False;
 
 endif
@@ -45,7 +46,7 @@ endif
 If (mode = CONSUME) then
 
 If  (Box1=true) then
- CALL storeObs With "Time spent with general-partner", "Box2";
+ CALL storeGroupedObs With "generalPartner_object","Time spent with general-partner", "Box2";
 endif;
 
 
