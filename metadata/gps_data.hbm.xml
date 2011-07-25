@@ -19,7 +19,7 @@
 		<property name="locationProvider" type="java.lang.String" column="location_provider"/>
 		<property name="accuracy" type="java.lang.Double" column="accuracy"/>
 		<property name="numSatellites" type="java.lang.Double" column="num_satellites"/>
-		
+		<property name="batteryLevel" type="java.lang.String" column="battery_level"/>
 	</class>
 	
 </hibernate-mapping>

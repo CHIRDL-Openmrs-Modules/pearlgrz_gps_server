@@ -74,4 +74,16 @@
 </sql>
 	</diff>
 	
+	<diff>
+		<version>1.0.4</version>
+		<author>Tammy Dugan</author>
+		<date>Jul 25 2011</date>
+		<description>
+			Add battery_level column to gps table.
+		</description>
+		<sql>
+	alter table pearlgrlz_gps_data add column battery_level varchar(40);
+</sql>
+	</diff>
+	
 </sqldiff>

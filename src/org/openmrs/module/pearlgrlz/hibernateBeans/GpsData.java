@@ -20,6 +20,7 @@ public class GpsData implements java.io.Serializable
 	private String locationProvider = null;
 	private Double accuracy = null;
 	private Double numSatellites = null;
+	private String batteryLevel = null;
 
 	
     /**
@@ -170,5 +171,18 @@ public class GpsData implements java.io.Serializable
     public void setNumSatellites(Double numSatellites) {
     	this.numSatellites = numSatellites;
     }
-    
+	
+    /**
+     * @return the batteryLevel
+     */
+    public String getBatteryLevel() {
+    	return this.batteryLevel;
+    }
+	
+    /**
+     * @param batteryLevel the batteryLevel to set
+     */
+    public void setBatteryLevel(String batteryLevel) {
+    	this.batteryLevel = batteryLevel;
+    }  
 }
