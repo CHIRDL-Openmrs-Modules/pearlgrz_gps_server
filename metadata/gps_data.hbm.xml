@@ -15,6 +15,11 @@
 		<property name="latitude" type="java.lang.Double" column="latitude"/>
 		<property name="phoneName" type="java.lang.String" column="phone_name"/>
 		<property name="time" type="java.util.Date" column="time"/>
+		<property name="address" type="java.lang.String" column="address"/>
+		<property name="locationProvider" type="java.lang.String" column="location_provider"/>
+		<property name="accuracy" type="java.lang.Double" column="accuracy"/>
+		<property name="numSatellites" type="java.lang.Double" column="num_satellites"/>
+		
 	</class>
 	
 </hibernate-mapping>

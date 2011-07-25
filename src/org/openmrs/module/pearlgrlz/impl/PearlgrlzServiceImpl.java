@@ -13,64 +13,32 @@
  */
 package org.openmrs.module.pearlgrlz.impl;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.FieldType;
 import org.openmrs.Form;
-import org.openmrs.FormField;
 import org.openmrs.Location;
-import org.openmrs.LocationTag;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
+import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.logic.LogicService;
-import org.openmrs.module.atd.TeleformTranslator;
-import org.openmrs.module.atd.datasource.TeleformExportXMLDatasource;
 import org.openmrs.module.atd.hibernateBeans.FormInstance;
-import org.openmrs.module.atd.hibernateBeans.PatientATD;
-import org.openmrs.module.atd.hibernateBeans.PatientState;
-import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.atd.service.ATDService;
-import org.openmrs.module.atd.util.Util;
-import org.openmrs.module.atd.xmlBeans.Field;
-import org.openmrs.module.atd.xmlBeans.Record;
-import org.openmrs.module.atd.xmlBeans.Records;
 import org.openmrs.module.chirdlutil.util.IOUtil;
-import org.openmrs.module.chirdlutil.util.XMLUtil;
 import org.openmrs.module.dss.DssManager;
-import org.openmrs.module.dss.hibernateBeans.Rule;
 import org.openmrs.module.dss.service.DssService;
-import org.openmrs.module.pearlgrlz.SurveyParameterHandler;
-import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.db.PearlgrlzDAO;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -83,122 +51,12 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	
 	private PearlgrlzDAO dao;
 
-	private SurveyParameterHandler parameterHandler;
-	private HashMap<Patient, Boolean> mSessionCompleted;
-
 
 	/**
 	 *  Default constructor
 	 */
 	public PearlgrlzServiceImpl() {
 		
-		mSessionCompleted = new HashMap<Patient, Boolean>();
-	}
-	
-	public SurveySession getLatestSurveySession(Patient patient, String surveyType){
-		return dao.getLatestSurveySession(patient, surveyType);
-	}
-	public void cupSurveySession(SurveySession surveySession){
-		dao.cupSurveySession(surveySession);
-	}
-
-	
-	
-	public Session getSurveySession(Patient patient, String surveyType, User provider,
-	                                Location location)  {
-		final int MILLISEC_IN_DAY = 24*60*60*1000;
-		ATDService atdService = Context.getService(ATDService.class);
-		boolean newSession = false;
-		Date now = new Date();
-		GregorianCalendar cal = new GregorianCalendar();
-		Session session = null;
-		Encounter encounter = null;
-
-		if(surveyType == null) 
-			surveyType = calculateSurveyType();
-		
-		cal.setTime(now);
-		
-		SurveySession surveySession = dao.getLatestSurveySession(patient, surveyType);
-		
-		// Very initial, or latest is voided
-		if(surveySession == null || surveySession.isVoided()) {
-			newSession = true;
-		} else {
-			// Completed, open a new session if it's the following day
-			if(surveySession.getEndTime() != null) {
-				GregorianCalendar endCal = new GregorianCalendar();
-				endCal.setTime(surveySession.getEndTime());
-				
-				// TODO: let's handle this gracefully (ie, redirect user to the completion and logout page)
-				if(cal.get(Calendar.DAY_OF_YEAR) - endCal.get(Calendar.DAY_OF_YEAR) > 0) {
-					newSession = true;
-				} else {
-					log.info(Context.getAuthenticatedUser().getUsername() + " have already completed today's Survey.  A new survey will start on tomorrow");
-					mSessionCompleted.put(patient, Boolean.TRUE);
-					return null;
-				}
-			} else {
-				if ((surveyType.equalsIgnoreCase(SURVEY_TYPE_DAILY) && (now.getTime() - surveySession.getStartTime()
-				        .getTime()) > MILLISEC_IN_DAY)
-				        || (surveyType.equalsIgnoreCase(SURVEY_TYPE_WEEKLY) && (now.getTime() - surveySession.getStartTime()
-				                .getTime()) > MILLISEC_IN_DAY * 7)) {
-					
-					newSession = true;
-					
-					surveySession.setVoided(Boolean.TRUE);
-					surveySession.setVoidedBy(Context.getUserService().getUser(1));
-					surveySession.setVoidReason(SURVEY_VOIDED_REASON_TIMESUP);
-					surveySession.setEndTime(now);
-					surveySession.setDateVoided(now);
-					dao.cupSurveySession(surveySession);
-				} else {
-					session =  atdService.getSession(surveySession.getSessionId());
-					encounter = Context.getEncounterService().getEncounter(surveySession.getEncounterId());
-				}
-			}
-		}
-		
-		if(newSession || session == null || encounter == null) {
-			// Create Session and Encounter
-			session = atdService.addSession();
-			encounter = createEncounter(patient, provider, location);
-			session.setEncounterId(encounter.getEncounterId());
-			session = atdService.updateSession(session);
-			
-			// Create SurveySession
-			surveySession = new SurveySession();
-			surveySession.setPatientId(patient.getPatientId());
-			surveySession.setSurveyType(surveyType);
-			surveySession.setSessionId(session.getSessionId());
-			surveySession.setEncounterId(encounter.getEncounterId());
-			surveySession.setStartTime(now);
-			dao.cupSurveySession(surveySession);
-			mSessionCompleted.put(patient, Boolean.FALSE);
-		}
-		
-		return session;
-	}
-
-	/**
-	 * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#calculateSurveyType()
-	 */
-	public String calculateSurveyType() {
-		String surveyType = null;
-		Date now = new Date();
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(now);
-		
-		if(surveyType == null) {
-			if(cal.get(Calendar.DAY_OF_MONTH) == cal.getMaximum(Calendar.DAY_OF_MONTH)) {
-				surveyType = SURVEY_TYPE_MONTHLY;
-			} else if(cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)  
-				surveyType = SURVEY_TYPE_WEEKLY;
-			else
-				surveyType = SURVEY_TYPE_DAILY;
-		}
-		
-		return surveyType;
 	}
 		
 	public PearlgrlzDAO getPearlgrlzDAO() {
@@ -209,24 +67,21 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	public void setPearlgrlzDAO(PearlgrlzDAO dao) {
 		this.dao = dao;
 	}
-	
-	
-	public SurveyParameterHandler getParameterHandler() {
-		return this.parameterHandler;
-	}
-	
-	
-	public void setParameterHandler(SurveyParameterHandler pHandler) {
-		this.parameterHandler = pHandler;
-	}
-	
-	
+
     /** 
      * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#createSurveyXML(org.openmrs.Patient, java.lang.Integer, java.lang.Integer, java.lang.Integer, org.openmrs.User)
      */
     public void createSurveyXML(Patient patient, Integer locationId, Integer formId, 
                                 Integer numQuestions, User provider, Integer locationTagId,
-                                FormInstance formInstance,Integer encounterId) {
+                                FormInstance formInstance,Integer encounterId,Integer sessionId) {
+		
+    	LogicService logicService = Context.getLogicService();
+
+		Integer patientId = patient.getPatientId();
+		
+		ObsService obsService = Context.getObsService();
+		Set<Obs> allObs = obsService.getObservations(patient, false);
+		ArrayList<Obs> list = new ArrayList<Obs>(allObs);
 		
 		LocationService locationService = Context.getLocationService();
 		Location location = locationService.getLocation(locationId);
@@ -247,122 +102,13 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 			String formName = form.getName();
 			
 			produce(output, patient, formName, numQuestions, formInstance, location, provider,
-				locationTagId,encounterId);
+				locationTagId,encounterId,sessionId);
 		
 		output.close();  
 		} catch(Exception e) {
 			log.debug(e);
 		}
 	}
-    
-	/**
-	 * @param map
-	 * @param formId
-	 * @param formInstanceId
-	 * @param locationTagId
-	 * @param locationId
-	 * @param translator
-	 * @param inputMergeFile
-	 * @param request
-	 */
-	public void saveForm(Map map, Integer formId, Integer formInstanceId, Integer locationTagId, Integer locationId,
-	                     TeleformTranslator translator, InputStream inputMergeFile, 
-	                     HttpServletRequest request, User provider) {
-		
-	/*	LocationService locationService = Context.getLocationService();
-		Location location = locationService.getLocation(locationId);
-		if(translator == null ) 
-    		translator = new TeleformTranslator();
-		
-		try {
-			HashSet<String> inputFields = new HashSet<String>();
-			
-			Form form = Context.getFormService().getForm(formId);
-	    	
-	    	List<FormField> flds = form.getOrderedFormFields();
-	    	
-	    	for (int nbr = 0; nbr < flds.size(); ++nbr) {
-	    		org.openmrs.Field currField = flds.get(nbr).getField();
-	    		FieldType fieldType = currField.getFieldType();
-	    		if (fieldType != null && fieldType.equals(translator.getFieldType("Export Field"))) {
-	    			inputFields.add(currField.getName());
-	    		}
-	    	}
-		    
-			Records records = (Records) XMLUtil.deserializeXML(Records.class, inputMergeFile);
-			inputMergeFile.close();
-			Record record = records.getRecord(); 
-			
-			//Link the values from the submitted answers to the form fields
-			for (Field currField : record.getFields()) {
-				String name = currField.getId();
-				
-				if (inputFields.contains(name)) {
-					// Check what's inside the multiselect
-					String inputVal = "";
-					String[] vals = request.getParameterValues(name);
-					if(vals != null && vals.length >=1) {
-						for(int i=0; i<vals.length; ++i) {
-							inputVal += vals[i];
-							if(i != vals.length -1) 
-								inputVal += SURVEY_VALUE_DELIMITOR;
-						}
-					}
-					currField.setValue(inputVal);
-				}
-			}
-			
-			
-			String exportDirectory = IOUtil.formatDirectoryName(org.openmrs.module.atd.util.Util.getFormAttributeValue(
-			    formId, "defaultExportDirectory", locationTagId, locationId));
-			
-			FormInstance formInstance = new FormInstance(locationId, formId, formInstanceId);
-			//Write the xml for the export file
-			String exportFilename = exportDirectory + formInstance.toString() + ".xml";
-			
-			OutputStream output = new FileOutputStream(exportFilename);
-			XMLUtil.serializeXML(records, output);
-			output.flush();
-			output.close();
-			
-			
-			// Reads in the saved xml file, and run the rules
-			LogicService logicService = Context.getLogicService();
-			InputStream input = new FileInputStream(exportFilename);
-			
-			TeleformExportXMLDatasource xmlDatasource = (TeleformExportXMLDatasource) logicService.getLogicDataSource("xml");
-			xmlDatasource.deleteParsedFile(formInstance);
-			formInstance = xmlDatasource.parse(input, formInstance, locationTagId);
-			
-			// make sure storeObs gets loaded before running consume rules       
-			DssService dssService = Context.getService(DssService.class); 
-			ATDService atdService = Context.getService(ATDService.class);  
-			dssService.loadRule("storeObs",false); 
-			dssService.loadRule("storeObsMultipleAnswers",false);
-			dssService.loadRule("storeGroupedObs",false);
-			Patient patient = getPatientByUserId(Context.getAuthenticatedUser().getPersonId());
-			                                                                  
-			Encounter encounter =  getEncounter(patient,provider,location);
-			Session session = getSession(patient,provider,location);
-			
-			atdService.consume(input, formInstance, patient, encounter.getEncounterId(),  request.getParameterMap(), null, parameterHandler,  null, locationTagId, session.getSessionId());                        
-			
-		} catch(Exception e) {
-			log.error("Failed to save the result for this form",  e);
-		}
-	*/
-	}
-
-		
-		
-    
-    
-    /**
-     * @see org.openmrs.module.pearlgrlz.service.PearlgrlzService#getNumberQuestions(java.lang.Integer)
-     */
-    public int getNumberQuestions(Integer formId,Integer locationTagId,Integer locationId) {
-    	return Integer.parseInt(Util.getFormAttributeValue(formId, "numQuestions", locationTagId, locationId)); 		
-    }
     
 	/**
 	 * @param output
@@ -375,7 +121,8 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 	 */
 	private void produce(OutputStream output, Patient patient, 
 	                     String dssType, int maxDssElements, FormInstance formInstance,
-	                    Location location, User provider,Integer locationTagId, Integer encounterId) {
+	                    Location location, User provider,Integer locationTagId, Integer encounterId,
+	                    Integer sessionId) {
 		
 		DssService dssService = Context.getService(DssService.class);
 		ATDService atdService = Context.getService(ATDService.class);
@@ -398,65 +145,9 @@ public class PearlgrlzServiceImpl implements PearlgrlzService {
 		}
 		
 		atdService.produce(patient, formInstance, output, dssManager, encounterId, baseParameters, null, locationTagId,
-		    getSession(patient, provider, location).getSessionId());
+		    sessionId);
 	}
-	
-	
-	
-	/**
-	 * @param patient
-	 * @param provider
-	 * @param location
-	 * @return
-	 */
-	private Encounter createEncounter(Patient patient, User provider,Location location) {
-				Encounter encounter = new Encounter();
-		
-		try{
-		EncounterService encounterService = Context.getEncounterService();
-		EncounterType encType = encounterService.getEncounterType("HL7Message");
-		encounter.setPatient(patient);
-		encounter.setProvider(provider);
-		encounter.setLocation(location);
-		encounter.setEncounterDatetime(new java.util.Date());
-		encounter.setCreator(Context.getAuthenticatedUser());
-		encounter.setDateCreated(new java.util.Date());
-		encounter.setEncounterType(encType);
-		encounterService.saveEncounter(encounter);
-		System.out.println("encounter id: "+ encounter.getEncounterId());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-
-		return encounter;
-	}
-
-	
-	/**
-	 * @return
-	 */
-	private Patient createPatient(Integer personId) {
-		
-		Patient patient = new Patient();
-		
-		if( Context.getPatientService().getPatient(personId) == null) {
-			patient = Context.getPatientService().savePatient(patient);		
-		}
-				
-		return patient;
-	}
-	     
-    public Encounter getEncounter(Patient patient, User provider, Location location) {
-    	Session session = getSurveySession(patient, null, provider,location);		// this will setEncounter
-    	Integer encounterId = session.getEncounterId();
-    	return Context.getEncounterService().getEncounter(encounterId);
-    }
-    
-    
-    public Session getSession(Patient patient, User provider, Location location) {
-    	return getSurveySession(patient, null, provider, location);
-    }
-		
+			
     public void addGpsData(GpsData gpsData){
     	dao.addGpsData(gpsData);
     }

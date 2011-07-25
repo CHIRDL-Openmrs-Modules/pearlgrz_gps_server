@@ -13,16 +13,6 @@
  */
 package org.openmrs.module.pearlgrlz.db;
 
-import java.util.Date;
-import java.util.List;
-
-import org.openmrs.Concept;
-import org.openmrs.Patient;
-import org.openmrs.module.atd.hibernateBeans.FormInstance;
-import org.openmrs.module.atd.hibernateBeans.PatientATD;
-import org.openmrs.module.atd.hibernateBeans.PatientState;
-import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 import org.springframework.transaction.annotation.Transactional;
 /**
@@ -30,10 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 public interface PearlgrlzDAO {
-
-	public void cupSurveySession(SurveySession surveySession);
-			
-	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
 
 	public void addGpsData(GpsData gpsData);
 }

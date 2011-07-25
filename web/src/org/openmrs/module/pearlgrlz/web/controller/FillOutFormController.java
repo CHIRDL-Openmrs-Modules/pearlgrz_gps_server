@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Field;
 import org.openmrs.FieldType;
 import org.openmrs.Form;
 import org.openmrs.FormField;
@@ -44,6 +46,7 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.FormService;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.ObsService;
@@ -61,7 +64,6 @@ import org.openmrs.module.atd.hibernateBeans.Session;
 import org.openmrs.module.atd.hibernateBeans.State;
 import org.openmrs.module.atd.service.ATDService;
 import org.openmrs.module.dss.service.DssService;
-import org.openmrs.module.atd.xmlBeans.Field;
 import org.openmrs.module.atd.xmlBeans.Record;
 import org.openmrs.module.atd.xmlBeans.Records;
 import org.openmrs.module.chirdlutil.util.IOUtil;
@@ -93,20 +95,17 @@ public class FillOutFormController extends SimpleFormController {
 	 */
 	@Override
 	protected Map referenceData(HttpServletRequest request) throws Exception {
+		long startTime = System.currentTimeMillis();
 		Map<String, Object> map = new HashMap<String, Object>();
 		Integer locationTagId = 1; //TODO needs to be configurable
 		Integer locationId = 3; //TODO needs to be configurable
 		Integer numQuestions = 5; //TODO needs to be a form attribute value
 		String idString = request.getParameter("formInstance");
 		String encounterIdString = request.getParameter("encounterId");
-		//String patientIdString = request.getParameter("patientId");
 		String patientIdString = null;
 		String sessionIdString = request.getParameter("sessionId");
-		//String providerIdString = request.getParameter("providerId");
 		
-		String providerIdString = "5"; // For now
-		
-		
+		String providerIdString = "5"; //TODO needs to be configurable
 		
 		Integer encounterId = null;
 		User user = Context.getUserContext().getAuthenticatedUser();
@@ -114,14 +113,7 @@ public class FillOutFormController extends SimpleFormController {
 		{
 			return map;
 		}
-		try{
-		if(encounterIdString != null){
-			try {
-	            encounterId = Integer.parseInt(encounterIdString);
-            }
-            catch (Exception e) {
-            }
-		}
+		
 		Integer patientId = null;
 		if(patientIdString != null){
 			try {
@@ -135,19 +127,40 @@ public class FillOutFormController extends SimpleFormController {
 			patientId = user.getPerson().getPersonId();
 		}
 		
-		Integer sessionId = null;
-		if(sessionIdString != null){
+		Integer providerId = null;
+		if(providerIdString != null){
 			try {
-				sessionId = Integer.parseInt(sessionIdString);
+				providerId = Integer.parseInt(providerIdString);
             }
             catch (Exception e) {
             }
 		}
 		
-		Integer providerId = null;
-		if(providerIdString != null){
+		try{
+		if(encounterIdString != null){
 			try {
-				providerId = Integer.parseInt(providerIdString);
+	            encounterId = Integer.parseInt(encounterIdString);
+            }
+            catch (Exception e) {
+            }
+		}
+		
+		if(encounterId == null){
+			PatientService patientService = Context.getPatientService();
+			Patient patient = patientService.getPatient(patientId);
+			LocationService locationService = Context.getLocationService();
+			Location location = locationService.getLocation(locationId);
+			UserService userService = Context.getUserService();
+			User provider = userService.getUser(providerId);
+			Encounter encounter = createEncounter(patient,provider,location);
+			encounterId = encounter.getEncounterId();
+		}
+		
+		
+		Integer sessionId = null;
+		if(sessionIdString != null){
+			try {
+				sessionId = Integer.parseInt(sessionIdString);
             }
             catch (Exception e) {
             }
@@ -224,7 +237,7 @@ public class FillOutFormController extends SimpleFormController {
 		map.put("sessionId", sessionId);
 		map.put("locationId", locationId);
 		
-		formInstance = generatePage(patientId,providerId,locationTagId,locationId,numQuestions,map);
+		formInstance = generatePage(patientId,providerId,locationTagId,locationId,numQuestions,map,encounterId);
 
 		//Run this to show the form
 		InputStream input = null;
@@ -255,12 +268,15 @@ public class FillOutFormController extends SimpleFormController {
 		}catch(APIAuthenticationException ex2){
 			//ignore this exception. It happens during the redirect to the login page
 		}	
+		System.out.println("referenceData time: "+(System.currentTimeMillis()-startTime));
 		return map;
 	}
 	
 	
 	private FormInstance generatePage(Integer patientId,Integer providerId,Integer locationTagId,
-	                                  Integer locationId, Integer numQuestions,Map<String,Object> map){
+	                                  Integer locationId, Integer numQuestions,Map<String,Object> map,
+	                                  Integer encounterId){
+		long startTime=System.currentTimeMillis();
 		FormInstance formInstance = null;
 		try {
 		ATDService atdService = Context.getService(ATDService.class);
@@ -273,13 +289,10 @@ public class FillOutFormController extends SimpleFormController {
 		//Hard code them for now
 		UserService userService = Context.getUserService();
 		User provider = userService.getUser(providerId);
-		LocationService locationService = Context.getLocationService();
-		Location location = locationService.getLocation(locationId);
 		
 		String formName = "PearlGrlz";
 		FormService formService = Context.getFormService();
-		List<Form> allForms = formService.getForms(formName, null, null, false, null, null, null);
-		Form form = allForms.get(0);
+		Form form = formService.getForm(formName);
 		Integer formId = form.getFormId();
 		
 		if (patientId != null) {
@@ -300,12 +313,11 @@ public class FillOutFormController extends SimpleFormController {
 			
 			OutputStream output = new FileOutputStream(currFilename);
 			PearlgrlzService pearlgrlzService = Context.getService(PearlgrlzService.class);
-			Encounter encounter = pearlgrlzService.getEncounter(patient, provider, location);
-			session.setEncounterId(encounter.getEncounterId());
+			session.setEncounterId(encounterId);
 			atdService.updateSession(session);
 			map.put("sessionId",sessionId);
 			pearlgrlzService.createSurveyXML(patient,locationId, formId, 
-				numQuestions, provider,locationTagId,formInstance,encounter.getEncounterId());
+				numQuestions, provider,locationTagId,formInstance,encounterId,sessionId);
 			output.close();  
 			patientState.setEndTime(new java.util.Date());
 			atdService.updatePatientState(patientState);
@@ -318,12 +330,14 @@ public class FillOutFormController extends SimpleFormController {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+		System.out.println("generatePage time: "+(System.currentTimeMillis()-startTime));
+
 		return formInstance;
 	}
 	
 	private void consumeInputXML(Integer patientId,PatientState patientState,
 	                                    FormInstance formInstance,String exportFilename){
-
+long startTime = System.currentTimeMillis();
 		//lookup the patient again to avoid lazy initialization errors
 		PatientService patientService = Context.getPatientService();
 		Patient patient = patientService.getPatient(patientId);
@@ -337,11 +351,13 @@ public class FillOutFormController extends SimpleFormController {
 		consume(sessionId,formInstance,patient,
 				null,locationTagId,exportFilename);
 		StateManager.endState(patientState);
+		System.out.println("consumeInputXML time: "+(System.currentTimeMillis()-startTime));
+
 	}
 	
 	private void consume(Integer sessionId, FormInstance formInstance, Patient patient,
 	                            List<FormField> fieldsToConsume, Integer locationTagId,String exportFilename) {
-		long startTime = System.currentTimeMillis();
+		long startTimeTotal = System.currentTimeMillis();
 		AdministrationService adminService = Context.getAdministrationService();
 		ATDService atdService = Context.getService(ATDService.class);
 		Integer encounterId = atdService.getSession(sessionId).getEncounterId();
@@ -349,7 +365,6 @@ public class FillOutFormController extends SimpleFormController {
 		try {
 			InputStream input = new FileInputStream(exportFilename);
 			
-			startTime = System.currentTimeMillis();
 			ParameterHandler parameterHandler = new SurveyParameterHandler();
 			//make sure to remove the parsed file before consume to make sure
 			//the file is freshly read
@@ -359,17 +374,14 @@ public class FillOutFormController extends SimpleFormController {
 
 			atdService.consume(input, formInstance, patient, encounterId, null, null,
 			    parameterHandler, fieldsToConsume, locationTagId, sessionId);
-			startTime = System.currentTimeMillis();
 			input.close();
 		}
 		catch (Exception e) {
-			log.error("Error consuming chica file: " + exportFilename);
+			log.error("Error consuming file: " + exportFilename);
 			log.error(e.getMessage());
 			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 		}
 		
-		System.out.println("chicaStateActionHandler.consume: time of saveObs: " + (System.currentTimeMillis() - startTime));
-		startTime = System.currentTimeMillis();
 		// remove the parsed xml from the xml datasource
 		try {
 			Integer purgeXMLDatasourceProperty = null;
@@ -388,6 +400,8 @@ public class FillOutFormController extends SimpleFormController {
 			log.error(e.getMessage());
 			log.error(org.openmrs.module.chirdlutil.util.Util.getStackTrace(e));
 		}
+		System.out.println("consume time: "+(System.currentTimeMillis()-startTimeTotal));
+
 	}
 
 	/**
@@ -403,6 +417,7 @@ public class FillOutFormController extends SimpleFormController {
 	 */
 	private static void showForm(Map map, Integer formId, Integer formInstanceId, Integer locationId,
 	                             TeleformTranslator translator, InputStream inputMergeFile) throws Exception {
+		long startTime = System.currentTimeMillis();
 		FormService formService = Context.getFormService();
 		LogicService logicService = Context.getLogicService();
 		TeleformExportXMLDatasource xmlDatasource = (TeleformExportXMLDatasource) logicService.getLogicDataSource("xml");
@@ -415,25 +430,31 @@ public class FillOutFormController extends SimpleFormController {
 			formInstance, null);
 		inputMergeFile.close();
 		fieldMap = xmlDatasource.getParsedFile(formInstance);
-		
-		List<org.openmrs.Field> fields = formService.getAllFields();
-		
+		String formName = "PearlGrlz";
+		Form form = formService.getForm(formName);
+		List<org.openmrs.FormField> fields = form.getOrderedFormFields();
 		//store the values of fields in the jsp map
 		try{
-		for (org.openmrs.Field currField : fields) {
+		for (org.openmrs.FormField currFormField : fields) {
+			Field currField = currFormField.getField();
 			FieldType fieldType = currField.getFieldType();
 			if (fieldType == null || !fieldType.equals(translator.getFieldType("Export Field"))) {
-				Field lookupField = fieldMap.get(currField.getName());
+				org.openmrs.module.atd.xmlBeans.Field lookupField = fieldMap.get(currField.getName());
 				if (lookupField != null) {
 					//if this is an input list parse it into a String List
 					if(currField.getName().contains("_input_list")){
 						List<String> inputList = new ArrayList<String>();
-						if (lookupField.getValue() != null) {
-							StringTokenizer tokenizer = new StringTokenizer(lookupField.getValue(), ",");
+						String fieldValue = lookupField.getValue();
+						if (fieldValue != null) {
+							if(fieldValue.contains(",")){
+								StringTokenizer tokenizer = new StringTokenizer(fieldValue, ",");
 							
-							while (tokenizer.hasMoreElements()) {
-								String value = tokenizer.nextToken();
-								inputList.add(value);
+								while (tokenizer.hasMoreElements()) {
+									String value = tokenizer.nextToken();
+									inputList.add(value);
+								}
+							}else{
+								inputList.add(fieldValue);
 							}
 							map.put(currField.getName(), inputList);
 						}
@@ -447,6 +468,8 @@ public class FillOutFormController extends SimpleFormController {
 	}catch (Exception e){
 		e.printStackTrace();
 	}
+	System.out.println("showForm time: "+(System.currentTimeMillis()-startTime));
+
 	}
 	
 	
@@ -468,14 +491,17 @@ public class FillOutFormController extends SimpleFormController {
 	                             TeleformTranslator translator, 
 	                             InputStream inputMergeFile, HttpServletRequest request,
 	                             Integer patientId,Integer sessionId) {
-
+long startTime = System.currentTimeMillis();
 		try {
 			//pull all the input fields from the database for the form
 			FormService formService = Context.getFormService();
 			HashSet<String> inputFields = new HashSet<String>();
-			List<org.openmrs.Field> fields = formService.getAllFields();
+			String formName = "PearlGrlz";
+			Form form = formService.getForm(formName);
+			List<org.openmrs.FormField> fields = form.getOrderedFormFields();
 			
-			for (org.openmrs.Field currField : fields) {
+			for (org.openmrs.FormField currFormField : fields) {
+				Field currField = currFormField.getField();
 				FieldType fieldType = currField.getFieldType();
 				if (fieldType != null && fieldType.equals(translator.getFieldType("Export Field"))) {
 					inputFields.add(currField.getName());
@@ -488,7 +514,7 @@ public class FillOutFormController extends SimpleFormController {
 			
 			//Link the values from the submitted answers to 
 			//the form fields
-			for (Field currField : record.getFields()) {
+			for (org.openmrs.module.atd.xmlBeans.Field currField : record.getFields()) {
 				String name = currField.getId(); 
 				
 				if (inputFields.contains(name)) {
@@ -519,8 +545,7 @@ public class FillOutFormController extends SimpleFormController {
 			atdService.updatePatientState(patientState);
 			
 			
-			//TODO: Deal with the states here,  next Form to process, or just Finish?   Indicate done for scan
-//			map.put("scanned", "scanned");
+			
 			map.put("contSurvey", "contSurvey");
 			map.put("nonInit", "nonInit");
 			map.put("submitAnswers", "");
@@ -530,5 +555,36 @@ public class FillOutFormController extends SimpleFormController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("scanForm time: "+(System.currentTimeMillis()-startTime));
+
+	}
+	
+	/**
+	 * @param patient
+	 * @param provider
+	 * @param location
+	 * @return
+	 */
+	private Encounter createEncounter(Patient patient, User provider,Location location) {
+				Encounter encounter = new Encounter();
+		
+				long startTime = System.currentTimeMillis();
+		try{
+		EncounterService encounterService = Context.getEncounterService();
+		EncounterType encType = encounterService.getEncounterType("HL7Message");
+		encounter.setPatient(patient);
+		encounter.setProvider(provider);
+		encounter.setLocation(location);
+		encounter.setEncounterDatetime(new java.util.Date());
+		encounter.setCreator(Context.getAuthenticatedUser());
+		encounter.setDateCreated(new java.util.Date());
+		encounter.setEncounterType(encType);
+		encounterService.saveEncounter(encounter);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		System.out.println("createEncounter time: "+(System.currentTimeMillis()-startTime));
+
+		return encounter;
 	}
 }

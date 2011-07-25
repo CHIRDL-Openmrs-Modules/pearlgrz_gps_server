@@ -107,7 +107,6 @@
 	<!-- /Internationalization -->
 	
 	<mappingFiles>
-		SurveySession.hbm.xml
 		gps_data.hbm.xml
 	</mappingFiles>
 	

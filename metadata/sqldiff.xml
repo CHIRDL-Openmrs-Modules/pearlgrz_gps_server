@@ -28,56 +28,9 @@
 			INSERT INTO atd_state(`name`) values ('process_survey');
 		</sql>
 	</diff>
-	
-	<diff>
-		<version>1.0.1</version>
-		<author>Jun Wang</author>
-		<date>Mar 29, 2010</date>
-		<description>
-			Setting up the concept dictionary and others.
-		</description>
-		<sql>
-			CREATE TABLE `survey_partner` (
- 				 `id` int(11) NOT NULL auto_increment,
- 				 `patient_id` int(11) NOT NULL,
- 				 `partner_name` varchar(100) NOT NULL,
-  				`partner_type` varchar(50) default NULL,
-  				`times_selected` int(11) NOT NULL default '0',
-  				`date_created` datetime NOT NULL,
-  				`date_changed` datetime NOT NULL,
-  				`voided` smallint(6) NOT NULL default '0',
-  				`voided_by` int(11) default NULL,
-  				`date_voided` datetime default NULL,
-  				`void_reason` varchar(255) default NULL,
-  				PRIMARY KEY  (`id`),
-  				KEY `voided_by_user` (`voided_by`),
-  				CONSTRAINT `voided_by_user` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-				
-			CREATE TABLE `survey_session` (
-  				`id` int(11) NOT NULL auto_increment,
-  				`patient_id` int(11) NOT NULL,
-  				`survey_type` varchar(100) NOT NULL default '',
-  				`session_id` int(11) NOT NULL,
-  				`encounter_id` int(11) NOT NULL,
-  				`start_time` datetime NOT NULL,
-  				`end_time` datetime default NULL,
-  				`voided` smallint(6) NOT NULL default '0',
-  				`voided_by` int(11) default NULL,
-  				`date_voided` datetime default NULL,
-  				`void_reason` varchar(255) default NULL,
-  				PRIMARY KEY  (`id`),
-  				KEY `user_who_takes_what_survey` (`patient_id`,`survey_type`),
-  				KEY `user_who_voided_survey` (`voided_by`),
-  				KEY `encounter_for_survey` (`encounter_id`),
-  				CONSTRAINT `user_who_voided_survey` FOREIGN KEY (`voided_by`) REFERENCES `users` (`user_id`)
-			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-			
-		</sql>
-		
-	</diff>
+
 		<diff>
-		<version>1.0.2</version>
+		<version>1.0.1</version>
 		<author>Tammy Dugan</author>
 		<date>Oct 6th 2010</date>
 		<description>
@@ -92,6 +45,32 @@
   `time` datetime NOT NULL,
   PRIMARY KEY (`gps_data_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</sql>
+	</diff>
+			<diff>
+		<version>1.0.2</version>
+		<author>Tammy Dugan</author>
+		<date>Feb 23rd 2011</date>
+		<description>
+			Add address column to gps table.
+		</description>
+		<sql>
+	alter table pearlgrlz_gps_data add column address varchar(100)
+
+</sql>
+	</diff>
+	<diff>
+		<version>1.0.3</version>
+		<author>Tammy Dugan</author>
+		<date>Mar 29rd 2011</date>
+		<description>
+			Add location_provider, accuracy, and num_satellites columns to gps table.
+		</description>
+		<sql>
+	alter table pearlgrlz_gps_data add column location_provider varchar(40);
+	alter table pearlgrlz_gps_data add column accuracy double;
+	alter table pearlgrlz_gps_data add column num_satellites double;
+
 </sql>
 	</diff>
 	

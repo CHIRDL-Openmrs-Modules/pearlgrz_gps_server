@@ -13,23 +13,9 @@
  */
 package org.openmrs.module.pearlgrlz.service;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.openmrs.Encounter;
-import org.openmrs.Location;
-import org.openmrs.LocationTag;
 import org.openmrs.Patient;
 import org.openmrs.User;
-import org.openmrs.module.atd.TeleformTranslator;
 import org.openmrs.module.atd.hibernateBeans.FormInstance;
-import org.openmrs.module.atd.hibernateBeans.PatientATD;
-import org.openmrs.module.atd.hibernateBeans.Session;
-import org.openmrs.module.dss.hibernateBeans.Rule;
-import org.openmrs.module.pearlgrlz.SurveySession;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 
 
@@ -37,36 +23,11 @@ import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
  *
  */
 public interface PearlgrlzService {
-	
 
-	public final static String   SURVEY_STATE = "pearlgrlz_state";
-	public final static String   SURVEY_TYPE_DAILY = "pearlgrlz_daily";
-	public final static String   SURVEY_TYPE_WEEKLY = "pearlgrlz_weekly";
-	public final static String   SURVEY_TYPE_MONTHLY = "pearlgrlz_monthly";
-	public final static String   SURVEY_VOIDED_REASON_TIMESUP = "Patient did NOT finish the survey on time.";
-	public final static String   SURVEY_GENERAL_PARTNER_TYPE = "general partner";
-	public final static String   SURVEY_GENERAL_PARTNER_TYPE2 = "general-partner";
-	public final static String   SURVEY_SEXUAL_PARTNER_TYPE = "sexual partner";
-	public final static String   SURVEY_SEXUAL_PARTNER_TYPE2 = "sexual-partner";
-	public final static String   SURVEY_VALUE_DELIMITOR = ":";
-	
 	
 	public void createSurveyXML(Patient patient, Integer locationId, Integer formId, 
                                 Integer numQuestions, User provider, Integer locationTagId,
-                                FormInstance formInstance,Integer encounterId);
+                                FormInstance formInstance,Integer encounterId,Integer sessionId);
 	 	 
-	public Encounter getEncounter(Patient patient, User provider, Location location);
-	
-	public Session getSurveySession(Patient patient, String surveyType, User provider,
-	                                Location location);
-	
-	public Session getSession(Patient patient, User provider, Location location);
-	
-	public String calculateSurveyType();
-	
-	public SurveySession getLatestSurveySession(Patient patient, String surveyType);
-
-	public void cupSurveySession(SurveySession surveySession);
-
     public void addGpsData(GpsData gpsData);
 }
