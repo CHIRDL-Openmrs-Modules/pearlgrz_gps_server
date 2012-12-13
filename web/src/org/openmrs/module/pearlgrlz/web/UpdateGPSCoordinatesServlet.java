@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.pearlgrlz.hibernateBeans.GpsData;
 import org.openmrs.module.pearlgrlz.service.PearlgrlzService;
@@ -76,10 +77,29 @@ public class UpdateGPSCoordinatesServlet extends HttpServlet {
 		gpsData.setNumSatellites(numSatellites);
 		gpsData.setBatteryLevel(batteryLevel);
 		
-		printGPSData(gpsData);
+		AdministrationService adminService = Context.getAdministrationService();
+		String skipPrintingString = adminService.getGlobalProperty("skipPrinting");
+		String skipDatabaseString = adminService.getGlobalProperty("skipDatabase");
 		
-		PearlgrlzService pearlGrlzService = Context.getService(PearlgrlzService.class);
-		pearlGrlzService.addGpsData(gpsData);
+		boolean skipPrinting = false;
+		boolean skipDatabase = true;
+		
+		if(skipPrintingString != null && skipPrintingString.equalsIgnoreCase("true")){
+			skipPrinting = true;
+		}
+		
+		if(skipDatabaseString != null && skipDatabaseString.equalsIgnoreCase("true")){
+			skipDatabase = true;
+		}
+		
+		if(!skipPrinting){
+			printGPSData(gpsData);
+		}
+		
+		if(!skipDatabase){
+			PearlgrlzService pearlGrlzService = Context.getService(PearlgrlzService.class);
+			pearlGrlzService.addGpsData(gpsData);
+		}
 	}
 
 	/**

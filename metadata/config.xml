@@ -52,17 +52,14 @@
 	 /Required Privileges -->
 
 
-	<!-- Required Global Properties 
 	<globalProperty>
-		<property>@MODULE_ID@.someProperty</property>
-		<defaultValue></defaultValue>
-		<description>
-			A description of the global property goes here.  The description
-			should explain enough for administrators to understand the purpose
-			and possible values for the global property.
-		</description>
+		<property>pearlgrlz.skipPrinting</property>
+		<defaultValue>false</defaultValue>
 	</globalProperty>
-	/Required Global Properties -->
+	<globalProperty>
+		<property>pearlgrlz.skipDatabase</property>
+		<defaultValue>false</defaultValue>
+	</globalProperty>
 	
 	<!--
 	<dwr>
