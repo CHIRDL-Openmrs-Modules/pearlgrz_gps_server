@@ -7,11 +7,6 @@
 	<classpathentry exported="true" kind="lib" path="metadata"/>
 	<classpathentry kind="lib" path="lib-common/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="lib-common/commons-logging-1.0.4.jar"/>
-	<classpathentry kind="lib" path="lib-common/spring-2.5.1.jar" sourcepath="C:/Java/libraries/spring-framework-2.5.6-with-dependencies/spring-framework-2.5.6/src">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Java/libraries/spring-framework-2.5.6-with-dependencies/spring-framework-2.5.6/docs/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib-common/spring-webmvc.jar" sourcepath="C:/Java/libraries/spring-framework-2.5.6-with-dependencies/spring-framework-2.5.6/src/org/springframework/web/servlet"/>
 	<classpathentry kind="lib" path="lib-common/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib-common/hibernate3.jar" sourcepath="C:/Java/libraries/hibernate-annotations-3.4.0.GA/hibernate-annotations-3.4.0.GA/src">
@@ -29,11 +24,11 @@
 			<attribute name="javadoc_location" value="file:/C:/Documents and Settings/jwang/workspace/dss/doc/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.5.0.10396-dev.jar"/>
-	<classpathentry kind="lib" path="/chica"/>
-	<classpathentry kind="lib" path="/rgccd"/>
-	<classpathentry kind="lib" path="/sockethl7listener"/>
 	<classpathentry kind="lib" path="lib-common/atd-1.58.jar" sourcepath="/atd/src"/>
 	<classpathentry kind="lib" path="lib-common/openmrs-api-1.6.1.16316-.jar"/>
+	<classpathentry kind="lib" path="lib-common/web-openmrs-api-1.5.0.10396-dev.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-2.5.6.jar"/>
+	<classpathentry kind="lib" path="lib-common/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib-common/logic-0.5.jar"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
